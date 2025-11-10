@@ -1,1 +1,1 @@
-# bowfolios-nextjs
+# RIBows-nextjs
