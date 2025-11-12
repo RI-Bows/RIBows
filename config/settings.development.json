@@ -1,4 +1,8 @@
 {
+    "defaultAccounts": [
+    { "email": "admin@foo.com", "password": "changeme", "role": "ADMIN" }
+  ],
+
     "defaultProfiles": [
       {
         "firstName": "Philip",
