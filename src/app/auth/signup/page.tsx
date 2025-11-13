@@ -62,7 +62,7 @@ const SignUp = () => {
                     <div className="invalid-feedback">{errors.email?.message}</div>
                   </Form.Group>
 
-                  <Form.Group className="form-group">
+                  <Form.Group className="form-group pt-2">
                     <Form.Label>Password</Form.Label>
                     <input
                       type="password"
@@ -71,7 +71,7 @@ const SignUp = () => {
                     />
                     <div className="invalid-feedback">{errors.password?.message}</div>
                   </Form.Group>
-                  <Form.Group className="form-group">
+                  <Form.Group className="form-group pt-2">
                     <Form.Label>Confirm Password</Form.Label>
                     <input
                       type="password"
@@ -89,7 +89,7 @@ const SignUp = () => {
                       </Col>
                       <Col>
                         <Button type="button" onClick={() => reset()} className="btn btn-warning float-right">
-                          Reset
+                          Clear
                         </Button>
                       </Col>
                     </Row>
@@ -98,6 +98,7 @@ const SignUp = () => {
               </Card.Body>
               <Card.Footer>
                 Already have an account?
+                &nbsp;
                 <a href="/auth/signin">Sign in</a>
               </Card.Footer>
             </Card>
