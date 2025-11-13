@@ -1,4 +1,4 @@
-import { PrismaClient, Role } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { hash } from 'bcrypt';
 import * as config from '../config/settings.development.json';
 
@@ -6,20 +6,6 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log('Seeding the database');
-  const adminPassword = await hash('changeme', 10);
-  config.defaultAccounts.forEach(async (account) => {
-    const role = account.role as Role || Role.USER;
-    console.log(`  Creating user: ${account.email} with role: ${role}`);
-    await prisma.user.upsert({
-      where: { email: account.email },
-      update: {},
-      create: {
-        email: account.email,
-        password: adminPassword,
-        role,
-      },
-    });
-  });
   config.defaultProjects.forEach(async (project) => {
     console.log(`  Creating/Updating project ${project.name}`);
     project.interests.forEach(async (interest) => {
@@ -60,10 +46,6 @@ async function main() {
   });
   const password = await hash('foo', 10);
   config.defaultProfiles.forEach(async (profile) => {
-    if (!profile) {
-      console.warn('admin, no profile');
-      return null;
-    }
     console.log(`  Creating/Updating profile ${profile.email}`);
     // upsert interests from the profile
     profile.interests.forEach(async (interest) => {

@@ -1,9 +1,15 @@
 {
-    "defaultAccounts": [
-    { "email": "admin@foo.com", "password": "changeme", "role": "ADMIN" }
-  ],
-
     "defaultProfiles": [
+      {
+        "firstName": "RIBow",
+        "lastName": "Website",
+        "bio": "nothing",
+        "title": "administrator",
+        "interests": ["nothing"],
+        "email": "admin@foo.com",
+        "projects": ["nothing"],
+        "role": "ADMIN"
+      },
       {
         "firstName": "Philip",
         "lastName": "Johnson",
