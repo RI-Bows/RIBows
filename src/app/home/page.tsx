@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth';
 import { Profile, Interest, Project } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { loggedInProtectedPage } from '@/lib/page-protection';
-import { authOptions } from '../api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth';
 import HomePage from './HomePage';
 
 const HomePageHelper = async () => {

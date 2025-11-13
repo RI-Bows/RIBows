@@ -6,7 +6,7 @@
 import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import { Container, Image, Nav, Navbar, NavDropdown } from 'react-bootstrap';
-import { BoxArrowRight, PersonFill, PersonPlusFill } from 'react-bootstrap-icons';
+import { BoxArrowRight, PersonFill } from 'react-bootstrap-icons';
 // eslint-disable-next-line import/extensions
 import { ComponentIDs } from '@/utilities/ids';
 
@@ -70,25 +70,26 @@ const NavBar: React.FC = () => {
           <Nav className="justify-content-end">
             {currentUser ? (
               <NavDropdown id={ComponentIDs.currentUserDropdown} title={currentUser}>
+                <NavDropdown.Item id="editProfile" href="/auth/editProfile">
+                  Edit Profile
+                </NavDropdown.Item>
                 <NavDropdown.Item id={ComponentIDs.currentUserDropdownSignOut} href="/auth/signout">
                   <BoxArrowRight />
                   Sign out
                 </NavDropdown.Item>
-                <NavDropdown.Item id="editProfile" href="/auth/editProfile">
-                  Edit Profile
-                </NavDropdown.Item>
               </NavDropdown>
             ) : (
-              <NavDropdown id={ComponentIDs.loginDropdown} title="Login">
-                <NavDropdown.Item id={ComponentIDs.loginDropdownSignIn} href="/auth/signin">
-                  <PersonFill />
-                  Sign in
-                </NavDropdown.Item>
-                <NavDropdown.Item id={ComponentIDs.loginDropdownSignUp} href="/auth/signup">
-                  <PersonPlusFill />
-                  Sign up
-                </NavDropdown.Item>
-              </NavDropdown>
+              <Nav.Link
+                id={ComponentIDs.signinMenuItem}
+                active={pathname === '/auth/signin'}
+                href="/auth/signin"
+                key="signin"
+              >
+              <Container className="d-flex align-items-center gap-1">
+                <PersonFill />
+                Sign In
+              </Container>
+              </Nav.Link>
             )}
           </Nav>
         </Navbar.Collapse>
