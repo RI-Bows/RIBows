@@ -23,26 +23,22 @@ const NavBar: React.FC = () => {
     <Navbar expand="lg" style={menuStyle} className={navbarClassName}>
       <Container>
         <Navbar.Brand href="/" className="align-items-center">
-          <span style={{ fontWeight: 800, fontSize: '24px' }}>
+          <span style={{ fontWeight: 800, fontSize: '30px' }}>
             RIBows
-            <Image src="/images/temp.png" width={50} style={{ marginBottom: 3 }} alt="Rainbow" />
+            <Image src="/images/logo.png" width={30} height={30} style={{ marginBottom: 3 }} alt="Rainbow" />
           </span>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls={ComponentIDs.basicNavbarNav} />
         <Navbar.Collapse id={ComponentIDs.basicNavbarNav}>
           <Nav className="me-auto justify-content-start">
-            {currentUser ? (
-              <Nav.Link
-                id="search-nav"
-                active={pathname === '/search'}
-                href="/search"
-                key="search"
-              >
-                Search
-              </Nav.Link>
-            ) : (
-              ''
-            )}
+            <Nav.Link
+              id="search-nav"
+              active={pathname === '/search'}
+              href="/search"
+              key="search"
+            >
+            Search
+            </Nav.Link>
             {currentUser && role === 'ADMIN' && (
               <Nav.Link
                 id="admin-search-nav"
