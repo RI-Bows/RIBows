@@ -29,7 +29,7 @@ export const authOptions: NextAuthOptions = {
         return {
           id: `${user.id}`,
           email: user.email,
-          randomKey: user.role,
+          role: user.role,
         };
       },
     }),
@@ -44,13 +44,13 @@ export const authOptions: NextAuthOptions = {
       user: {
         ...session.user,
         id: token.id,
-        randomKey: token.randomKey,
+        role: token.role,
       },
     }),
     jwt: ({ token, user }) => {
       if (user) {
         const u = user as any;
-        return { ...token, id: u.id, randomKey: u.randomKey };
+        return { ...token, id: u.id, role: u.role };
       }
       return token;
     },

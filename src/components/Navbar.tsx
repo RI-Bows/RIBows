@@ -14,8 +14,8 @@ const NavBar: React.FC = () => {
   const { data: session } = useSession();
   const pathname = usePathname();
   const currentUser = session?.user?.email;
-  const userWithRole = session?.user as { email: string; randomKey: string };
-  const role = userWithRole?.randomKey;
+  // const userWithRole = session?.user as { email: string; randomKey: string };
+  const role = session?.user?.role ?? null;
   const menuStyle = { marginBottom: '0px' };
   const navbarClassName = currentUser ? 'bg-dark' : 'bg-light';
   // const navbarVariant = currentUser ? 'dark' : 'light';

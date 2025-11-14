@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Role } from '@prisma/client';
 import { hash } from 'bcrypt';
 import * as config from '../config/settings.development.json';
 
@@ -56,12 +56,15 @@ async function main() {
       });
     });
     // Upsert/Create the user so they can login.
+    const role = profile.role as Role || Role.USER;
+    // console.log(`  Creating user: ${profile.email} with role: ${role}`);
     await prisma.user.upsert({
       where: { email: profile.email },
       update: {},
       create: {
         email: profile.email,
         password,
+        role,
       },
     });
     // Upsert/Create the profile.
