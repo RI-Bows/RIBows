@@ -73,7 +73,7 @@ const NavBar: React.FC = () => {
                 <NavDropdown.Item id="editProfile" href="/editProfile">
                   Edit Profile
                 </NavDropdown.Item>
-                <NavDropdown.Item id={ComponentIDs.currentUserDropdownSignOut} href="/signout">
+                <NavDropdown.Item id={ComponentIDs.currentUserDropdownSignOut} href="/auth/signout">
                   <BoxArrowRight />
                   Sign out
                 </NavDropdown.Item>
