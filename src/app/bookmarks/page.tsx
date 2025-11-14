@@ -15,31 +15,28 @@ const BookmarksPage = async () => {
 
   const rios = [
     {
-      firstName: 'Philip',
-      lastName: 'Johnson',
-      address: 'POST 307, University of Hawaii',
-      image: 'https://github.com/philipmjohnson.png',
+      name: '8bit',
+      type: 'Academic/Professional',
+      main_contact: 'Jalen Lum',
+      email: 'jlum@foo.com',
       description:
-        'I am a Professor of Information and Computer Sciences at the University of Hawaii, Director of the Collaborative Software Development Laboratory, and the CEO of OpenPowerQuality.com.',
-      owner: 'john@foo.com',
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
     },
     {
-      firstName: 'Henri',
-      lastName: 'Casanova',
-      address: 'POST 307, University of Hawaii',
-      image: 'https://avatars0.githubusercontent.com/u/7494478?s=460&v=4',
+      name: 'Aikido Club at UHM',
+      type: 'Leisure/Recreational',
+      main_contact: 'Henri Bouchard',
+      email: 'henri@foo.com',
       description:
-        'I am originally from France. I maintain a list of reports from my surf sessions. I have proof that I ran the Hana relay with an actual Team.',
-      owner: 'john@foo.com',
+        'To practice aikido.',
     },
     {
-      firstName: 'Kim',
-      lastName: 'Binsted',
-      address: 'POST 307, University of Hawaii',
-      image: 'https://www.ics.hawaii.edu/wp-content/uploads/2013/08/kim_binsted-square-300x300.jpg',
+      name: 'Hui Dui',
+      type: 'Academic/Professional',
+      main_contact: 'Kimothy Chang',
+      email: 'kim@foo.com',
       description:
         'Kim Binsted received her BSc in Physics at McGill (1991), and her PhD in Artificial Intelligence from the University of Edinburgh (1996). Her thesis topic was the computational modeling and generation of punning riddles, and her program, JAPE (Joke Analysis and Production Engine), generated puns such as "What do you call a Martian who drinks beer? An ale-ien!".',
-      owner: 'admin@foo.com',
     },
   ];
 
@@ -56,9 +53,9 @@ const BookmarksPage = async () => {
             <h5>All of your bookmarked RIOs.</h5>
           </Col>
         </Row>
-        <Row xs={1} md={2} lg={3} className="g-4">
+        <Row xs={1} md={2} lg={3} className="g-4 py-3">
           {rios.map((rio) => (
-            <Col key={`Contact-${rio.firstName}`}>
+            <Col key={`Contact-${rio.name}`}>
               <RIOCard {...rio} />
             </Col>
           ))}

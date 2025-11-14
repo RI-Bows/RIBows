@@ -1,29 +1,32 @@
 'use client';
 
-import { Card, Image } from 'react-bootstrap';
+import { Button, Card } from 'react-bootstrap';
 
 type RIO = {
-  firstName: string;
-  lastName: string;
-  image: string;
-  address: string;
+  name: string;
+  type: string;
+  main_contact: string;
+  email: string;
   description: string;
 };
 
 /* Renders a single RIO card. */
-const RIOCard = ({ firstName, lastName, image, address, description }: RIO) => (
+const RIOCard = ({ name, type, main_contact, email, description }: RIO) => (
   <Card className="h-100">
-    <Card.Header>
-      <Image src={image} width={75} alt={`${firstName} ${lastName}`} />
-      <Card.Title>
-        {firstName}
-        &nbsp;
-        {lastName}
-      </Card.Title>
-      <Card.Subtitle>{address}</Card.Subtitle>
+    <Card.Header className="bg-success text-white">
+      <Card.Title>{name}</Card.Title>
+      <Card.Subtitle>{type}</Card.Subtitle>
     </Card.Header>
     <Card.Body>
       <Card.Text>{description}</Card.Text>
+      <Card.Text>
+        Main Contact:
+        &nbsp;
+        {main_contact}
+      </Card.Text>
+      <Button variant="success">
+        <a href={`mailto:${email}`} style={{ color: 'inherit', textDecoration: 'none' }}>Contact</a>
+      </Button>
     </Card.Body>
   </Card>
 );
