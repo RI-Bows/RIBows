@@ -39,7 +39,8 @@
           "WRENCH"
         ],
         "picture": "http://www.ics.hawaii.edu/wp-content/uploads/2013/08/Henri_Casanova1.jpg",
-        "email": "henric@hawaii.edu"
+        "email": "henric@hawaii.edu",
+        "role": "ADMIN_CLUB"
       },
       {
         "firstName": "Carleton",

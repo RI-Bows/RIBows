@@ -57,7 +57,7 @@ async function main() {
     });
     // Upsert/Create the user so they can login.
     const role = profile.role as Role || Role.USER;
-    // console.log(`  Creating user: ${profile.email} with role: ${role}`);
+    console.log(`  Creating user: ${profile.email} with role: ${role}`);
     await prisma.user.upsert({
       where: { email: profile.email },
       update: {},

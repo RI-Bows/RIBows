@@ -56,15 +56,17 @@ const NavBar: React.FC = () => {
             ) : (
               ''
             )}
-            {currentUser && role === 'ADMIN-CLUB' && (
+            {currentUser && role === 'ADMIN_CLUB' ? (
               <Nav.Link
                 id="admin-club-edit-nav"
-                active={pathname === '/edit'}
-                href="/edit"
-                key="edit"
+                active={pathname === '/editRIO'}
+                href="/editRIO"
+                key="editRIO"
               >
                 editRIO
               </Nav.Link>
+            ) : (
+              ''
             )}
           </Nav>
           <Nav className="justify-content-end">
@@ -73,7 +75,7 @@ const NavBar: React.FC = () => {
                 <NavDropdown.Item id="editProfile" href="/editProfile">
                   Edit Profile
                 </NavDropdown.Item>
-                <NavDropdown.Item id={ComponentIDs.currentUserDropdownSignOut} href="/signout">
+                <NavDropdown.Item id={ComponentIDs.currentUserDropdownSignOut} href="/auth/signout">
                   <BoxArrowRight />
                   Sign out
                 </NavDropdown.Item>
