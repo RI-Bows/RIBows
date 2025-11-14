@@ -1,6 +1,16 @@
 {
     "defaultProfiles": [
       {
+        "firstName": "RIBow",
+        "lastName": "Website",
+        "bio": "nothing",
+        "title": "administrator",
+        "interests": ["nothing"],
+        "email": "admin@foo.com",
+        "projects": ["nothing"],
+        "role": "ADMIN"
+      },
+      {
         "firstName": "Philip",
         "lastName": "Johnson",
         "bio": "I am a Professor and like to paddle outrigger canoes.",
