@@ -15,7 +15,7 @@ const NavBar: React.FC = () => {
   const pathname = usePathname();
   const currentUser = session?.user?.email;
   // const userWithRole = session?.user as { email: string; randomKey: string };
-  const role = session?.user?.role ?? null;
+  const role = (session?.user as any)?.role ?? null;
   const menuStyle = { marginBottom: '0px' };
   const navbarClassName = currentUser ? 'bg-dark' : 'bg-light';
   // const navbarVariant = currentUser ? 'dark' : 'light';
@@ -70,10 +70,10 @@ const NavBar: React.FC = () => {
           <Nav className="justify-content-end">
             {currentUser ? (
               <NavDropdown id={ComponentIDs.currentUserDropdown} title={currentUser}>
-                <NavDropdown.Item id="editProfile" href="/auth/editProfile">
+                <NavDropdown.Item id="editProfile" href="/editProfile">
                   Edit Profile
                 </NavDropdown.Item>
-                <NavDropdown.Item id={ComponentIDs.currentUserDropdownSignOut} href="/auth/signout">
+                <NavDropdown.Item id={ComponentIDs.currentUserDropdownSignOut} href="/signout">
                   <BoxArrowRight />
                   Sign out
                 </NavDropdown.Item>
