@@ -49,11 +49,11 @@ const BookmarksPage = async () => {
           </Col>
         </Row>
         <Row>
-          <Col className="text-center">
+          <Col className="text-center pb-4">
             <h5>All of your bookmarked RIOs.</h5>
           </Col>
         </Row>
-        <Row xs={1} md={2} lg={3} className="g-4 py-3">
+        <Row xs={1} md={2} lg={3} className="bg-success rounded g-4 my-2 py-3">
           {rios.map((rio) => (
             <Col key={`Contact-${rio.name}`}>
               <RIOCard {...rio} />
