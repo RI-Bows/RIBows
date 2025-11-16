@@ -21,6 +21,16 @@ const AddRIOForm: React.FC = () => {
     resolver: yupResolver(AddRIOSchema),
   });
 
+  const RIO_CATEGORIES = [
+    'Ethnic/Cultural',
+    'Fraternity/Sorority',
+    'Sports/Leisure',
+    'Academic/Professional',
+    'Religious/Spiritual',
+    'Honorary Society',
+    'Other',
+  ];
+
   const onSubmit = (data: IRIO) => {
     // Mock-up function to simulate server action
     console.log('Mock Add RIO Data:', data);
@@ -51,14 +61,14 @@ const AddRIOForm: React.FC = () => {
               <Col xs={6}>
                 <Form.Group controlId="category">
                   <Form.Label column sm={2}>Category</Form.Label>
-                  <Form.Control
-                    type="text"
-                    {...register('category')}
-                    placeholder="Sports/Leisure"
-                  />
-                  <Form.Text className="text-danger">
-                    {errors.category?.message}
-                  </Form.Text>
+                  <Form.Select defaultValue="">
+                    <option value="" disabled>Select Category</option>
+                    {RIO_CATEGORIES.map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
+                  </Form.Select>
                 </Form.Group>
               </Col>
             </Row>
