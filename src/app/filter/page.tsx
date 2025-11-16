@@ -4,7 +4,7 @@ import { Container } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma';
 import FilterProfileForm from '@/components/FilterProfileForm';
 import { loggedInProtectedPage } from '@/lib/page-protection';
-import { authOptions } from '../api/auth/[...nextauth]/route';
+import { authOptions } from '@/app/lib/auth';
 
 const FilterPage = async () => {
   const session = await getServerSession(authOptions);
