@@ -5,14 +5,14 @@ const Footer = () => (
   <footer className="footer mt-auto py-3 bg-dark">
     <Container>
       <Col className="text-center" style={{ color: 'white' }}>
-        The Bowfolios Project
+        RIBows
         <br />
         University of Hawaii
         <br />
         Honolulu, HI 96822
         <br />
-        <a style={{ color: 'white' }} href="https://bowfolios.github.io">
-          https://bowfolios.github.io
+        <a style={{ color: 'white' }} href="https://ri-bows.github.io">
+          https://ri-bows.github.io
         </a>
       </Col>
     </Container>
