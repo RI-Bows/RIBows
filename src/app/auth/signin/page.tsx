@@ -14,7 +14,7 @@ const SignIn = () => {
     const email = target.email.value;
     const password = target.password.value;
     const result = await signIn('credentials', {
-      callbackUrl: '/home',
+      callbackUrl: '/',
       email,
       password,
     });
@@ -48,6 +48,7 @@ const SignIn = () => {
               </Card.Body>
               <Card.Footer>
                 Don&apos;t have an account?
+                &nbsp;
                 <a href="/auth/signup">Sign up</a>
               </Card.Footer>
             </Card>

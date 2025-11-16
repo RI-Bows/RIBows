@@ -1,6 +1,6 @@
 import { getServerSession } from 'next-auth/next';
 import { NextResponse } from 'next/server';
-import { authOptions } from '@/app/lib/auth';
+import { authOptions } from '@/lib/auth';
 
 // eslint-disable-next-line import/prefer-default-export
 export async function GET() {
@@ -12,6 +12,5 @@ export async function GET() {
     });
   }
 
-  // console.log('GET API', session)
   return NextResponse.json({ authenticated: !!session });
 }
