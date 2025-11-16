@@ -5,8 +5,8 @@
 
 import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
-import { Container, Image, Nav, Navbar, NavDropdown, Button } from 'react-bootstrap';
-import { BoxArrowRight, Person, PersonFill, PersonPlusFill } from 'react-bootstrap-icons';
+import { Container, Image, Nav, Navbar } from 'react-bootstrap';
+import { BoxArrowRight, PersonFill } from 'react-bootstrap-icons';
 // eslint-disable-next-line import/extensions
 import { ComponentIDs } from '@/utilities/ids';
 
@@ -88,11 +88,11 @@ const NavBar: React.FC = () => {
               <Nav.Link
                 id={ComponentIDs.signoutMenuItem}
                 active={pathname === '/auth/signout'}
-                href='/auth/signout'
-                key='signout'
+                href="/auth/signout"
+                key="signout"
               >
-                <Container className='d-flex align-items-center gap-1'>
-                  <BoxArrowRight/>
+                <Container className="d-flex align-items-center gap-1">
+                  <BoxArrowRight />
                   Signout
                 </Container>
               </Nav.Link>
@@ -100,11 +100,11 @@ const NavBar: React.FC = () => {
               <Nav.Link
                 id={ComponentIDs.signinMenuItem}
                 active={pathname === '/auth/signin'}
-                href='/auth/signin'
-                key='signin'
+                href="/auth/signin"
+                key="signin"
               >
-                <Container className='d-flex align-items-center gap-1'>
-                  <PersonFill/>
+                <Container className="d-flex align-items-center gap-1">
+                  <PersonFill />
                   Sign In
                 </Container>
               </Nav.Link>

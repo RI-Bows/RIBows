@@ -47,7 +47,8 @@ const SignIn = () => {
                 </Form>
               </Card.Body>
               <Card.Footer>
-                Don&apos;t have an account? <a href="/auth/signup">Sign up</a>
+                Don&apos;t have an account?
+                <a href="/auth/signup">Sign up</a>
               </Card.Footer>
             </Card>
           </Col>
