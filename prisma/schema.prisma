@@ -14,7 +14,7 @@ datasource db {
   // url      = env("DATABASE_URL")
   // for Vercel
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 enum Role {
