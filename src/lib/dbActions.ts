@@ -1,6 +1,7 @@
 'use server';
 
 import { compare, hash } from 'bcrypt';
+import { Interest } from '@prisma/client';
 import { prisma } from './prisma';
 
 export async function getUser(email: string) {
@@ -32,13 +33,16 @@ export async function changePassword(credentials: { email: string; password: str
   });
 }
 
-export async function createUser(credentials: { email: string; password: string }) {
+// TODO: Delete this eslint override once DB updated
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function createUser(credentials: { email: string; password: string }, interests: Interest[]) {
   // console.log(`createUser data: ${JSON.stringify(credentials, null, 2)}`);
   const password = await hash(credentials.password, 10);
   await prisma.user.create({
     data: {
       email: credentials.email,
       password,
+      //      interests, TODO: Uncomment once DB updated
     },
   });
 }
