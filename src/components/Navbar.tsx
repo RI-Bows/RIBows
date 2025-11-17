@@ -3,29 +3,29 @@
 
 'use client';
 
-import {useSession} from 'next-auth/react';
-import {usePathname} from 'next/navigation';
-import {Container, Image, Nav, Navbar, NavDropdown} from 'react-bootstrap';
-import {BoxArrowRight, PersonFill, Pen} from 'react-bootstrap-icons';
+import { useSession } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
+import { Container, Image, Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import { BoxArrowRight, PersonFill, Pen, Bookmarks } from 'react-bootstrap-icons';
 // eslint-disable-next-line import/extensions
-import {ComponentIDs} from '@/utilities/ids';
+import { ComponentIDs } from '@/utilities/ids';
 
 const NavBar: React.FC = () => {
-  const {data: session} = useSession();
+  const { data: session } = useSession();
   const pathname = usePathname();
   const currentUser = session?.user?.email;
   // const userWithRole = session?.user as { email: string; randomKey: string };
   const role = (session?.user as any)?.role ?? null;
-  const menuStyle = {marginBottom: '0px'};
-  const navbarClassName = currentUser ? 'bg-dark' : 'bg-light';
+  const menuStyle = { marginBottom: '0px' };
+  const navbarClassName = 'bg-dark';
   // const navbarVariant = currentUser ? 'dark' : 'light';
   return (
     <Navbar expand="lg" style={menuStyle} className={navbarClassName}>
       <Container>
         <Navbar.Brand href="/" className="align-items-center">
-          <span style={{fontWeight: 800, fontSize: '30px'}}>
+          <span style={{ fontWeight: 800, fontSize: '30px' }}>
             RIBows
-            <Image src="/images/logo.png" width={30} height={30} style={{marginBottom: 3}} alt="Rainbow" />
+            <Image src="/images/logo.png" width={30} height={30} style={{ marginBottom: 3 }} alt="Rainbow" />
           </span>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls={ComponentIDs.basicNavbarNav} />
@@ -39,6 +39,14 @@ const NavBar: React.FC = () => {
             >
               Search
             </Nav.Link>
+            <Nav.Link
+              id="trending-nav"
+              active={pathname === '/trending'}
+              href="/trending"
+              key="trending"
+            >
+              Trending
+            </Nav.Link>
             {currentUser && role === 'ADMIN' && (
               <Nav.Link
                 id="admin-search-nav"
@@ -50,24 +58,39 @@ const NavBar: React.FC = () => {
               </Nav.Link>
             )}
             {currentUser && role === 'ADMIN' ? (
-              <Nav.Link id="admin-add-nav" href="/addRIO" key="admin" active={pathname === '/addRIO'}>
+              <Nav.Link id="admin-add-nav" href="/addclub" key="admin" active={pathname === '/addclub'}>
                 Add RIO
               </Nav.Link>
             ) : (
               ''
             )}
-            {currentUser && role === 'ADMIN-CLUB' && (
+            {currentUser && role === 'CLUB' && (
               <Nav.Link
                 id="admin-club-edit-nav"
                 active={pathname === '/edit'}
                 href="/edit"
                 key="edit"
               >
-                editRIO
+                Edit RIO
               </Nav.Link>
             )}
           </Nav>
           <Nav className="justify-content-end">
+            {currentUser ? (
+              <Nav.Link
+                id="bookmarks-nav"
+                active={pathname === '/bookmarks'}
+                href="/bookmarks"
+                key="bookmarks"
+              >
+              <Container className="ps-0 d-flex align-items-center gap-1">
+                Saved
+                <Bookmarks />
+              </Container>
+              </Nav.Link>
+            ) : (
+              ''
+            )}
             {currentUser ? (
               <NavDropdown id={ComponentIDs.currentUserDropdown} title={currentUser}>
                 <NavDropdown.Item id="editProfile" href="/editProfile">

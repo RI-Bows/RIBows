@@ -28,11 +28,21 @@ model Profile {
 }
 
 model Interest {
-  id              Int               @id @default(autoincrement())
-  name            String            @unique
-  profiles        ProfileInterest[]
-  ProjectInterest ProjectInterest[]
-  RioInterest     RioInterest[]
+  id       Int               @id @default(autoincrement())
+  name     String            @unique
+  profiles ProfileInterest[]
+  projects ProjectInterest[]
+  rios     RioInterest[]    
+}
+
+model Project {
+  id          Int               @id @default(autoincrement())
+  name        String            @unique
+  homepage    String?
+  description String?
+  picture     String?
+  profiles    ProfileProject[]
+  interests   ProjectInterest[]
 }
 
 model ProfileInterest {
@@ -51,22 +61,12 @@ model ProfileProject {
   Project   Project @relation(fields: [projectId], references: [id])
 }
 
-model Project {
-  id              Int               @id @default(autoincrement())
-  name            String            @unique
-  homepage        String?
-  description     String?
-  picture         String?
-  ProfileProject  ProfileProject[]
-  ProjectInterest ProjectInterest[]
-}
-
 model ProjectInterest {
   id         Int      @id @default(autoincrement())
   projectId  Int
   interestId Int
-  Interest   Interest @relation(fields: [interestId], references: [id])
-  Project    Project  @relation(fields: [projectId], references: [id])
+  project    Project  @relation(fields: [projectId], references: [id])
+  interest   Interest @relation(fields: [interestId], references: [id])
 }
 
 model Rio {
