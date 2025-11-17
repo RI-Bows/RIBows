@@ -39,6 +39,14 @@ const NavBar: React.FC = () => {
             >
               Search
             </Nav.Link>
+            <Nav.Link
+              id="trending-nav"
+              active={pathname === '/trending'}
+              href="/trending"
+              key="trending"
+            >
+              Trending
+            </Nav.Link>
             {currentUser && role === 'ADMIN' && (
               <Nav.Link
                 id="admin-search-nav"
@@ -68,17 +76,21 @@ const NavBar: React.FC = () => {
             )}
           </Nav>
           <Nav className="justify-content-end">
-            <Nav.Link
-              id="bookmarks-nav"
-              active={pathname === '/bookmarks'}
-              href="/bookmarks"
-              key="bookmarks"
-            >
+            {currentUser ? (
+              <Nav.Link
+                id="bookmarks-nav"
+                active={pathname === '/bookmarks'}
+                href="/bookmarks"
+                key="bookmarks"
+              >
               <Container className="ps-0 d-flex align-items-center gap-1">
                 Saved
                 <Bookmarks />
               </Container>
-            </Nav.Link>
+              </Nav.Link>
+            ) : (
+              ''
+            )}
             {currentUser ? (
               <NavDropdown id={ComponentIDs.currentUserDropdown} title={currentUser}>
                 <NavDropdown.Item id="editProfile" href="/editProfile">
