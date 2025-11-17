@@ -1,25 +1,11 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  // for local development
-  // url      = env("DATABASE_URL")
-  // for Vercel
+  provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DATABASE_URL_UNPOOLED")
-}
-
-enum Role {
-  USER
-  ADMIN
 }
 
 model User {
@@ -30,54 +16,82 @@ model User {
 }
 
 model Profile {
-  id        Int               @id @default(autoincrement())
-  email     String            @unique
-  firstName String?
-  lastName  String?
-  bio       String?
-  title     String?
-  picture   String?
-  interests ProfileInterest[]
-  projects  ProfileProject[]
+  id             Int               @id @default(autoincrement())
+  email          String            @unique
+  firstName      String?
+  lastName       String?
+  bio            String?
+  title          String?
+  picture        String?
+  interests      ProfileInterest[]
+  ProfileProject ProfileProject[]
 }
 
 model Interest {
-  id       Int               @id @default(autoincrement())
-  name     String            @unique
-  profiles ProfileInterest[]
-  projects ProjectInterest[]
-}
-
-model Project {
-  id          Int               @id @default(autoincrement())
-  name        String            @unique
-  homepage    String?
-  description String?
-  picture     String?
-  profiles    ProfileProject[]
-  interests   ProjectInterest[]
+  id              Int               @id @default(autoincrement())
+  name            String            @unique
+  profiles        ProfileInterest[]
+  ProjectInterest ProjectInterest[]
+  RioInterest     RioInterest[]
 }
 
 model ProfileInterest {
   id         Int      @id @default(autoincrement())
   profileId  Int
   interestId Int
-  profile    Profile  @relation(fields: [profileId], references: [id])
   interest   Interest @relation(fields: [interestId], references: [id])
+  profile    Profile  @relation(fields: [profileId], references: [id])
 }
 
 model ProfileProject {
   id        Int     @id @default(autoincrement())
   profileId Int
   projectId Int
-  profile   Profile @relation(fields: [profileId], references: [id])
-  project   Project @relation(fields: [projectId], references: [id])
+  Profile   Profile @relation(fields: [profileId], references: [id])
+  Project   Project @relation(fields: [projectId], references: [id])
+}
+
+model Project {
+  id              Int               @id @default(autoincrement())
+  name            String            @unique
+  homepage        String?
+  description     String?
+  picture         String?
+  ProfileProject  ProfileProject[]
+  ProjectInterest ProjectInterest[]
 }
 
 model ProjectInterest {
   id         Int      @id @default(autoincrement())
   projectId  Int
   interestId Int
-  project    Project  @relation(fields: [projectId], references: [id])
-  interest   Interest @relation(fields: [interestId], references: [id])
+  Interest   Interest @relation(fields: [interestId], references: [id])
+  Project    Project  @relation(fields: [projectId], references: [id])
+}
+
+model Rio {
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  dateApproved DateTime    @db.Date
+  expirationDate DateTime  @db.Date
+  purposeStatement String?
+  type    String
+  mainContact String
+  email       String
+  image       String?
+  RioInterest RioInterest[]
+}
+
+model RioInterest {
+  id         Int      @id @default(autoincrement())
+  rioId      Int
+  interestId Int
+  Interest   Interest @relation(fields: [interestId], references: [id])
+  Rio        Rio      @relation(fields: [rioId], references: [id])
+}
+
+enum Role {
+  USER
+  ADMIN
+  CLUB
 }
