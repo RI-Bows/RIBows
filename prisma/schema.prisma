@@ -12,12 +12,13 @@ datasource db {
   // for Vercel / Neon pooled connection
   url       = env("DATABASE_URL")
   // direct connection for Prisma (you already have this env var)
-  directUrl = env("POSTGRES_PRISMA_URL")
+  // directUrl = env("POSTGRES_PRISMA_URL")
 }
 
 enum Role {
   USER
   ADMIN
+  CLUB
 }
 
 model User {

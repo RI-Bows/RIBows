@@ -27,9 +27,9 @@
         "email": "johnson@hawaii.edu"
       },
       {
-        "firstName": "Henri",
-        "lastName": "Casanova",
-        "bio": "In my spare time, I like to scuba dive.",
+        "firstName": "CLUB",
+        "lastName": "test",
+        "bio": "For club admin capabilities (editing club profile).",
         "title": "Professor",
         "interests": [
           "HPC",
@@ -39,7 +39,8 @@
           "WRENCH"
         ],
         "picture": "http://www.ics.hawaii.edu/wp-content/uploads/2013/08/Henri_Casanova1.jpg",
-        "email": "henric@hawaii.edu"
+        "email": "club@hawaii.edu",
+        "role": "CLUB"
       },
       {
         "firstName": "Carleton",
