@@ -69,13 +69,11 @@ export default function Home() {
             <h2 style={{ paddingTop: '20px', color: '#376551' }}>
               Once you&apos;re all set up
             </h2>
-            <h3 style={{ color: '#376551' }}>
-              Explore RIO&apos;s with the search tab that match your interests!
-              Bookmark them to join later or contact them directly through the app.
-              Or look at our most trending tab to see what&apos;s popular!
-            </h3>
             <Row md={1} lg={2}>
               <Col xs={6}>
+                <h3 style={{ color: '#376551' }}>
+                  Explore RIO&apos;s with the search tab that match your interests!
+                </h3>
                 <Image
                   src="/images/interests-page.png"
                   width={500}
@@ -83,6 +81,19 @@ export default function Home() {
                 />
               </Col>
               <Col xs={6}>
+                <h3 style={{ color: '#376551' }}>
+                  Bookmark them to join later or contact them directly through the app.
+                </h3>
+                <Image
+                  src="/images/filter-page.png"
+                  width={500}
+                  alt="filter-page"
+                />
+              </Col>
+              <Col xs={6} className="mx-auto">
+                <h3 style={{ color: '#376551' }}>
+                  Or look at our most trending tab to see what&apos;s popular!
+                </h3>
                 <Image
                   src="/images/filter-page.png"
                   width={500}
