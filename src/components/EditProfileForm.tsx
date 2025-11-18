@@ -49,7 +49,7 @@ export default function EditProfileForm() {
   };
 
   return (
-    <Card className="p-3">
+    <Card className="p-3 mb-4">
       <Form onSubmit={handleSubmit}>
         <InputField
           label="First Name"
