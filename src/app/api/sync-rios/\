@@ -1,0 +1,86 @@
+call plug#begin()
+Plug 'tomasiser/vim-code-dark'
+Plug 'preservim/nerdtree'
+Plug 'terryma/vim-smooth-scroll'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'lervag/vimtex'
+call plug#end()
+
+noremap <silent> <c-u> :call smooth_scroll#up(&scroll, 10, 2)<CR>
+noremap <silent> <c-d> :call smooth_scroll#down(&scroll, 10, 2)<CR>
+
+" Theme
+if has('termguicolors')
+  set termguicolors
+endif
+
+let g:codedark_transparent=1
+colorscheme codedark
+
+filetype on
+
+" coc.nvim
+set encoding=utf-8
+set signcolumn=yes
+
+inoremap <silent><expr> <TAB>
+       \ coc#pum#visible() ? coc#pum#confirm() :
+       \ CheckBackspace() ? "\<Tab>" :
+       \ coc#refresh()
+
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Show hover documentation
+nnoremap <silent> K :call CocActionAsync('doHover')<CR>
+
+" Scroll through hover docs with arrow keys
+nnoremap <silent><nowait><expr> <Down> coc#float#has_scroll() ? coc#float#scroll(1) : "\<Down>"
+nnoremap <silent><nowait><expr> <Up>   coc#float#has_scroll() ? coc#float#scroll(0) : "\<Up>"
+inoremap <silent><nowait><expr> <Down> coc#float#has_scroll() ? "\<C-r>=coc#float#scroll(1)\<CR>" : "\<Down>"
+inoremap <silent><nowait><expr> <Up>   coc#float#has_scroll() ? "\<C-r>=coc#float#scroll(0)\<CR>" : "\<Up>"
+
+"Vimtex
+filetype plugin indent on
+let g:vimtex_view_method = 'skim'
+let g:vimtex_compiler_method = 'latexmk'
+
+"syntax on
+"set tabstop=4
+"set shiftwidth=4
+
+" Filetype-specific settings
+augroup filetype_settings
+  " Clear existing autocommands in this group
+  " autocmd!
+
+  " Use 4 spaces for Python
+  autocmd FileType python setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
+
+  " Use 4 spaces for C++
+  autocmd FileType cpp setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
+
+  " Use 4 spaces for GLSL (OpenGL Shading Language)
+  autocmd FileType glsl setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
+
+  " Use 2 spaces for JavaScript
+  autocmd FileType javascript setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+
+  " Use 2 spaces for Typescript
+  autocmd FileType typescript setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+
+  " Use 2 spaces for Typescript React
+  autocmd FileType typescriptreact setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+
+  " Use 2 spaces for text
+  autocmd FileType text setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+ 
+  " Use 2 spaces for yaml
+  autocmd FileType yaml setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+augroup END
+
+set number
+set relativenumber
+
