@@ -70,16 +70,16 @@ model ProjectInterest {
 }
 
 model Rio {
-  id          Int           @id @default(autoincrement())
-  name        String        @unique
-  dateApproved DateTime    @db.Date
-  expirationDate DateTime  @db.Date
+  id               Int          @id @default(autoincrement())
+  name             String       @unique
+  approvalData     DateTime     @db.Date
+  expirationDate   DateTime     @db.Date
   purposeStatement String?
-  type    String
-  mainContact String
-  email       String
-  image       String?
-  RioInterest RioInterest[]
+  type    	   String
+  mainContact 	   String
+  email            String
+  image            String?
+  RioInterest      RioInterest[]
 }
 
 model RioInterest {
