@@ -11,9 +11,12 @@ const Footer = () => (
         <br />
         Honolulu, HI 96822
         <br />
-        <a style={{ color: 'white' }} href="https://ri-bows.github.io">
+        <a style={{ color: 'white' }} href="https://ri-bows.github.io" target="_blank" rel="noreferrer">
           https://ri-bows.github.io
         </a>
+        <br />
+        {/* eslint-disable-next-line no-trailing-spaces, react/jsx-one-expression-per-line */}
+        We would love to hear your <a style={{ color: 'white' }} href="/feedback">feedback!</a>
       </Col>
     </Container>
   </footer>
