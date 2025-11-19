@@ -80,7 +80,7 @@ export default function Home() {
         <div className="landing-white-background section-spacing">
           <Container className="justify-content-center text-center">
             <h3 style={{ color: 'black', marginBottom: '20px', fontSize: '28pt' }}>
-              1. Start by making your profile
+              Start by making your profile
             </h3>
             <h5 style={{ color: 'black', marginBottom: '1.5rem' }}>
               Either by clicking sign in at the top right or clicking
@@ -93,63 +93,38 @@ export default function Home() {
             </Row>
           </Container>
         </div>
-        <div className="landing-green-background section-spacing">
+        <div className="landing-white-background section-spacing">
           <Container className="justify-content-center text-center">
-            <h3 style={{ paddingTop: '20px', color: 'white', marginBottom: '1.5rem', fontSize: '28pt' }}>
-              2. Add your interests to your profile
-            </h3>
-            <Row md={1} lg={2} className="g-4 justify-content-center" style={{ marginBottom: '2.5rem' }}>
-              <Col xs={12} md={6}>
-                <Image
-                  src="/images/add-project-page.png"
-                  width={500}
-                  alt="add-project-page"
-                  className="img-fluid shadow-sm rounded"
-                />
-              </Col>
-              <Col xs={6}>
-                <Image
-                  src="/images/projects-page.png"
-                  width={500}
-                  alt="projets-page"
-                  className="img-fluid shadow-sm rounded"
-                />
-              </Col>
-            </Row>
-          </Container>
-        </div>
-        <div className="landing-white-background text-center section-spacing">
-          <Container>
-            <h3 style={{ paddingTop: '20px', color: '#376551', marginBottom: '2.5rem', fontSize: '28pt' }}>
-              3. Once you&apos;re all set up!
+            <h3 style={{ paddingTop: '20px', color: '#000000ff', marginBottom: '2.5rem', fontSize: '28pt' }}>
+              Then you&apos;re all set up!
               <br />
               Explore, bookmark, and see what&apos;s trending!
             </h3>
             <Row md={1} lg={2} className="g-4 justify-content-center">
               <Col xs={12} md={4}>
-                <h3 style={{ color: '#376551' }}>
+                <h3 style={{ color: '#000000ff' }}>
                   Explore RIO&apos;s with the search tab that match your interests!
                 </h3>
-                <Image
+                {/* <Image
                   src="/images/interests-page.png"
                   width={500}
                   alt="interest-page"
                   className="img-fluid shadow-sm rounded"
-                />
+                /> */}
               </Col>
               <Col xs={12} md={4}>
-                <h3 style={{ color: '#376551' }}>
+                <h3 style={{ color: '#000000ff' }}>
                   Bookmark them to join later or contact them directly through the app.
                 </h3>
-                <Image
+                {/* <Image
                   src="/images/filter-page.png"
                   width={500}
                   alt="filter-page"
                   className="img-fluid shadow-sm rounded"
-                />
+                /> */}
               </Col>
-              <Col xs={6} className="mx-auto">
-                <h3 style={{ color: '#376551' }}>
+              <Col xs={6} className="mx-auto py-3">
+                {/* <h3 style={{ color: '#000000ff' }}>
                   Or look at our most trending tab to see what&apos;s popular!
                 </h3>
                 <Image
@@ -157,7 +132,7 @@ export default function Home() {
                   width={500}
                   alt="filter-page"
                   className="img-fluid shadow-sm rounded"
-                />
+                /> */}
               </Col>
             </Row>
           </Container>
