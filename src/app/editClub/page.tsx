@@ -5,14 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth/next';
 import { redirect } from 'next/navigation';
 
-type PageProps = {
-  params: Promise<{ id: string }>;
-};
-
-export default async function EditClubPage({ params }: PageProps) {
-  // Await params if using Next.js 15+
-  const { id } = await params;
-
+export default async function EditClubPage() {
   // Get the current user session
   const session = await getServerSession();
 
@@ -21,21 +14,21 @@ export default async function EditClubPage({ params }: PageProps) {
     redirect('/auth/signin'); // Redirect to login if not authenticated
   }
 
-  const rio = await prisma.rio.findUnique({
-    where: { id: Number(id) },
-    include: { RioInterest: true },
-  });
-
-  if (!rio) {
-    return <div>RIO not found.</div>;
-  }
-
+  console.log('Test email:', session.user.email);
+  console.log('Test role:', session.user.role);
+  // Check authorization first
   if (!session.user || session.user.role !== 'CLUB') {
     return <div>Unauthorized: Only clubs can edit RIOs.</div>;
   }
 
-  if (rio.email !== session.user.email) {
-    return <div>Unauthorized: You can only edit your own club.</div>;
+  // Find the RIO by the logged-in user's email
+  const rio = await prisma.rio.findFirst({
+    where: { email: session.user.email },
+    include: { RioInterest: true },
+  });
+
+  if (!rio) {
+    return <div>RIO not found for your account.</div>;
   }
 
   return <EditClubForm rio={rio} />;
