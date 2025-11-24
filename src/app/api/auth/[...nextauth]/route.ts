@@ -1,10 +1,10 @@
-import NextAuth, { Session } from 'next-auth';
+import NextAuth, { Session, AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcrypt';
 import { JWT } from 'next-auth/jwt';
 
-export const authOptions = {
+export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -35,7 +35,7 @@ export const authOptions = {
         }
 
         return {
-          id: user.id,
+          id: user.id.toString(), // Convert to string for consistency
           email: user.email,
           role: user.role,
         };
@@ -44,6 +44,7 @@ export const authOptions = {
   ],
   callbacks: {
     async jwt({ token, user }: { token: JWT; user?: any }) {
+      // Return new object instead of mutating token
       if (user) {
         return {
           ...token,
@@ -54,12 +55,13 @@ export const authOptions = {
       return token;
     },
     async session({ session, token }: { session: Session; token: JWT }) {
+      // Return new object instead of mutating session
       return {
         ...session,
         user: {
           ...session.user,
-          id: token.id as number,
-          role: token.role,
+          id: token.id as string,
+          role: token.role as 'USER' | 'CLUB' | 'ADMIN',
         },
       };
     },

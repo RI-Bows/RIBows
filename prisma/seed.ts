@@ -117,6 +117,58 @@ async function main() {
       }
     });
   });
+
+  // Seed default RIOs
+  if (config.defaultRios) {
+    await Promise.all(config.defaultRios.map(async (rio) => {
+      console.log(`  Creating/Updating RIO ${rio.name}`);
+
+      // Upsert interests for the RIO
+      await Promise.all(rio.RioInterest.map(async (interest) => {
+        await prisma.interest.upsert({
+          where: { name: interest },
+          update: {},
+          create: { name: interest },
+        });
+      }));
+
+      // Upsert the RIO
+      const dbRio = await prisma.rio.upsert({
+        where: { email: rio.email },
+        update: {},
+        create: {
+          name: rio.name,
+          expirationDate: new Date(rio.expirationDate),
+          purposeStatement: rio.purposeStatement,
+          mainContact: rio.mainContact,
+          email: rio.email,
+          image: rio.image,
+        },
+      });
+
+      // Create RIO interests
+      await Promise.all(rio.RioInterest.map(async (interest) => {
+        const dbInterest = await prisma.interest.findUnique({
+          where: { name: interest },
+        });
+
+        if (dbInterest) {
+          const dbRioInterest = await prisma.rioInterest.findMany({
+            where: { rioId: dbRio.id, interestId: dbInterest.id },
+          });
+
+          if (dbRioInterest.length === 0) {
+            await prisma.rioInterest.create({
+              data: {
+                rioId: dbRio.id,
+                interestId: dbInterest.id,
+              },
+            });
+          }
+        }
+      }));
+    }));
+  }
 }
 
 main()

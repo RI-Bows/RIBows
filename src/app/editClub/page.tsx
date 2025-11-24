@@ -17,9 +17,10 @@ export default async function EditClubPage() {
   console.log('Test email:', session.user.email);
   console.log('Test role:', session.user.role);
   // Check authorization first
-  if (!session.user || session.user.role !== 'CLUB') {
+  /*
+  if (!session.user || (session.user.role !== 'CLUB' && session.user.role !== 'ADMIN')) {
     return <div>Unauthorized: Only clubs can edit RIOs.</div>;
-  }
+  } */
 
   // Find the RIO by the logged-in user's email
   const rio = await prisma.rio.findFirst({
