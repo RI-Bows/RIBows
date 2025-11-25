@@ -9,13 +9,17 @@ const AboutPage = () => {
       year: 'Junior',
       email: 'gerrica@hawaii.edu',
       linkedin: 'https://www.linkedin.com/in/alicejohnson',
+      github: 'https://github.com/g3rr1c',
+      portfolio: 'https://g3rr1c.github.io/',
       image: 'https://github.com/g3rr1c.png',
     },
     {
       name: 'Charles Brown',
       year: 'Junior',
       email: 'cbrown29@hawaii.edu',
-      linkedin: 'https://www.linkedin.com/in/charlesbrown',
+      linkedin: 'https://www.linkedin.com/in/charlesbrown-iii',
+      github: 'https://github.com/cbxiii',
+      portfolio: 'https://cbxiii.github.io/',
       image: 'https://avatars.githubusercontent.com/u/17363228?v=4',
     },
     {
@@ -23,6 +27,8 @@ const AboutPage = () => {
       year: 'Junior',
       email: 'chiue@hawaii.edu',
       linkedin: 'https://www.linkedin.com/in/bobsmith',
+      github: 'https://github.com/ethnchiu',
+      portfolio: 'https://ethnchiu.github.io/',
       image: 'https://github.com/ethnchiu.png',
     },
     {
@@ -30,6 +36,8 @@ const AboutPage = () => {
       year: 'Junior',
       email: 'kateh2@hawaii.edu',
       linkedin: 'https://www.linkedin.com/in/bobsmith',
+      github: 'https://github.com/katehamada',
+      portfolio: 'https://katehamada.github.io/',
       image: 'https://avatars.githubusercontent.com/u/165729175?v=4',
     },
     {
@@ -37,6 +45,8 @@ const AboutPage = () => {
       year: 'Junior',
       email: 'tjacasio@hawaii.edu',
       linkedin: 'https://www.linkedin.com/in/bobsmith',
+      github: 'https://github.com/tjlacasio',
+      portfolio: 'https://tjlacasio.github.io/',
       image: 'https://github.com/tjlacasio.png',
     },
   ];
@@ -52,10 +62,13 @@ const AboutPage = () => {
         <Row className="py-3">
           <Col className="text-center">
             <h2>Our Mission</h2>
-            <p>
-              At RIBows, our mission is to connect students with Registered Independent Organizations (RIOs) that align
-              with their interests and passions. We strive to create a vibrant community where students can discover,
-              engage with, and contribute to various RIOs on campus.
+            <p className="mx-auto mt-3" style={{ maxWidth: '800px' }}>
+              <big>
+                At RIBows, our mission is to connect students with Registered Independent Organizations (RIOs) that
+                align with their interests and passions. We strive to create a vibrant community where students can
+                discover, engage with, and contribute to various RIOs on campus. Through our platform, we aim to foster
+                collaboration, personal growth, and a sense of belonging among students and RIOs alike.
+              </big>
             </p>
           </Col>
         </Row>
@@ -64,7 +77,7 @@ const AboutPage = () => {
             <h2>Our Team</h2>
           </Col>
         </Row>
-        <Row xs={1} md={2} lg={3} className="d-flex justify-content-center rounded g-4 my-2 py-3">
+        <Row xs={1} md={2} lg={3} className="d-flex justify-content-center rounded g-4 my-2">
           {members.map((member) => (
             <Col key={`Contact-${member.name}`}>
               <MemberCard {...member} />

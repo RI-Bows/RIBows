@@ -1,20 +1,22 @@
 'use client';
 
 import { Card } from 'react-bootstrap';
-import { Envelope, Linkedin } from 'react-bootstrap-icons';
+import { Envelope, Linkedin, Github, BriefcaseFill } from 'react-bootstrap-icons';
 
 type Member = {
   name: string;
   year: string;
   email: string;
   linkedin: string;
+  github: string;
+  portfolio: string;
   image: string;
 };
 
 /* Renders a single Member card. The entire card links to the member's LinkedIn. */
-const MemberCard = ({ name, year, email, linkedin, image }: Member) => (
+const MemberCard = ({ name, year, email, linkedin, github, portfolio, image }: Member) => (
   <Card className="h-80">
-    <Card.Img variant="top" src={image} alt={`${name} headshot`} style={{ objectFit: 'cover', height: '200px' }} />
+    <Card.Img variant="top" src={image} alt={`${name} headshot`} style={{ objectFit: 'cover', height: '250px' }} />
 
     <Card.Header className="bg-light">
       <Card.Title>{name}</Card.Title>
@@ -32,6 +34,24 @@ const MemberCard = ({ name, year, email, linkedin, image }: Member) => (
         className="text-reset"
       >
         <Linkedin size={20} />
+      </a>
+      <a
+        href={github}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${name}'s GitHub`}
+        className="text-reset ms-3"
+      >
+        <Github size={20} />
+      </a>
+      <a
+        href={portfolio}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${name}'s Portfolio`}
+        className="text-reset ms-3"
+      >
+        <BriefcaseFill size={20} />
       </a>
     </Card.Body>
   </Card>
