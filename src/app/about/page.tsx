@@ -1,5 +1,5 @@
-import { Container, Row, Col } from 'react-bootstrap';
-import { Envelope } from 'react-bootstrap-icons';
+import { Container, Row, Col, Button } from 'react-bootstrap';
+import Link from 'next/link';
 import MemberCard from '@/components/MemberCard';
 
 const AboutPage = () => {
@@ -8,8 +8,8 @@ const AboutPage = () => {
       name: 'Gerric Abe',
       year: 'Junior',
       email: 'gerrica@hawaii.edu',
-      linkedin: 'https://www.linkedin.com/in/alicejohnson',
-      github: 'https://github.com/g3rr1c',
+      linkedin: 'https://www.linkedin.com/in/gerric-abe/',
+      github: 'https://github.com/g3rr1c/',
       portfolio: 'https://g3rr1c.github.io/',
       image: 'https://github.com/g3rr1c.png',
     },
@@ -18,7 +18,7 @@ const AboutPage = () => {
       year: 'Junior',
       email: 'cbrown29@hawaii.edu',
       linkedin: 'https://www.linkedin.com/in/charlesbrown-iii',
-      github: 'https://github.com/cbxiii',
+      github: 'https://github.com/cbxiii/',
       portfolio: 'https://cbxiii.github.io/',
       image: 'https://avatars.githubusercontent.com/u/17363228?v=4',
     },
@@ -26,8 +26,8 @@ const AboutPage = () => {
       name: 'Ethan Chiu',
       year: 'Junior',
       email: 'chiue@hawaii.edu',
-      linkedin: 'https://www.linkedin.com/in/bobsmith',
-      github: 'https://github.com/ethnchiu',
+      linkedin: 'https://www.linkedin.com/in/ethnchiu/',
+      github: 'https://github.com/ethnchiu/',
       portfolio: 'https://ethnchiu.github.io/',
       image: 'https://github.com/ethnchiu.png',
     },
@@ -35,8 +35,8 @@ const AboutPage = () => {
       name: 'Kate Hamada',
       year: 'Junior',
       email: 'kateh2@hawaii.edu',
-      linkedin: 'https://www.linkedin.com/in/bobsmith',
-      github: 'https://github.com/katehamada',
+      linkedin: 'https://www.linkedin.com/in/kate-hamada-/',
+      github: 'https://github.com/katehamada/',
       portfolio: 'https://katehamada.github.io/',
       image: 'https://avatars.githubusercontent.com/u/165729175?v=4',
     },
@@ -44,8 +44,8 @@ const AboutPage = () => {
       name: 'Tyler Jordan Acasio',
       year: 'Junior',
       email: 'tjacasio@hawaii.edu',
-      linkedin: 'https://www.linkedin.com/in/bobsmith',
-      github: 'https://github.com/tjlacasio',
+      linkedin: 'https://www.linkedin.com/in/tjlacasio/',
+      github: 'https://github.com/tjlacasio/',
       portfolio: 'https://tjlacasio.github.io/',
       image: 'https://github.com/tjlacasio.png',
     },
@@ -90,9 +90,10 @@ const AboutPage = () => {
             <p>We&apos;d love to hear from you. Please reach out with any questions or comments.</p>
             <Row className="g-4 justify-content-center">
               <Col>
-                <a href="mailto:contact@ribows.com" className="text-black">
-                  <Envelope size={32} />
-                </a>
+                <Link href="/feedback" className="text-black">
+                  {/* <Envelope size={32} /> */}
+                  <Button variant="outline-success">Feedback Page</Button>
+                </Link>
               </Col>
             </Row>
           </Col>
