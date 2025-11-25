@@ -6,9 +6,10 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log('Seeding the database');
-  config.defaultProjects.forEach(async (project) => {
+
+  for (const project of config.defaultProjects) {
     console.log(`  Creating/Updating project ${project.name}`);
-    project.interests.forEach(async (interest) => {
+    for (const interest of project.interests) {
       // console.log(`Project ${project.name} ${interest}`);
       await prisma.interest.upsert({
         where: { name: interest },
@@ -25,7 +26,7 @@ async function main() {
           picture: project.picture,
         },
       });
-      project.interests.forEach(async (intere) => {
+      for (const intere of project.interests) {
         const dbInterest = await prisma.interest.findUnique({
           where: { name: intere },
         });
@@ -41,22 +42,24 @@ async function main() {
             },
           });
         }
-      });
-    });
-  });
+      }
+    }
+  }
+
   const password = await hash('foo', 10);
-  config.defaultProfiles.forEach(async (profile) => {
+
+  for (const profile of config.defaultProfiles) {
     console.log(`  Creating/Updating profile ${profile.email}`);
     // upsert interests from the profile
-    profile.interests.forEach(async (interest) => {
+    for (const interest of profile.interests) {
       await prisma.interest.upsert({
         where: { name: interest },
         update: {},
         create: { name: interest },
       });
-    });
+    }
     // Upsert/Create the user so they can login.
-    const role = profile.role as Role || Role.USER;
+    const role = (profile.role as Role) || Role.USER;
     // console.log(`  Creating user: ${profile.email} with role: ${role}`);
     await prisma.user.upsert({
       where: { email: profile.email },
@@ -79,7 +82,7 @@ async function main() {
         picture: profile.picture,
       },
     });
-    profile.interests.forEach(async (interest) => {
+    for (const interest of profile.interests) {
       const dbInterest = await prisma.interest.findUnique({
         where: { name: interest },
       });
@@ -96,17 +99,19 @@ async function main() {
           },
         });
       }
-    });
+    }
     // Upsert/Create the profile projects
-    profile.projects.forEach(async (project) => {
+    for (const project of profile.projects) {
       // console.log(`Project member ${dbProfile.firstName} ${project}`);
       const dbProject = await prisma.project.findFirst({
         where: { name: project },
       });
-      const dbProfileProject = await prisma.profileProject.findMany({
-        where: { profileId: dbProfile.id, projectId: dbProject!.id },
-      });
-      if (dbProfileProject.length === 0 && dbProject !== null) {
+      const dbProfileProject = dbProject
+        ? await prisma.profileProject.findMany({
+            where: { profileId: dbProfile.id, projectId: dbProject.id },
+          })
+        : [];
+      if (dbProject && dbProfileProject.length === 0) {
         // Create the profile project
         await prisma.profileProject.create({
           data: {
@@ -115,8 +120,8 @@ async function main() {
           },
         });
       }
-    });
-  });
+    }
+  }
 }
 
 main()
