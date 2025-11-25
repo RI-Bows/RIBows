@@ -1,7 +1,7 @@
 import { Container, Row, Col, Image } from 'react-bootstrap';
 import { PageIDs } from '@/utilities/ids';
 // EC 11/24/25 - Commenting this out for now–see dbActions
-// import { getTrendingRios, type TrendingRio } from '@/lib/dbActions';
+import { TrendingRio } from '@/lib/dbActions';
 
 const fallbackTrendingRios: TrendingRio[] = [
   { id: 1,
