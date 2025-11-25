@@ -7,7 +7,7 @@ import * as Yup from 'yup';
 import { Card, Col, Container, Button, Form, Row } from 'react-bootstrap';
 import { createUser } from '@/lib/dbActions';
 import Multiselect from 'multiselect-react-dropdown';
-// import { prisma } from '@/lib/prisma'; TODO: Uncomment once db updated
+import { prisma } from '@/lib/prisma';
 import { Interest } from '@prisma/client';
 
 type SignUpForm = {
@@ -30,7 +30,7 @@ function onRemove(selectedList: Array<Interest>) {
 }
 
 /** The sign up page. */
-const SignUp = () => {
+const SignUp = async () => {
   const validationSchema = Yup.object().shape({
     email: Yup.string().required('Email is required').email('Email is invalid'),
     password: Yup.string()
@@ -57,13 +57,7 @@ const SignUp = () => {
     resolver: yupResolver(validationSchema),
   });
 
-  // const interests = await prisma.interest.findMany(); // TODO: Uncomment (and fix as necessary) once DB updated
-  const interests: Interest[] = [
-    { id: 1, name: 'Academic/Professional' },
-    { id: 2, name: 'Leisure/Recreational' },
-    { id: 3, name: 'Fraternity/Sorority' },
-    { id: 4, name: 'Religious/Spiritual' },
-  ];
+  const interests = await prisma.interest.findMany();
 
   const onSubmit = async (data: SignUpForm) => {
     // console.log(JSON.stringify(data, null, 2));
