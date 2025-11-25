@@ -1,4 +1,16 @@
 {
+
+    "defaultRios": [
+      {
+        "name": "Test RIO",
+        "expirationDate": "2024-12-31",
+        "purposeStatement": "This is a test RIO.",
+        "mainContact": "Club Admin Person",
+        "email": "club@hawaii.edu",
+        "image": "https://acmmanoa.org/images/switch/switchlogo.png",
+        "RioInterest": [] 
+      }
+    ],
     "defaultProfiles": [
       {
         "firstName": "RIBow",
