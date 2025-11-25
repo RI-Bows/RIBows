@@ -13,10 +13,8 @@ type Member = {
 
 /* Renders a single Member card. The entire card links to the member's LinkedIn. */
 const MemberCard = ({ name, year, email, linkedin, image }: Member) => (
-  <Card className="h-100">
-    {image && (
-      <Card.Img variant="top" src={image} alt={`${name} headshot`} style={{ objectFit: 'cover', height: '200px' }} />
-    )}
+  <Card className="h-80">
+    <Card.Img variant="top" src={image} alt={`${name} headshot`} style={{ objectFit: 'cover', height: '200px' }} />
 
     <Card.Header className="bg-light">
       <Card.Title>{name}</Card.Title>

@@ -5,18 +5,39 @@ import MemberCard from '@/components/MemberCard';
 const AboutPage = () => {
   const members = [
     {
-      name: 'Alice Johnson',
-      year: 'Senior',
-      email: '',
+      name: 'Gerric Abe',
+      year: 'Junior',
+      email: 'gerrica@hawaii.edu',
       linkedin: 'https://www.linkedin.com/in/alicejohnson',
-      image: '/images/members/alice.jpg',
+      image: 'https://github.com/g3rr1c.png',
     },
     {
-      name: 'Bob Smith',
+      name: 'Charles Brown',
       year: 'Junior',
-      email: '',
+      email: 'cbrown29@hawaii.edu',
+      linkedin: 'https://www.linkedin.com/in/charlesbrown',
+      image: 'https://avatars.githubusercontent.com/u/17363228?v=4',
+    },
+    {
+      name: 'Ethan Chiu',
+      year: 'Junior',
+      email: 'chiue@hawaii.edu',
       linkedin: 'https://www.linkedin.com/in/bobsmith',
-      image: '/images/members/bob.jpg',
+      image: 'https://github.com/ethnchiu.png',
+    },
+    {
+      name: 'Kate Hamada',
+      year: 'Junior',
+      email: 'kateh2@hawaii.edu',
+      linkedin: 'https://www.linkedin.com/in/bobsmith',
+      image: 'https://avatars.githubusercontent.com/u/165729175?v=4',
+    },
+    {
+      name: 'Tyler Jordan Acasio',
+      year: 'Junior',
+      email: 'tjacasio@hawaii.edu',
+      linkedin: 'https://www.linkedin.com/in/bobsmith',
+      image: 'https://github.com/tjlacasio.png',
     },
   ];
 
@@ -32,9 +53,9 @@ const AboutPage = () => {
           <Col className="text-center">
             <h2>Our Mission</h2>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-              ea commodo consequat.
+              At RIBows, our mission is to connect students with Registered Independent Organizations (RIOs) that align
+              with their interests and passions. We strive to create a vibrant community where students can discover,
+              engage with, and contribute to various RIOs on campus.
             </p>
           </Col>
         </Row>
@@ -43,14 +64,14 @@ const AboutPage = () => {
             <h2>Our Team</h2>
           </Col>
         </Row>
-        <Row xs={1} md={2} lg={3} className="rounded g-4 my-2 py-3">
+        <Row xs={1} md={2} lg={3} className="d-flex justify-content-center rounded g-4 my-2 py-3">
           {members.map((member) => (
             <Col key={`Contact-${member.name}`}>
               <MemberCard {...member} />
             </Col>
           ))}
         </Row>
-        <Row className="py-3">
+        <Row className="py-5">
           <Col className="text-center">
             <h2>Contact Us!</h2>
             <p>We&apos;d love to hear from you. Please reach out with any questions or comments.</p>
