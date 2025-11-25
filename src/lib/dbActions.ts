@@ -62,29 +62,89 @@ export type TrendingRio = {
   count: number;
 };
 
-export const getTrendingRios = async (limit = 9): Promise<TrendingRio[]> => {
-  const rios = await prisma.rio.findMany({
-    take: limit,
-    orderBy: {
-      RioInterest: {
-        _count: 'desc',
-      },
-    },
-    include: {
-      _count: {
-        select: { RioInterest: true },
-      },
-    },
+// EC 11/24/25 - Commenting this out for now since schema was just updated and
+// popularity should be determined by something like number of bookmarks
+// TODO: Update this logic and reimplement it in the search/trending page
+// export const getTrendingRios = async (limit = 9): Promise<TrendingRio[]> => {
+//   const rios = await prisma.rio.findMany({
+//     take: limit,
+//     orderBy: {
+//       RioInterest: {
+//         _count: 'desc',
+//       },
+//     },
+//     include: {
+//       _count: {
+//         select: { RioInterest: true },
+//       },
+//     },
+//   });
+//
+//   return rios.map((r) => ({
+//     id: r.id,
+//     name: r.name,
+//     blurb: r.purposeStatement ?? 'No description yet.',
+//     // eslint-disable-next-line no-underscore-dangle
+//     count: r._count?.RioInterest ?? 0,
+//   }));
+// };
+
+export type RioType = {
+  name: string;
+  approvalDate: Date;
+  expirationDate: Date;
+  purposeStatement: string | null;
+  interestName: string;
+  mainContact: string;
+  email: string;
+  image: string | null;
+};
+
+/**
+ * Upserts an rio
+ * @param {RioType} rio: The RIO to upsert.
+ */
+export async function upsertRio(rio: RioType) {
+  const interest = await prisma.interest.upsert({
+    where: { name: rio.interestName },
+    update: {},
+    create: { name: rio.interestName },
   });
 
-  return rios.map((r) => ({
-    id: r.id,
-    name: r.name,
-    blurb: r.purposeStatement ?? 'No description yet.',
-    // eslint-disable-next-line no-underscore-dangle
-    count: r._count?.RioInterest ?? 0,
-  }));
-};
+  await prisma.rio.upsert({
+    where: { name: rio.name },
+    update: {
+      approvalDate: rio.approvalDate,
+      expirationDate: rio.expirationDate,
+      purposeStatement: rio.purposeStatement,
+      interestId: interest.id,
+      mainContact: rio.mainContact,
+      email: rio.email,
+      image: rio.image,
+    },
+    create: {
+      name: rio.name,
+      approvalDate: rio.approvalDate,
+      expirationDate: rio.expirationDate,
+      purposeStatement: rio.purposeStatement,
+      interestId: interest.id,
+      mainContact: rio.mainContact,
+      email: rio.email,
+      image: rio.image,
+    },
+  });
+}
+
+/**
+ * Bulk upserts multiple rios
+ * @param {Array.<RioType>} rios: The RIOs to upsert.
+ */
+export async function upsertRios(rios: RioType[]) {
+  for (const rio of rios) {
+    // eslint-disable-next-line no-await-in-loop
+    await upsertRio(rio);
+  }
+}
 
 export async function upsertProject(project: any) {
   // console.log(`upsertProject data: ${JSON.stringify(project, null, 2)}`);
@@ -98,9 +158,9 @@ export async function upsertProject(project: any) {
       picture: project.picture,
     },
   });
-  project.interests.forEach(async (intere: string) => {
+  project.interests.forEach(async (interest: string) => {
     const dbInterest = await prisma.interest.findUnique({
-      where: { name: intere },
+      where: { name: interest },
     });
     // console.log(`${dbProject.name} ${dbInterest!.name}`);
     const dbProjectInterest = await prisma.projectInterest.findMany({
