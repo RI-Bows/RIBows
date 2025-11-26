@@ -51,10 +51,10 @@ const SignUp = () => {
 
   getInterests()
     .then((result) => {
-      interests.push(...result) ;
+      interests.push(...result);
     })
     .catch((error) => {
-      console.error("Error querying interests:", error);
+      console.error('Error querying interests:', error);
     });
 
   const {

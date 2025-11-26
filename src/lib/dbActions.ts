@@ -46,7 +46,7 @@ export async function createUser(credentials: { email: string; password: string 
         connectOrCreate: interests.map((interest) => ({
           where: { name: interest.name },
           create: { name: interest.name },
-        }))
+        })),
       },
     },
   });
@@ -156,7 +156,7 @@ export async function upsertRios(rios: RioType[]) {
  * @returns {Promise<Interest[]>} The interests.
  */
 export async function getInterests(): Promise<Interest[]> {
-  return await prisma.interest.findMany();
+  return prisma.interest.findMany();
 }
 
 export async function upsertProject(project: any) {
