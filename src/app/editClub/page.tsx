@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
+import { Container, Row, Col } from 'react-bootstrap';
 
 export default async function EditClubPage() {
   // Get the current user session (pass authOptions)
@@ -31,5 +32,18 @@ export default async function EditClubPage() {
     return <div>RIO not found for your account.</div>;
   }
 
-  return <EditClubForm rio={rio} />;
+  return (
+    <Container>
+      <Row className="py-3">
+        <Col className="text-center">
+          <h1>Edit RIO</h1>
+        </Col>
+      </Row>
+      <Row className="justify-content-center">
+        <Col md={12} lg={10}>
+          <EditClubForm rio={rio} />
+        </Col>
+      </Row>
+    </Container>
+  );
 }

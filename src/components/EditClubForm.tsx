@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Form, Button, Card, Toast, ToastContainer } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
+import { Form, Button, Card, Toast, ToastContainer, Image, Row, Col } from 'react-bootstrap';
 
 const interestOptions = [
   'Academic / Professional',
@@ -19,16 +19,60 @@ export default function EditClubForm({ rio }: { rio: any }) {
   const [email, setEmail] = useState(rio.email);
   const [interests, setInterests] = useState(rio.RioInterest);
 
+  // Image state: existing URL, preview for newly selected file, and File object
+  const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(rio?.image ?? null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!imageFile) {
+      setImagePreview(null);
+      return () => {};
+    }
+    const url = URL.createObjectURL(imageFile);
+    setImagePreview(url);
+    return () => {
+      URL.revokeObjectURL(url);
+    };
+  }, [imageFile]);
+
   const handleInterestsChange = (e: any) => {
     const selected = Array.from(e.target.selectedOptions as HTMLOptionElement[]).map(o => o.value);
     setInterests(selected);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0] ?? null;
+    setImageFile(f);
   };
 
   const [showToast, setShowToast] = useState(false);
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    await fetch(`/api/rio/${rio.id}`, {
+    let uploadedImageUrl: string | null = null;
+
+    // If a new file was selected, upload it first to the image route
+    if (imageFile) {
+      const fd = new FormData();
+      fd.append('image', imageFile);
+
+      const uploadRes = await fetch(`/api/rio/${rio.id}/image`, {
+        method: 'POST',
+        body: fd,
+      });
+
+      if (!uploadRes.ok) {
+        console.error('Image upload failed', await uploadRes.text());
+        return;
+      }
+
+      const uploadJson = await uploadRes.json();
+      uploadedImageUrl = uploadJson.url ?? uploadJson.imageUrl ?? null;
+    }
+
+    // Now update rio fields (include uploadedImageUrl if present)
+    const res = await fetch(`/api/rio/${rio.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -37,47 +81,96 @@ export default function EditClubForm({ rio }: { rio: any }) {
         mainContact,
         email,
         interests,
+        ...(uploadedImageUrl ? { image: uploadedImageUrl } : {}),
       }),
     });
+
+    if (!res.ok) {
+      console.error('Update failed', await res.text());
+      return;
+    }
+
+    // update local image url if uploaded
+    if (uploadedImageUrl) setCurrentImageUrl(uploadedImageUrl);
     setShowToast(true);
   };
 
   return (
     <Card className="p-3 mb-4">
       <Form onSubmit={handleSubmit}>
-        <Form.Group>
-          <Form.Label>RIO Name</Form.Label>
-          <Form.Control value={name} onChange={(e) => setName(e.target.value)} />
-        </Form.Group>
+        <Row>
+          {/* Left column: inputs */}
+          <Col md={7}>
+            <Form.Group className="mb-2">
+              <Form.Label>RIO Name</Form.Label>
+              <Form.Control value={name} onChange={(e) => setName(e.target.value)} />
+            </Form.Group>
 
-        <Form.Group>
-          <Form.Label>Purpose Statement</Form.Label>
-          <Form.Control value={purposeStatement} onChange={(e) => setPurposeStatement(e.target.value)} />
-        </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Purpose Statement</Form.Label>
+              <Form.Control value={purposeStatement} onChange={(e) => setPurposeStatement(e.target.value)} />
+            </Form.Group>
 
-        <Form.Group>
-          <Form.Label>Main Contact</Form.Label>
-          <Form.Control value={mainContact} onChange={(e) => setMainContact(e.target.value)} />
-        </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Main Contact</Form.Label>
+              <Form.Control value={mainContact} onChange={(e) => setMainContact(e.target.value)} />
+            </Form.Group>
 
-        <Form.Group>
-          <Form.Label>Email</Form.Label>
-          <Form.Control value={email} onChange={(e) => setEmail(e.target.value)} />
-        </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Email</Form.Label>
+              <Form.Control value={email} onChange={(e) => setEmail(e.target.value)} />
+            </Form.Group>
 
-        <Form.Group>
-          <Form.Label>Interests</Form.Label>
-          <Form.Select multiple value={interests} onChange={handleInterestsChange}>
-            {interestOptions.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </Form.Select>
-        </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Interests</Form.Label>
+              <Form.Select multiple value={interests} onChange={handleInterestsChange}>
+                {interestOptions.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
 
-        <Button className="mt-3" type="submit">Save Changes</Button>
+            <Button className="mt-3" type="submit">Save Changes</Button>
+          </Col>
+
+          {/* Right column: image preview + upload */}
+          <Col md={5}>
+            <Form.Group className="mb-2">
+              <Form.Label>Image</Form.Label>
+              <div className="mb-2 d-flex justify-content-center">
+                {(() => {
+                  if (imagePreview) {
+                    return (
+                      <Image
+                        src={imagePreview}
+                        alt="New preview"
+                        thumbnail
+                        style={{ maxWidth: '100%', height: 'auto' }}
+                      />
+                    );
+                  }
+                  if (currentImageUrl) {
+                    return (
+                      <Image
+                        src={currentImageUrl}
+                        alt="Current image"
+                        thumbnail
+                        style={{ maxWidth: '100%', height: 'auto' }}
+                      />
+                    );
+                  }
+                  return <div>No image</div>;
+                })()}
+              </div>
+              <Form.Control type="file" accept="image/*" onChange={handleImageChange} />
+              <Form.Text className="text-muted">Choose a new image to replace the existing one.</Form.Text>
+            </Form.Group>
+          </Col>
+        </Row>
       </Form>
+
       <ToastContainer position="bottom-end" className="p-3">
         <Toast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide>
           <Toast.Header>
