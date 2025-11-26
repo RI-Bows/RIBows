@@ -21,5 +21,14 @@
     "react/jsx-props-no-spreading": "off",
     "react/one-expression-per-line": "off",
     "react/react-in-jsx-scope": "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["scripts/**/*.js"],
+      "parser": "espree",
+      "rules": {
+        // optional: enable/disable rules for scripts
+      }
+    }
+  ]
 }
