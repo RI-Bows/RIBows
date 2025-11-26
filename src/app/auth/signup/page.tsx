@@ -5,9 +5,8 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { Card, Col, Container, Button, Form, Row } from 'react-bootstrap';
-import { createUser } from '@/lib/dbActions';
+import { createUser, getInterests } from '@/lib/dbActions';
 import Multiselect from 'multiselect-react-dropdown';
-import { prisma } from '@/lib/prisma';
 import { Interest } from '@prisma/client';
 
 type SignUpForm = {
@@ -30,7 +29,7 @@ function onRemove(selectedList: Array<Interest>) {
 }
 
 /** The sign up page. */
-const SignUp = async () => {
+const SignUp = () => {
   const validationSchema = Yup.object().shape({
     email: Yup.string().required('Email is required').email('Email is invalid'),
     password: Yup.string()
@@ -48,6 +47,16 @@ const SignUp = async () => {
     ),
   });
 
+  const interests: Interest[] = [];
+
+  getInterests()
+    .then((result) => {
+      interests.push(...result) ;
+    })
+    .catch((error) => {
+      console.error("Error querying interests:", error);
+    });
+
   const {
     register,
     handleSubmit,
@@ -56,8 +65,6 @@ const SignUp = async () => {
   } = useForm<SignUpForm>({
     resolver: yupResolver(validationSchema),
   });
-
-  const interests = await prisma.interest.findMany();
 
   const onSubmit = async (data: SignUpForm) => {
     // console.log(JSON.stringify(data, null, 2));
@@ -110,6 +117,7 @@ const SignUp = async () => {
                       onSelect={onSelect} // Function will trigger on select event
                       onRemove={onRemove} // Function will trigger on remove event
                       displayValue="name" // Property name to display in the dropdown options
+                      placeholder=""
                     />
                   </Form.Group>
 
