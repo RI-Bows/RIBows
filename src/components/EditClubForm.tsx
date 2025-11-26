@@ -65,53 +65,65 @@ export default function EditClubForm({
     setImageFile(f);
   };
 
-  const [showToast, setShowToast] = useState(false);
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-
-    let uploadedImageUrl: string | null = null;
-
-    // If a new file was selected, upload it first to the image route
-    if (imageFile) {
-      const fd = new FormData();
-      fd.append('image', imageFile);
-
-      const uploadRes = await fetch(`/api/rio/${rio.id}/image`, {
-        method: 'POST',
-        body: fd,
-      });
-
-      if (!uploadRes.ok) {
-        console.error('Image upload failed', await uploadRes.text());
-        return;
-      }
-
-      const uploadJson = await uploadRes.json();
-      uploadedImageUrl = uploadJson.url ?? uploadJson.imageUrl ?? null;
-    }
-
-    // Now update rio fields (include uploadedImageUrl if present)
+  // helper to update Rio on the server
+  const addRio = async (data: {
+    name: string;
+    purposeStatement: string;
+    mainContact: string;
+    email: string;
+    interests: string[];
+    image?: string | null;
+  }) => {
     const res = await fetch(`/api/rio/${rio.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  };
+
+  const [showToast, setShowToast] = useState(false);
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    try {
+      let uploadedImageUrl: string | null = null;
+
+      // upload image first if a new file was chosen
+      if (imageFile) {
+        const fd = new FormData();
+        fd.append('image', imageFile);
+
+        const uploadRes = await fetch(`/api/rio/${rio.id}/image`, {
+          method: 'POST',
+          body: fd,
+        });
+
+        if (!uploadRes.ok) throw new Error(await uploadRes.text());
+        const uploadJson = await uploadRes.json();
+        uploadedImageUrl = uploadJson.url ?? uploadJson.imageUrl ?? null;
+      }
+
+      // build payload from text inputs and interests
+      const payload = {
         name,
         purposeStatement,
         mainContact,
         email,
-        interests,
+        interests, // string[]
         ...(uploadedImageUrl ? { image: uploadedImageUrl } : {}),
-      }),
-    });
+      };
 
-    if (!res.ok) {
-      console.error('Update failed', await res.text());
-      return;
+      // call helper to update DB
+      await addRio(payload);
+
+      // reflect changes locally
+      if (uploadedImageUrl) setCurrentImageUrl(uploadedImageUrl);
+      setShowToast(true);
+    } catch (err: any) {
+      console.error('Save failed', err);
+      // optionally show an error toast/modal here
     }
-
-    // update local image url if uploaded
-    if (uploadedImageUrl) setCurrentImageUrl(uploadedImageUrl);
-    setShowToast(true);
   };
 
   return (
@@ -215,7 +227,7 @@ export default function EditClubForm({
         </Row>
       </Form>
 
-      <ToastContainer position="bottom-end" className="p-3">
+      <ToastContainer position="middle-center" className="p-3">
         <Toast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide>
           <Toast.Header>
             <strong className="me-auto">Success</strong>

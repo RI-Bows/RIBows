@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 
 export default async function EditClubPage() {
   // Get the current user session (pass authOptions)
@@ -19,7 +19,17 @@ export default async function EditClubPage() {
   // Check authorization first
   // Cast session.user to `any` to access custom `role` property added to the user object by NextAuth callbacks
   if (!session.user || (((session.user as any).role !== 'CLUB') && ((session.user as any).role !== 'ADMIN'))) {
-    return <div>Unauthorized: Only clubs can edit RIOs.</div>;
+    return (
+      <Container>
+        <Row className="py-3">
+          <Col className="text-center">
+            <h1>Error</h1>
+            <p>Unauthorized: Only clubs can edit RIOs.</p>
+            <Button variant="primary" href="/">Go to Home</Button>
+          </Col>
+        </Row>
+      </Container>
+    );
   }
 
   // Find the RIO by the logged-in user's email
@@ -29,7 +39,23 @@ export default async function EditClubPage() {
   });
 
   if (!rio) {
-    return <div>RIO not found for your account.</div>;
+    return (
+      <Container>
+        <Row className="py-3">
+          <Col className="text-center">
+            <h1>Error</h1>
+            <p>
+              Your RIO or Club was not found. Please contact support at
+              {' '}
+              <u>support@example.com</u>
+              {' '}
+              if you believe this is an error.
+            </p>
+            <Button variant="primary" href="/">Go to Home</Button>
+          </Col>
+        </Row>
+      </Container>
+    );
   }
 
   const allInterests = await prisma.interest.findMany({ orderBy: { name: 'asc' } });

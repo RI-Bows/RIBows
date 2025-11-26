@@ -128,7 +128,7 @@ const AddRIOForm: React.FC = () => {
                 </Button>
               </Col>
               <Col xs="auto">
-                <Button variant="warning" type="button" onClick={() => reset()}>
+                <Button variant="outline-secondary" type="button" onClick={() => reset()}>
                   Reset
                 </Button>
               </Col>
