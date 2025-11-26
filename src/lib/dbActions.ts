@@ -42,7 +42,12 @@ export async function createUser(credentials: { email: string; password: string 
     data: {
       email: credentials.email,
       password,
-      //      interests, TODO: Uncomment once DB updated
+      interests: {
+        connectOrCreate: interests.map((interest) => ({
+          where: { name: interest.name },
+          create: { name: interest.name },
+        })),
+      },
     },
   });
 }
@@ -101,7 +106,7 @@ export type RioType = {
 };
 
 /**
- * Upserts an rio
+ * Upserts an rio.
  * @param {RioType} rio: The RIO to upsert.
  */
 export async function upsertRio(rio: RioType) {
@@ -136,7 +141,7 @@ export async function upsertRio(rio: RioType) {
 }
 
 /**
- * Bulk upserts multiple rios
+ * Bulk upserts multiple rios.
  * @param {Array.<RioType>} rios: The RIOs to upsert.
  */
 export async function upsertRios(rios: RioType[]) {
@@ -144,6 +149,14 @@ export async function upsertRios(rios: RioType[]) {
     // eslint-disable-next-line no-await-in-loop
     await upsertRio(rio);
   }
+}
+
+/**
+ * Retrieves all interests.
+ * @returns {Promise<Interest[]>} The interests.
+ */
+export async function getInterests(): Promise<Interest[]> {
+  return prisma.interest.findMany();
 }
 
 export async function upsertProject(project: any) {
