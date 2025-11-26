@@ -32,6 +32,9 @@ export default async function EditClubPage() {
     return <div>RIO not found for your account.</div>;
   }
 
+  const allInterests = await prisma.interest.findMany({ orderBy: { name: 'asc' } });
+  const interestNames = allInterests.map((i) => i.name);
+
   return (
     <Container>
       <Row className="py-3">
@@ -41,7 +44,7 @@ export default async function EditClubPage() {
       </Row>
       <Row className="justify-content-center">
         <Col md={12} lg={10}>
-          <EditClubForm rio={rio} />
+          <EditClubForm rio={rio} interestOptions={interestNames} />
         </Col>
       </Row>
     </Container>

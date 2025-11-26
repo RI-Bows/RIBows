@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Form, Button, Card, Toast, ToastContainer, Image, Row, Col } from 'react-bootstrap';
 
-const interestOptions = [
+const defaultInterestOptions = [
   'Academic / Professional',
   'Leisure / Recreational',
   'Arts / Culture',
@@ -12,12 +12,31 @@ const interestOptions = [
   'Other',
 ];
 
-export default function EditClubForm({ rio }: { rio: any }) {
+export default function EditClubForm({
+  rio, interestOptions = defaultInterestOptions }: { rio: any; interestOptions: string[] }) {
+  // use server-provided options when available
+  const options = Array.isArray(interestOptions) && interestOptions.length > 0
+    ? interestOptions
+    : defaultInterestOptions;
+
   const [name, setName] = useState(rio.name);
   const [purposeStatement, setPurposeStatement] = useState(rio.purposeStatement || '');
   const [mainContact, setMainContact] = useState(rio.mainContact);
   const [email, setEmail] = useState(rio.email);
-  const [interests, setInterests] = useState(rio.RioInterest);
+  // Normalize incoming rio interests into a string[] so .map is always safe
+  const normalizeInterests = (): string[] => {
+    if (Array.isArray(rio?.RioInterest) && rio.RioInterest.length > 0) {
+      // RioInterest entries might be objects; extract a name field if present
+      return rio.RioInterest.map((ri: any) => ri.name ?? ri.interest?.name ?? String(ri));
+    }
+    if (rio?.interest) {
+      // singular relation case
+      return [rio.interest.name ?? String(rio.interest)];
+    }
+    return [];
+  };
+
+  const [interests, setInterests] = useState<string[]>(normalizeInterests());
 
   // Image state: existing URL, preview for newly selected file, and File object
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(rio?.image ?? null);
@@ -123,8 +142,33 @@ export default function EditClubForm({ rio }: { rio: any }) {
 
             <Form.Group className="mb-2">
               <Form.Label>Interests</Form.Label>
+
+              {/* read-only box that looks like a select and displays badges */}
+              <div
+                className="form-control d-flex flex-wrap align-items-center gap-2 mb-2"
+                style={{ minHeight: 37, padding: '6px 10px', backgroundColor: '#fff' }}
+                role="group"
+                aria-label="Selected interests"
+              >
+                {Array.isArray(interests) && interests.length > 0 ? (
+                  interests.map((interest: string) => (
+                    <span
+                      key={interest}
+                      className="badge bg-primary mb-1"
+                      style={{ pointerEvents: 'none' }}
+                      role="listitem"
+                      aria-hidden
+                    >
+                      {interest}
+                    </span>
+                  ))
+                ) : (
+                  <div className="text-muted">No interests</div>
+                )}
+              </div>
+
               <Form.Select multiple value={interests} onChange={handleInterestsChange}>
-                {interestOptions.map((opt) => (
+                {options.map((opt) => (
                   <option key={opt} value={opt}>
                     {opt}
                   </option>
