@@ -1,58 +1,70 @@
-import { compare } from 'bcrypt';
-import type { NextAuthOptions } from 'next-auth';
+import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { prisma } from '@/lib/prisma';
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
 
-// eslint-disable-next-line import/prefer-default-export
+const prisma = new PrismaClient();
+
 export const authOptions: NextAuthOptions = {
-  session: {
-    strategy: 'jwt',
-  },
   providers: [
     CredentialsProvider({
-      name: 'Email and Password',
+      name: 'Credentials',
       credentials: {
-        email: { label: 'Email', type: 'email', placeholder: 'john@foo.com' },
+        email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials.password) return null;
+      async authorize(credentials: Record<'email' | 'password', string> | undefined) {
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
 
-        const user = await prisma.user.findUnique({
+        const user = await prisma.user.findFirst({
           where: { email: credentials.email },
         });
-        if (!user) return null;
 
-        const isPasswordValid = await compare(credentials.password, user.password);
-        if (!isPasswordValid) return null;
+        if (!user) {
+          return null;
+        }
+
+        const isPasswordValid = await bcrypt.compare(
+          credentials.password,
+          user.password,
+        );
+
+        if (!isPasswordValid) {
+          return null;
+        }
 
         return {
-          id: `${user.id}`,
+          id: user.id.toString(),
           email: user.email,
           role: user.role,
         };
       },
     }),
   ],
-  pages: {
-    signIn: '/auth/signin',
-    signOut: '/auth/signout',
-  },
   callbacks: {
-    session: ({ session, token }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: token.id,
-        role: token.role,
-      },
-    }),
-    jwt: ({ token, user }) => {
+    async jwt({ token, user }) {
+      const newToken = { ...token } as any;
       if (user) {
-        const u = user as any;
-        return { ...token, id: u.id, role: u.role };
+        newToken.role = (user as any).role ?? newToken.role;
       }
-      return token;
+      if (!newToken.role && newToken.email) {
+        const dbUser = await prisma.user.findFirst({ where: { email: newToken.email as string } });
+        if (dbUser) newToken.role = dbUser.role;
+      }
+      return newToken;
+    },
+    async session({ session, token }) {
+      return {
+        ...session,
+        user: {
+          ...(session.user ?? {}),
+          role: (token as any).role,
+        },
+      };
     },
   },
 };
+
+export default NextAuth(authOptions);
