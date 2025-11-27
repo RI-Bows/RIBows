@@ -68,7 +68,7 @@ const SignUp = ({ interests }: SignUpProps) => {
   return (
     <main>
       <Container>
-        <Row className="justify-content-center">
+        <Row className="pt-5 justify-content-center">
           <Col xs={5}>
             <h1 className="text-center">Sign Up</h1>
             <Card>
@@ -114,7 +114,7 @@ const SignUp = ({ interests }: SignUpProps) => {
                     />
                   </Form.Group>
 
-                  <Form.Group className="form-group py-3">
+                  <Form.Group className="form-group pt-3">
                     <Row>
                       <Col>
                         <Button type="submit" className="btn btn-primary">
@@ -122,7 +122,7 @@ const SignUp = ({ interests }: SignUpProps) => {
                         </Button>
                       </Col>
                       <Col>
-                        <Button type="button" onClick={handleClear} className="btn btn-warning float-right">
+                        <Button type="button" onClick={handleClear} className="btn btn-primary float-right">
                           Clear
                         </Button>
                       </Col>
