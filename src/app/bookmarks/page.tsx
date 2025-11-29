@@ -3,7 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { getServerSession } from 'next-auth';
 import { loggedInProtectedPage } from '@/lib/page-protection';
 import { authOptions } from '@/lib/auth';
-import RIOCard from '@/components/RIOCard';
+import RioCard from '@/components/RioCard';
 
 const BookmarksPage = async () => {
   const session = await getServerSession(authOptions);
@@ -56,7 +56,7 @@ const BookmarksPage = async () => {
         <Row xs={1} md={2} lg={3} className="bg-success rounded g-4 my-2 py-3">
           {rios.map((rio) => (
             <Col key={`Contact-${rio.name}`}>
-              <RIOCard {...rio} />
+              <RioCard {...rio} />
             </Col>
           ))}
         </Row>

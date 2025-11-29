@@ -11,7 +11,7 @@ type RIO = {
 };
 
 /* Renders a single RIO card. */
-const RIOCard = ({ name, type, main_contact, email, description }: RIO) => (
+const RioCard = ({ name, type, main_contact, email, description }: RIO) => (
   <Card className="h-100">
     <Card.Header className="bg-light">
       <Card.Title>{name}</Card.Title>
@@ -34,4 +34,4 @@ const RIOCard = ({ name, type, main_contact, email, description }: RIO) => (
   </Card>
 );
 
-export default RIOCard;
+export default RioCard;

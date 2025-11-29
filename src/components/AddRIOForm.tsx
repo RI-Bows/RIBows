@@ -9,7 +9,7 @@ import swal from 'sweetalert';
 import { Form, Button, Col, Row, Container, Card } from 'react-bootstrap';
 import { AddRIOSchema, IRIO } from '../lib/validationSchemas';
 
-const AddRIOForm: React.FC = () => {
+const AddRioForm: React.FC = () => {
   const formPadding = 'py-1';
 
   const {
@@ -140,4 +140,4 @@ const AddRIOForm: React.FC = () => {
   );
 };
 
-export default AddRIOForm;
+export default AddRioForm;
