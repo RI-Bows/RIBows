@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/sync-rios",
+      "schedule": "59 23 * * 5"
+    } 
+  ]
+}
