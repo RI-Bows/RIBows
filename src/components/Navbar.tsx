@@ -43,15 +43,6 @@ const NavBar: React.FC = () => {
             >
               Search
             </Nav.Link>
-            <Nav.Link
-              id="trending-nav"
-              active={pathname === '/trending'}
-              href="/trending"
-              key="trending"
-              className="rb-nav-link"
-            >
-              Trending
-            </Nav.Link>
             {currentUser && role === 'ADMIN' && (
               <Nav.Link
                 id="admin-search-nav"
