@@ -8,67 +8,11 @@ datasource db {
   directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
-model User {
-  id        Int        @id @default(autoincrement())
-  email     String     @unique
-  password  String
-  role      Role       @default(USER)
-  interests Interest[] @relation("InterestToUser")
-}
-
-model Profile {
-  id             Int               @id @default(autoincrement())
-  email          String            @unique
-  firstName      String?
-  lastName       String?
-  bio            String?
-  title          String?
-  picture        String?
-  interests      ProfileInterest[]
-  ProfileProject ProfileProject[]
-}
-
 model Interest {
-  id       Int               @id @default(autoincrement())
-  name     String            @unique
-  profiles ProfileInterest[]
-  projects ProjectInterest[]
-  rios     Rio[]
-  users    User[]            @relation("InterestToUser")
-}
-
-model Project {
-  id          Int               @id @default(autoincrement())
-  name        String            @unique
-  homepage    String?
-  description String?
-  picture     String?
-  profiles    ProfileProject[]
-  interests   ProjectInterest[]
-}
-
-model ProfileInterest {
-  id         Int      @id @default(autoincrement())
-  profileId  Int
-  interestId Int
-  interest   Interest @relation(fields: [interestId], references: [id])
-  profile    Profile  @relation(fields: [profileId], references: [id])
-}
-
-model ProfileProject {
-  id        Int     @id @default(autoincrement())
-  profileId Int
-  projectId Int
-  Profile   Profile @relation(fields: [profileId], references: [id])
-  Project   Project @relation(fields: [projectId], references: [id])
-}
-
-model ProjectInterest {
-  id         Int      @id @default(autoincrement())
-  projectId  Int
-  interestId Int
-  interest   Interest @relation(fields: [interestId], references: [id])
-  project    Project  @relation(fields: [projectId], references: [id])
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  Rio  Rio[]
+  User User[]
 }
 
 model Rio {
@@ -79,8 +23,18 @@ model Rio {
   mainContact      String
   email            String
   image            String?
+  approvalDate     DateTime @db.Date
+  interestId       Int
   bookmarks        Int      @default(0)
-  interest         Interest @relation(fields: [interestId], references: [id])
+  Interest         Interest @relation(fields: [interestId], references: [id])
+}
+
+model User {
+  id       Int        @id @default(autoincrement())
+  email    String     @unique
+  password String
+  role     Role       @default(USER)
+  Interest Interest[]
 }
 
 enum Role {
