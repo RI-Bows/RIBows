@@ -1,157 +1,21 @@
 {
     "defaultRios": [
       {
-        "name": "Test RIO",
-        "approvaleDate": "2024-01-01",
-        "expirationDate": "2025-12-31",
-        "purposeStatement": "This is a test RIO.",
-        "mainContact": "Club Admin Person",
-        "email": "club@hawaii.edu",
-        "image": "https://acmmanoa.org/images/switch/switchlogo.png",
-        "RioInterest": ["ICS"] 
+        "name": "Accounting Club",
+        "approvaleDate": "10/3/25",
+        "expirationDate": "9/30/26",
+        "purposeStatement": "The purpose of this organization shall be: A. To provide members with opportunities for academic, personal, and professional  development so they may contribute effectively and ethically to society and their  organizations B. To serve the community and develop conscientious members of the community through  participation in civic activities C. To build unity within the club while establishing friendships and networks that extend beyond the college career D. To educate members about the opportunity provided by all sectors of the accounting industry. E. To aspire continuous improvement in all activities to ensure that members perform  effectively in today’s business environment.",
+        "mainContact": "Britney Pham",
+        "email": "phambrit@hawaii.edu",
+        "image": "https://images.squarespace-cdn.com/content/v1/5f2371858296275165c4fed8/1598171416577-93L1YDJ9YHL3W7F5AMCA/New-AC-Logo-1024x1024.png?format=1500w",
+        "RioInterest": ["Academic/Professional"] 
       }
     ],
-    "defaultProfiles": [
+    "defaultUsers": [
       {
-        "firstName": "RIBow",
-        "lastName": "Website",
-        "bio": "nothing",
-        "title": "administrator",
-        "interests": ["nothing"],
-        "email": "admin@foo.com",
-        "projects": ["nothing"],
+        "email": "ribows@admin.com",
+        "password": "3N7T0w03l6&x",
         "role": "ADMIN"
-      },
-      {
-        "firstName": "Philip",
-        "lastName": "Johnson",
-        "bio": "I am a Professor and like to paddle outrigger canoes.",
-        "title": "Professor",
-        "interests": [
-          "Software Engineering",
-          "Climate Change"
-        ],
-        "projects":[
-          "RadGrad",
-          "Open Power Quality"
-        ],
-        "picture": "https://github.com/philipmjohnson.png",
-        "email": "johnson@hawaii.edu"
-      },
-      {
-        "firstName": "CLUB",
-        "lastName": "test",
-        "bio": "For club admin capabilities (editing club profile).",
-        "title": "Professor",
-        "interests": [
-          "HPC",
-          "Distributed Computing"
-        ],
-        "projects":[
-          "WRENCH"
-        ],
-        "picture": "http://www.ics.hawaii.edu/wp-content/uploads/2013/08/Henri_Casanova1.jpg",
-        "email": "club@hawaii.edu",
-        "role": "CLUB"
-      },
-      {
-        "firstName": "Carleton",
-        "lastName": "Moore",
-        "bio": "Every summer, I enjoy visiting Portland, Oregon.",
-        "title": "Assistant Professor",
-        "interests": [
-          "Software Engineering",
-          "Renewable Energy"
-        ],
-        "projects":[
-          "RadGrad"
-        ],
-        "picture": "https://github.com/cammoore.png",
-        "email": "cmoore@hawaii.edu"
-      },
-      {
-        "firstName": "Anthony",
-        "lastName": "Christe",
-        "bio": "I enjoy competitive bicycle racing.",
-        "title": "Ph.D. (2020))",
-        "interests": [
-          "AI",
-          "Distributed Computing"
-        ],
-        "projects":[
-          "Open Power Quality"
-        ],
-        "picture": "https://anthonyjchriste.github.io/images/me.png",
-        "email": "achriste@hawaii.edu"
-      },
-      {
-        "firstName": "Jason",
-        "lastName": "Leigh",
-        "bio": "I escaped from Chicago and moved to Hawaii in 2014.",
-        "title": "Professor",
-        "interests": [
-          "Visualization"
-        ],
-        "projects":[
-          "Cyber Canoe"
-        ],
-        "picture": "http://www.ics.hawaii.edu/wp-content/uploads/2013/08/Jason_Leigh-2014.jpg",
-        "email": "leighj@hawaii.edu"
-      },
-      {
-        "firstName": "Serge",
-        "lastName": "Negrashov",
-        "bio": "Most weekends, you can find me on my 8 foot dinghy.",
-        "title": "Ph.D. (2020)",
-        "interests": [
-          "Scalable IP Networks"
-        ],
-        "projects":[
-          "Open Power Quality"
-        ],
-        "picture": "https://sergey-negrashov.github.io/images/serge.jpg",
-        "email": "sin8@hawaii.edu"
       }
-    ],
-    "defaultProjects": [
-      {
-        "name": "Open Power Quality",
-        "homepage": "https://openpowerquality.org",
-        "description": "Open source hardware and software for distributed power quality data collection, analysis, and visualization.",
-        "interests": [
-          "Software Engineering",
-          "Renewable Energy"
-        ],
-        "picture": "https://avatars0.githubusercontent.com/u/4641939"
-      },
-      {
-        "name": "RadGrad",
-        "homepage": "https://radgrad.org",
-        "description": "Growing awesome computer scientists, one graduate at a time.",
-        "interests": [
-          "Educational Technology"
-        ],
-        "picture": "https://www.radgrad.org/img/radgrad_logo.png"
-      },
-      {
-        "name": "WRENCH",
-        "homepage": "https://wrench-project.org",
-        "description": "WRENCH is an open-source library for developing simulators for large-scale scientific computation",
-        "interests": [
-          "Distributed Computing"
-        ],
-        "picture": "https://wrench-project.org/images/logo-vertical.png"
-      },
-      {
-        "name": "Cyber Canoe",
-        "homepage": "http://lava.manoa.hawaii.edu/blog/2014/07/11/cyber-canoe-cyber-infrastructure-enabled-collaborative-analysis-navigation-and-observation-environment/",
-        "description": "Software for Unity projects involving stereoscopic resolution driven by 9 PCs with a GeForce 980 graphics card.",
-        "interests": [
-          "Unity",
-          "Visualization"
-        ],
-        "picture": "https://www.hawaii.edu/its/wp-content/uploads/sites/2/2019/01/LAVAlogo-300x192-300x192.png"
-      }
-    ],
-    "loadAssetsFile":  false
+    ]
   }

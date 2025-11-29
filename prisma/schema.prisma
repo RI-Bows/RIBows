@@ -16,59 +16,11 @@ model User {
   role      Role       @default(USER)
 }
 
-model Profile {
-  id             Int               @id @default(autoincrement())
-  email          String            @unique
-  firstName      String?
-  lastName       String?
-  bio            String?
-  title          String?
-  picture        String?
-  interests      ProfileInterest[]
-  ProfileProject ProfileProject[]
-}
-
 model Interest {
   id       Int               @id @default(autoincrement())
   name     String            @unique
-  profiles ProfileInterest[]
-  projects ProjectInterest[]
   rios     Rio[]
   users    User[]
-}
-
-model Project {
-  id          Int               @id @default(autoincrement())
-  name        String            @unique
-  homepage    String?
-  description String?
-  picture     String?
-  profiles    ProfileProject[]
-  interests   ProjectInterest[]
-}
-
-model ProfileInterest {
-  id         Int      @id @default(autoincrement())
-  profileId  Int
-  interestId Int
-  interest   Interest @relation(fields: [interestId], references: [id])
-  profile    Profile  @relation(fields: [profileId], references: [id])
-}
-
-model ProfileProject {
-  id        Int     @id @default(autoincrement())
-  profileId Int
-  projectId Int
-  Profile   Profile @relation(fields: [profileId], references: [id])
-  Project   Project @relation(fields: [projectId], references: [id])
-}
-
-model ProjectInterest {
-  id         Int      @id @default(autoincrement())
-  projectId  Int
-  interestId Int
-  project    Project  @relation(fields: [projectId], references: [id])
-  interest   Interest @relation(fields: [interestId], references: [id])
 }
 
 model Rio {

@@ -1,10 +1,10 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import AddRIOForm from '@/components/AddRIOForm';
+import AddRioForm from '@/components/AddRioForm';
 
 const AddRIOPage = () => (
   <Container className="py-3">
-    <AddRIOForm />
+    <AddRioForm />
   </Container>
 );
 

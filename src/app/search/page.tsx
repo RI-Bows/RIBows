@@ -6,11 +6,71 @@
 import { Col, Container, Row, Accordion, Form } from 'react-bootstrap';
 import pageStyle from '@/utilities/pageStyle';
 import { useState, useEffect } from 'react';
-import fallbackTrendingRios from '@/utilities/trendingRIOS';
-import { TrendingRio } from '@/lib/dbActions';
 // import { IRIO } from '@/lib/validationSchemas';
 // import { TrendingRio } from '@/lib/dbActions';
 // import { prisma } from '@/lib/prisma';
+
+// EC 11/28/25 - Adding temporary trending rios here
+const fallbackTrendingRios: any[] = [
+  { id: 1,
+    name: 'Ka Mea Kolo',
+    purposeStatement: "Shares enthusiasm for Earth's diverse creatures, especially those that call Hawai'i home.",
+    count: 0,
+    interest: 'Academic/Professional',
+  },
+  { id: 2,
+    name: 'Women in STEM',
+    purposeStatement: 'Support, , and elevate students who identify as women pursuing degrees in STEM.',
+    count: 0,
+    interest: 'Academic/Professional',
+  },
+  { id: 3,
+    name: 'Natural Sciences Student Ambassadors',
+    // eslint-disable-next-line max-len
+    purposeStatement: 'Promote a welcoming and inclusive community for all students pursuing a degree in the Natural Sciences',
+    count: 0,
+    interest: 'Academic/Professional',
+  },
+  { id: 4,
+    name: 'K-pop Cardio Crew ',
+    purposeStatement: 'Creating a supportive community for students who love K-Pop and dancing.',
+    count: 0,
+    interest: 'Leisure/Recreational',
+  },
+  { id: 5,
+    name: 'Beta Beta Gamma Sorority',
+    // eslint-disable-next-line max-len
+    purposeStatement: 'Cultivate lifelong friendships, celebrate diversity, and make meaningful contributions to society.',
+    count: 0,
+    interest: 'Fraternity/Sorority',
+  },
+  { id: 6,
+    name: 'Cafe Hoppers',
+    purposeStatement: 'We also explore and engage with small businesses owners within our community.',
+    count: 0,
+    interest: 'Leisure/Recreational',
+  },
+  { id: 7,
+    name: 'Chinese Club',
+    // eslint-disable-next-line max-len
+    purposeStatement: 'Create a community to learn, appreciate, and celebrate aspects of Chinese culture and language.',
+    count: 0,
+    interest: 'Ethnic/Cultural',
+  },
+  { id: 8,
+    name: 'Hawaii Powerlifting Club',
+    purposeStatement: 'Create a team that can represent the University at local,  state, and national competitions.',
+    count: 0,
+    interest: 'Sports/Leisure',
+  },
+  { id: 9,
+    name: 'Inspire Church YA',
+    // eslint-disable-next-line max-len
+    purposeStatement: 'Provide a Christ- community where students can grow in their faith and build relationships.',
+    count: 0,
+    interest: 'Religious/Spiritual',
+  },
+];
 
 export default function SearchPage() {
   const rioList = fallbackTrendingRios;
@@ -34,7 +94,7 @@ export default function SearchPage() {
   // }, []);
 
   // sorting function
-  const sortItems = (items: TrendingRio[], sortType: string) => {
+  const sortItems = (items: any[], sortType: string) => {
     const sorted = [...items];
 
     switch (sortType) {
