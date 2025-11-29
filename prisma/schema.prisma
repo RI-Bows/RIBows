@@ -79,8 +79,6 @@ model Rio {
   mainContact      String
   email            String
   image            String?
-  approvalDate     DateTime @db.Date
-  interestId       Int
   bookmarks        Int      @default(0)
   interest         Interest @relation(fields: [interestId], references: [id])
 }

@@ -49,10 +49,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       email: r.Email,
       image: null,
     }));
-    console.log(rios);
+    // console.log(rios);
 
     // Push RIOs into database
-    upsertRios(rios);
+    await upsertRios(rios);
 
     return res.status(200).json({ ok: true, count: rios.length });
   } catch (err: any) {
