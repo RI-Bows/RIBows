@@ -52,7 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log(rios);
 
     // Push RIOs into database
-    upsertRios(rios);
+    await upsertRios(rios);
 
     return res.status(200).json({ ok: true, count: rios.length });
   } catch (err: any) {
