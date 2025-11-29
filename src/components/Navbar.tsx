@@ -17,13 +17,16 @@ const NavBar: React.FC = () => {
   // const userWithRole = session?.user as { email: string; randomKey: string };
   const role = (session?.user as any)?.role ?? null;
   const menuStyle = { marginBottom: '0px' };
-  const navbarClassName = 'bg-dark';
+  const navbarClassName = 'rb-navbar';
   // const navbarVariant = currentUser ? 'dark' : 'light';
   return (
     <Navbar expand="lg" style={menuStyle} className={navbarClassName}>
       <Container>
-        <Navbar.Brand href="/" className="align-items-center">
-          <span style={{ fontWeight: 800, fontSize: '30px' }}>
+        <Navbar.Brand
+          href="/"
+          className="rb-brand-text"
+        >
+          <span style={{ fontWeight: 800, fontSize: '30px', color: 'var(--rb-surface-soft)' }}>
             RIBows
             <Image src="/images/logo.png" width={30} height={30} style={{ marginBottom: 3 }} alt="Rainbow" />
           </span>
@@ -36,6 +39,7 @@ const NavBar: React.FC = () => {
               active={pathname === '/search'}
               href="/search"
               key="search"
+              className="rb-nav-link"
             >
               Search
             </Nav.Link>
@@ -44,6 +48,7 @@ const NavBar: React.FC = () => {
               active={pathname === '/trending'}
               href="/trending"
               key="trending"
+              className="rb-nav-link"
             >
               Trending
             </Nav.Link>
@@ -53,12 +58,19 @@ const NavBar: React.FC = () => {
                 active={pathname === '/adminSearch'}
                 href="/adminSearch"
                 key="adminSearch"
+                className="rb-nav-link"
               >
                 Admin Search
               </Nav.Link>
             )}
             {currentUser && role === 'ADMIN' ? (
-              <Nav.Link id="admin-add-nav" href="/addclub" key="admin" active={pathname === '/addclub'}>
+              <Nav.Link
+                id="admin-add-nav"
+                href="/addclub"
+                key="admin"
+                active={pathname === '/addclub'}
+                className="rb-nav-link"
+              >
                 Add RIO
               </Nav.Link>
             ) : (
@@ -67,32 +79,46 @@ const NavBar: React.FC = () => {
             {currentUser && role === 'CLUB' && (
               <Nav.Link
                 id="admin-club-edit-nav"
-                active={pathname === '/edit'}
-                href="/edit"
-                key="edit"
+                active={pathname === '/editClub'}
+                href="/editClub"
+                key="editClub"
+                className="rb-nav-link"
               >
                 Edit RIO
               </Nav.Link>
             )}
           </Nav>
           <Nav className="justify-content-end">
+            <Nav.Link
+              id="about-nav"
+              active={pathname === '/about'}
+              href="/about"
+              key="about"
+              className="rb-nav-link d-flex align-items-center"
+
+            >
+              About Us
+            </Nav.Link>
             {currentUser ? (
               <Nav.Link
                 id="bookmarks-nav"
                 active={pathname === '/bookmarks'}
                 href="/bookmarks"
                 key="bookmarks"
+                className="rb-nav-link d-flex align-items-center gap-1"
               >
-              <Container className="ps-0 d-flex align-items-center gap-1">
                 Saved
                 <Bookmarks />
-              </Container>
               </Nav.Link>
             ) : (
               ''
             )}
             {currentUser ? (
-              <NavDropdown id={ComponentIDs.currentUserDropdown} title={currentUser}>
+              <NavDropdown
+                id={ComponentIDs.currentUserDropdown}
+                title={currentUser}
+                className="rb-user-dropdown nav-link"
+              >
                 <NavDropdown.Item id="editProfile" href="/editProfile">
                   <Container className="ps-0 d-flex align-items-center gap-1">
                     <Pen />
@@ -113,6 +139,7 @@ const NavBar: React.FC = () => {
                 active={pathname === '/auth/signin'}
                 href="/auth/signin"
                 key="signin"
+                className="rb-nav-link rb-nav-cta"
               >
                 <Container className="d-flex align-items-center gap-1">
                   <PersonFill />
