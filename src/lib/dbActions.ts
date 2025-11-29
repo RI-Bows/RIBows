@@ -60,31 +60,32 @@ export type TrendingRio = {
   name: string;
   blurb: string;
   count: number;
+  interest: string;
 };
 
-export const getTrendingRios = async (limit = 9): Promise<TrendingRio[]> => {
-  const rios = await prisma.rio.findMany({
-    take: limit,
-    orderBy: {
-      RioInterest: {
-        _count: 'desc',
-      },
-    },
-    include: {
-      _count: {
-        select: { RioInterest: true },
-      },
-    },
-  });
+// export const getTrendingRios = async (limit = 9): Promise<TrendingRio[]> => {
+//   const rios = await prisma.rio.findMany({
+//     take: limit,
+//     orderBy: {
+//       RioInterest: {
+//         _count: 'desc',
+//       },
+//     },
+//     include: {
+//       _count: {
+//         select: { RioInterest: true },
+//       },
+//     },
+//   });
 
-  return rios.map((r) => ({
-    id: r.id,
-    name: r.name,
-    blurb: r.purposeStatement ?? 'No description yet.',
-    // eslint-disable-next-line no-underscore-dangle
-    count: r._count?.RioInterest ?? 0,
-  }));
-};
+//   return rios.map((r) => ({
+//     id: r.id,
+//     name: r.name,
+//     blurb: r.purposeStatement ?? 'No description yet.',
+//     // eslint-disable-next-line no-underscore-dangle
+//     count: r._count?.RioInterest ?? 0,
+//   }));
+// };
 
 export async function upsertProject(project: any) {
   // console.log(`upsertProject data: ${JSON.stringify(project, null, 2)}`);

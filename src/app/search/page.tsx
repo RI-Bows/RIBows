@@ -7,6 +7,7 @@ import { Col, Container, Row, Accordion, Form } from 'react-bootstrap';
 import pageStyle from '@/utilities/pageStyle';
 import { useState, useEffect } from 'react';
 import fallbackTrendingRios from '@/utilities/trendingRIOS';
+import { TrendingRio } from '@/lib/dbActions';
 // import { IRIO } from '@/lib/validationSchemas';
 // import { TrendingRio } from '@/lib/dbActions';
 // import { prisma } from '@/lib/prisma';
@@ -15,6 +16,7 @@ export default function SearchPage() {
   const rioList = fallbackTrendingRios;
 
   const [searchQuery, setSearchQuery] = useState('');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [rios, setRios] = useState(rioList); // change fallbackTrendingRios to database ones
   const [filteredItems, setFilteredItems] = useState(fallbackTrendingRios);
   const [sortBy, setSortBy] = useState('trending');
@@ -32,7 +34,7 @@ export default function SearchPage() {
   // }, []);
 
   // sorting function
-  const sortItems = (items, sortType: string) => {
+  const sortItems = (items: TrendingRio[], sortType: string) => {
     const sorted = [...items];
 
     switch (sortType) {
