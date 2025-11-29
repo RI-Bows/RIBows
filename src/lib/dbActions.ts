@@ -33,6 +33,10 @@ export async function changePassword(credentials: { email: string; password: str
   });
 }
 
+export async function getRios() {
+  return prisma.rio.findMany();
+}
+
 // TODO: Delete this eslint override once DB updated
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function createUser(credentials: { email: string; password: string }, interests: Interest[]) {
