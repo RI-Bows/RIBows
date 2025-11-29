@@ -1,6 +1,6 @@
 import { Container, Row, Col, Image } from 'react-bootstrap';
 import { PageIDs } from '@/utilities/ids';
-import { getTrendingRios, type TrendingRio } from '@/lib/dbActions';
+// import { getTrendingRios, type TrendingRio } from '@/lib/dbActions';
 import fallbackTrendingRios from '@/utilities/trendingRIOS';
 
 export default async function Home() {
