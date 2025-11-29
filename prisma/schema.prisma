@@ -9,10 +9,11 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  password String
-  role     Role   @default(USER)
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  password  String
+  interests Interest[]
+  role      Role       @default(USER)
 }
 
 model Profile {
@@ -32,7 +33,8 @@ model Interest {
   name     String            @unique
   profiles ProfileInterest[]
   projects ProjectInterest[]
-  rios     RioInterest[]    
+  rios     Rio[]
+  users    User[]
 }
 
 model Project {
@@ -70,24 +72,16 @@ model ProjectInterest {
 }
 
 model Rio {
-  id               Int          @id @default(autoincrement())
-  name             String       @unique
-  approvalData     DateTime     @db.Date
-  expirationDate   DateTime     @db.Date
+  id               Int      @id @default(autoincrement())
+  name             String   @unique
+  approvalDate     DateTime @db.Date
+  expirationDate   DateTime @db.Date
   purposeStatement String?
-  type    	   String
-  mainContact 	   String
+  interestId       Int
+  mainContact      String
   email            String
   image            String?
-  RioInterest      RioInterest[]
-}
-
-model RioInterest {
-  id         Int      @id @default(autoincrement())
-  rioId      Int
-  interestId Int
-  Interest   Interest @relation(fields: [interestId], references: [id])
-  Rio        Rio      @relation(fields: [rioId], references: [id])
+  interest         Interest @relation(fields: [interestId], references: [id])
 }
 
 enum Role {

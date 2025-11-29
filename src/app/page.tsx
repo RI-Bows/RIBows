@@ -4,13 +4,14 @@ import { getTrendingRios, type TrendingRio } from '@/lib/dbActions';
 import fallbackTrendingRios from '@/utilities/trendingRIOS';
 
 export default async function Home() {
+  // EC 11/24/25 - Commenting this out for now–see dbActions
   // Fetch trending RIOs from the database
-  let trendingRios; // = await getTrendingRios(9);
+  // let trendingRios = await getTrendingRios(9);
 
   // If no trending RIOs found, use fallback data
-  if (trendingRios?.length === 0) {
-    trendingRios = fallbackTrendingRios;
-  }
+  // if (trendingRios.length === 0) {
+  //   trendingRios = fallbackTrendingRios;
+  // }
 
   return (
     <main>
