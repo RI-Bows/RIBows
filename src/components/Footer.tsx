@@ -1,23 +1,52 @@
-import { Col, Container } from 'react-bootstrap';
+import { Col, Container, Row } from 'react-bootstrap';
+import Image from 'next/image';
 
 /* The Footer appears at the bottom of every page. Rendered by the App Layout component. */
 const Footer = () => (
-  <footer className="footer mt-auto py-3 bg-dark">
+  <footer className="rb-footer mt-auto">
     <Container>
-      <Col className="text-center" style={{ color: 'white' }}>
-        RIBows
-        <br />
-        University of Hawaii
-        <br />
-        Honolulu, HI 96822
-        <br />
-        <a style={{ color: 'white' }} href="https://ri-bows.github.io" target="_blank" rel="noreferrer">
-          https://ri-bows.github.io
-        </a>
-        <br />
-        {/* eslint-disable-next-line no-trailing-spaces, react/jsx-one-expression-per-line */}
-        We would love to hear your <a style={{ color: 'white' }} href="/feedback">feedback!</a>
-      </Col>
+      {/* Powered by + logo */}
+      <Row className="justify-content-center">
+        <Col xs="auto">
+          <div className="rb-footer-powered">Powered by</div>
+          <div className="rb-footer-logo-circle">
+            <span className="rb-footer-logo-text">RB</span>
+          </div>
+        </Col>
+      </Row>
+
+      {/* RIBows info block */}
+      <Row className="justify-content-center mt-4">
+        <Col xs="auto">
+          <div className="rb-footer-title">
+            RIBows
+            <Image src="/images/logo.png" width={20} height={20} style={{ marginBottom: 3 }} alt="Rainbow" />
+          </div>
+          <div className="rb-footer-address">
+            University of Hawaii
+            <br />
+            Honolulu, HI 96822
+            <br />
+          </div>
+
+          <a
+            href="https://ri-bows.github.io"
+            target="_blank"
+            rel="noreferrer"
+            className="rb-footer-link"
+          >
+            https://ri-bows.github.io
+          </a>
+
+          {/* eslint-disable-next-line no-trailing-spaces, react/jsx-one-expression-per-line */}
+          <div className="rb-footer-feedback">
+            We would love to hear your&nbsp;
+            <a href="/feedback" className="rb-footer-link">
+              feedback!
+            </a>
+          </div>
+        </Col>
+      </Row>
     </Container>
   </footer>
 );

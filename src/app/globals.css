@@ -3,13 +3,21 @@
 
 /* Create some Bowfolio CSS variables. */
 :root {
-  --bowfolio-navbar-bg: #376551;
-  --bowfolio-navbar-bg-rgb: 55, 101, 81;
-  --bowfolio-navbar-text: white;
-  --bowfolio-navbar-highlight-text: var(--bs-gray-500);
-  --bs-primary: #198754;
-  --bs-primary-rgb: 25, 135, 84;
+  --bowfolio-navbar-bg: #6B9080;
+  --bowfolio-navbar-bg-rgb: 107, 144, 128;
+  --bowfolio-navbar-text: #ffffff;
+  --bowfolio-navbar-highlight-text: #CCE3DE;
+
+    /* RIBows theme tokens hooked into existing colors */
+  --rb-primary: #6B9080;   
+  --rb-primary-soft: #A4C3B2;  /* hover/soft green */
+  --rb-accent: #CCE3DE;    
+  --rb-surface: #F6FFF8;   /* cards / navbar surface */
+  --rb-surface-soft: #EAF4F4; 
+  --rb-text-main: #123b2c;    /* dark text */
+  --rb-text-muted: #4f6d61;     /* muted nav links */
 }
+
 /* Change bootstrap variable values.
  See https://getbootstrap.com/docs/5.2/customize/css-variables/
  */
@@ -159,44 +167,141 @@ html, body {
 }
 /* end of trending section styles */
 
-/* ensure .btn-primary uses the new color and adjust hover/focus */
-.btn-primary {
-  background-color: var(--bs-primary) !important;
-  border-color: var(--bs-primary) !important;
+/* === RIBows Navbar Theme === */
+
+.rb-navbar {
+  background-color: var(--rb-primary);         /* 6B9080 */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.btn-primary:hover,
-.btn-primary:focus {
-  background-color: #146c43 !important; /* slightly darker hover */
-  border-color: #146c43 !important;
+.rb-brand-text {
+  font-weight: 800;
+  font-size: 1.7rem;
+  letter-spacing: 0.03em;
+  color: #F6FFF8;                             /* light text on green */
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
-.btn-primary:active,
-.btn-primary.active {
-  background-color: #0f5132 !important;
-  border-color: #0f5132 !important;
+/* Base nav link style */
+.rb-navbar .rb-nav-link {
+  color: #F6FFF8;                             /* white-ish */
+  font-weight: 500;
+  font-size: 0.98rem;
+  padding-inline: 0.9rem;
+  position: relative;
 }
 
-/* make outline-secondary use the primary color (and keep outline behavior) */
-.btn-outline-secondary {
-  color: var(--bs-primary) !important;
-  border-color: var(--bs-primary) !important;
-  background-color: transparent !important;
+/* Hover / focus */
+.rb-navbar .rb-nav-link:hover,
+.rb-navbar .rb-nav-link:focus {
+  color: var(--rb-primary-soft);              /* A4C3B2 */
 }
 
-.btn-outline-secondary:hover,
-.btn-outline-secondary:focus {
-  background-color: rgba(var(--bs-primary-rgb), 0.12) !important; /* subtle fill on hover */
-  border-color: var(--bs-primary) !important;
+/* Active */
+.rb-navbar .rb-nav-link.active {
+  color: #F6FFF8;
 }
 
-.btn-outline-secondary:active,
-.btn-outline-secondary.active {
-  color: #fff !important;
-  background-color: rgba(var(--bs-primary-rgb), 0.2) !important;
-  border-color: var(--bs-primary) !important;
+.rb-navbar .rb-nav-link.active::after {
+  content: '';
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: -0.2rem;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--rb-accent) 0%,                      /* CCE3DE */
+    #F6FFF8 100%
+  );
 }
 
-.btn-outline-secondary:focus {
-  box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25) !important;
+/* Sign-in CTA stays light */
+.rb-navbar .rb-nav-cta {
+  border-radius: 999px;
+  border: 1px solid #F6FFF8;
+  color: #6B9080;                             /* text on white pill */
+  background-color: #F6FFF8;
+}
+
+.rb-navbar .rb-nav-cta:hover,
+.rb-navbar .rb-nav-cta:focus {
+  background-color: var(--rb-surface-soft);   /* EAF4F4 */
+  border-color: #F6FFF8;
+}
+
+
+
+/* Footer styles */
+.rb-footer {
+  background: linear-gradient(
+    135deg,
+    var(--rb-primary) 0%,
+    #23463a 50%,
+    #1a3127 100%
+  );
+  color: var(--bowfolio-navbar-text);
+  padding: 3rem 0 2.5rem; /* more vertical space */
+  text-align: center;
+}
+
+/* "Powered by" block */
+.rb-footer-powered {
+  font-size: 0.9rem;
+  opacity: 0.85;
+  margin-bottom: 0.35rem;
+}
+
+/* Circle logo with "RB" */
+.rb-footer-logo-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 2px solid #d7d3c9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.rb-footer-logo-text {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* RIBows block */
+.rb-footer-title {
+  margin-top: 2rem;        /* space between RB circle and RIBows text */
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.rb-footer-address {
+  font-size: 0.9rem;
+  opacity: 0.95;
+  margin-bottom: 0.25rem;
+}
+
+/* Links */
+.rb-footer-link {
+  font-size: 0.9rem;
+  color: #fdfdfd;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.rb-footer-link:hover {
+  color: var(--rb-accent);
+}
+
+/* Feedback line */
+.rb-footer-feedback {
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
 }
