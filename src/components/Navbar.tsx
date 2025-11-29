@@ -79,9 +79,9 @@ const NavBar: React.FC = () => {
             {currentUser && role === 'CLUB' && (
               <Nav.Link
                 id="admin-club-edit-nav"
-                active={pathname === '/edit'}
-                href="/edit"
-                key="edit"
+                active={pathname === '/editClub'}
+                href="/editClub"
+                key="editClub"
                 className="rb-nav-link"
               >
                 Edit RIO
@@ -89,6 +89,14 @@ const NavBar: React.FC = () => {
             )}
           </Nav>
           <Nav className="justify-content-end">
+            <Nav.Link
+              id="about-nav"
+              active={pathname === '/about'}
+              href="/about"
+              key="about"
+            >
+              About Us
+            </Nav.Link>
             {currentUser ? (
               <Nav.Link
                 id="bookmarks-nav"
