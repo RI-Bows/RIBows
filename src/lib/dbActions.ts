@@ -65,6 +65,7 @@ export type TrendingRio = {
   name: string;
   blurb: string;
   count: number;
+  interest: string;
 };
 
 // EC 11/24/25 - Commenting this out for now since schema was just updated and
