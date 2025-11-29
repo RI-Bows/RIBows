@@ -126,7 +126,7 @@ export async function upsertRio(rio: RioType) {
       interestId: interest.id,
       mainContact: rio.mainContact,
       email: rio.email,
-      image: rio.image,
+      // image: rio.image,
     },
     create: {
       name: rio.name,
