@@ -164,8 +164,6 @@ html, body {
   color: #555555;
   margin: 0;
   text-align: center;
-  text-overflow: ellipsis;
-  overflow: hidden;
 }
 /* end of trending section styles */
 

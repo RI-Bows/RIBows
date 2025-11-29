@@ -1,5 +1,5 @@
 const pageStyle = {
-  paddingTop: 20,
+  paddingTop: 10,
   paddingBottom: 20,
 };
 
