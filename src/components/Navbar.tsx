@@ -94,6 +94,8 @@ const NavBar: React.FC = () => {
               active={pathname === '/about'}
               href="/about"
               key="about"
+              className="rb-nav-link d-flex align-items-center"
+
             >
               About Us
             </Nav.Link>
@@ -103,7 +105,7 @@ const NavBar: React.FC = () => {
                 active={pathname === '/bookmarks'}
                 href="/bookmarks"
                 key="bookmarks"
-                className="rb-nav-link ps-0 d-flex align-items-center gap-1"
+                className="rb-nav-link d-flex align-items-center gap-1"
               >
                 Saved
                 <Bookmarks />
