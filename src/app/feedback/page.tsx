@@ -1,21 +1,9 @@
 'use client';
 
 /* eslint-disable arrow-body-style */
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Ratio } from 'react-bootstrap';
 
 const Feedback = () => {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-
-    const email = formData.get('email');
-    const feedback = formData.get('feedback');
-
-    console.log('Submitted:', { email, feedback });
-    // eslint-disable-next-line no-alert
-    alert('Form submitted! Mahalo!');
-  };
-
   return (
     <main>
       <Container>
@@ -29,26 +17,17 @@ const Feedback = () => {
         </Row>
 
         <Row className="justify-content-center">
-          <Col md={8} lg={6}>
-            <Form method="post" onSubmit={handleSubmit}>
-              <Form.Group controlId="formBasicEmail">
-                <Form.Label>Email</Form.Label>
-                <input name="email" type="text" className="form-control" />
-              </Form.Group>
-
-              <Form.Group className="pt-2">
-                <Form.Label>Feedback</Form.Label>
-                <textarea
-                  name="password"
-                  className="form-control"
-                  rows={5}
-                />
-              </Form.Group>
-
-              <Button type="submit" className="mt-3">
-                Submit
-              </Button>
-            </Form>
+          <Col>
+            <Ratio aspectRatio="16x9">
+              <iframe
+                title="Feedback Form"
+                // eslint-disable-next-line max-len
+                src="https://docs.google.com/forms/d/e/1FAIpQLSdboJ3GTp9fTSk3WfOXxrFUNfDRjfx6v0pQ_Eca-v-BJsjx3A/viewform?usp=dialog"
+                className="rounded p-4"
+              >
+                Loading…
+              </iframe>
+            </Ratio>
           </Col>
         </Row>
       </Container>
