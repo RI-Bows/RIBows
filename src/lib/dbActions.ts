@@ -35,11 +35,26 @@ export async function changePassword(credentials: { email: string; password: str
 
 export async function createUser(credentials: { email: string; password: string }, interests: Interest[]) {
   // console.log(`createUser data: ${JSON.stringify(credentials, null, 2)}`);
+  const email = credentials.email?.toLowerCase?.() ?? credentials.email;
+
+  // Enforce domain policy: only allow @hawaii.edu addresses
+  if (!email || !email.endsWith('@hawaii.edu')) {
+    throw new Error('INVALID_DOMAIN');
+  }
+
+  // Pre-check for existing user to provide a friendly error message
+  const existing = await getUser(email);
+  if (existing) {
+    throw new Error('DUPLICATE_EMAIL');
+  }
+
   const password = await hash(credentials.password, 10);
+
   await prisma.user.create({
     data: {
-      email: credentials.email,
+      email,
       password,
+      // role defaults to USER in schema; explicit assignment kept out to avoid accidental privilege elevation
       interests: {
         connectOrCreate: interests.map((interest) => ({
           where: { name: interest.name },

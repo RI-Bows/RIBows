@@ -5,10 +5,12 @@ import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import { Card, Col, Container, Button, Form, Row } from 'react-bootstrap';
-import { createUser } from '@/lib/dbActions';
+import { Card, Col, Container, Button, Form, Row, Toast, ToastContainer } from 'react-bootstrap';
+import { createUser, getUser } from '@/lib/dbActions';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import Multiselect from 'multiselect-react-dropdown';
 import { Interest } from '@prisma/client';
+import { CaretDownFill } from 'react-bootstrap-icons';
 
 type SignUpForm = {
   email: string;
@@ -23,11 +25,18 @@ type SignUpProps = {
 /** The sign up page. */
 const SignUp = ({ interests }: SignUpProps) => {
   const [selectedInterests, setSelectedInterests] = useState<Interest[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [toastShow, setToastShow] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastBg, setToastBg] = useState<'success' | 'danger' | 'info'>('danger');
 
   const multiselectRef = useRef<any>(null);
 
   const validationSchema = Yup.object().shape({
-    email: Yup.string().required('Email is required').email('Email is invalid'),
+    email: Yup.string()
+      .required('Email is required')
+      .email('Email is invalid')
+      .matches(/^[A-Z0-9._%+-]+@hawaii\.edu$/i, 'Email must be a @hawaii.edu address'),
     password: Yup.string()
       .required('Password is required')
       .min(6, 'Password must be at least 6 characters')
@@ -53,10 +62,41 @@ const SignUp = ({ interests }: SignUpProps) => {
   });
 
   const onSubmit = async (data: SignUpForm) => {
-    // console.log(JSON.stringify(data, null, 2));
-    await createUser(data, selectedInterests);
-    // After creating, signIn with redirect to the add page
-    await signIn('credentials', { callbackUrl: '/add', ...data });
+    setLoading(true);
+    try {
+      // Pre-check for duplicate
+      const existing = await getUser(data.email);
+      if (existing) {
+        setToastBg('danger');
+        setToastMessage('An account with that email already exists. Try signing in or resetting your password.');
+        setToastShow(true);
+        setLoading(false);
+        return;
+      }
+
+      await createUser(data, selectedInterests);
+      // After creating, signIn with redirect to the add page
+      setToastBg('success');
+      setToastMessage('Account created — signing you in...');
+      setToastShow(true);
+      await signIn('credentials', { callbackUrl: '/', ...data });
+    } catch (err: unknown) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const e: any = err;
+      if (e?.message === 'INVALID_DOMAIN') {
+        setToastBg('danger');
+        setToastMessage('Email must be a @hawaii.edu address.');
+      } else if (e?.message === 'DUPLICATE_EMAIL') {
+        setToastBg('danger');
+        setToastMessage('An account with that email already exists. Try signing in.');
+      } else {
+        setToastBg('danger');
+        setToastMessage('Unexpected server error. Please try again later.');
+      }
+      setToastShow(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleClear = () => {
@@ -68,10 +108,25 @@ const SignUp = ({ interests }: SignUpProps) => {
   return (
     <main>
       <Container>
-        <Row className="pt-5 justify-content-center">
-          <Col xs={5}>
+        <ToastContainer
+          className="p-3"
+          position="top-center"
+          style={{
+            position: 'fixed',
+            top: '1rem',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 1060,
+          }}
+        >
+          <Toast onClose={() => setToastShow(false)} show={toastShow} bg={toastBg} delay={5000} autohide>
+            <Toast.Body className={toastBg === 'danger' ? 'text-white' : ''}>{toastMessage}</Toast.Body>
+          </Toast>
+        </ToastContainer>
+        <Row className="py-3 mb-3 justify-content-center">
+          <Col xs={8}>
             <h1 className="text-center">Sign Up</h1>
-            <Card>
+            <Card className="shadow-sm mt-3">
               <Card.Body>
                 <Form onSubmit={handleSubmit(onSubmit)}>
                   <Form.Group className="form-group">
@@ -104,21 +159,34 @@ const SignUp = ({ interests }: SignUpProps) => {
                   </Form.Group>
                   <Form.Group className="form-group pt-2">
                     <Form.Label>Interests</Form.Label>
-                    <Multiselect
-                      options={interests} // Options to display in the dropdown
-                      ref={multiselectRef}
-                      onSelect={(list) => setSelectedInterests(list)} // Function will trigger on select event
-                      onRemove={(list) => setSelectedInterests(list)} // Function will trigger on remove event
-                      displayValue="name" // Property name to display in the dropdown options
-                      placeholder=""
-                    />
+                    <div className="position-relative">
+                      <Multiselect
+                        options={interests}
+                        ref={multiselectRef}
+                        onSelect={(list) => setSelectedInterests(list)}
+                        onRemove={(list) => setSelectedInterests(list)}
+                        displayValue="name"
+                        placeholder=""
+                      />
+                      <CaretDownFill
+                        style={{
+                          position: 'absolute',
+                          right: '12px',
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                          pointerEvents: 'none',
+                          color: '#6c757d',
+                        }}
+                        aria-hidden
+                      />
+                    </div>
                   </Form.Group>
 
                   <Form.Group className="form-group pt-3">
                     <Row>
                       <Col>
-                        <Button type="submit" className="btn btn-primary">
-                          Register
+                        <Button type="submit" className="btn btn-primary" disabled={loading}>
+                          {loading ? <LoadingSpinner /> : 'Register'}
                         </Button>
                       </Col>
                       <Col>
@@ -131,8 +199,7 @@ const SignUp = ({ interests }: SignUpProps) => {
                 </Form>
               </Card.Body>
               <Card.Footer>
-                Already have an account?
-                &nbsp;
+                Already have an account? &nbsp;
                 <a href="/auth/signin">Sign in</a>
               </Card.Footer>
             </Card>
