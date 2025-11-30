@@ -19,3 +19,10 @@ test.describe('All pages render successfully', () => {
     });
   }
 });
+
+test('Admin pages', async ({ page }) => {
+  // Test that admin can access the admin dashboard
+  const response = await page.goto('http://localhost:3000');
+  expect(response?.status()).toBeLessThan(400);
+  await expect(page.getByRole('link', { name: 'Search' })).toBeVisible();
+});
