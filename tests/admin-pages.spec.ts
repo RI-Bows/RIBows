@@ -1,24 +1,32 @@
 import { test, expect } from '@playwright/test';
 
-test.use({ storageState: 'admin-auth.json' });
+test.use({
+  storageState: './admin-auth.json',
+});
 
 test('Admin pages render successfully', async ({ page }) => {
   const response = await page.goto('http://localhost:3000');
   expect(response?.status()).toBeLessThan(400);
 
   // check navbar links
+  await expect(page.getByRole('link', { name: 'RIBowsRainbow' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Search' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Admin Search' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Add RIO' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'About Us' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Saved' })).toBeVisible();
 
+  // check home page
+  await page.getByRole('link', { name: 'RIBowsRainbow' }).click();
+  await expect(page).toHaveURL('http://localhost:3000/');
+  await expect(page.getByRole('heading', { name: 'Find and join RIO\'s at UH Mānoa' })).toBeVisible();
+
   // check search page
-  await page.getByRole('link', { name: 'Search' }).click();
+  await page.getByRole('link', { name: 'Search', exact: true }).click();
   await expect(page).toHaveURL('http://localhost:3000/search');
   await expect(page.getByRole('heading', { name: 'Search for Clubs' })).toBeVisible();
 
-  // check admin search page
+  // check admin search page (not done yet)
   // await page.getByRole('link', { name: 'Admin Search' }).click();
   // await expect(page).toHaveURL('http://localhost:3000/adminsearch');
 
@@ -45,13 +53,12 @@ test('Admin pages render successfully', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Bookmarks Page' })).toBeVisible();
 
   // check edit profile page
-  await page.goto('http://localhost:3000/editProfile');
+  await page.getByRole('button', { name: 'ribows@admin.com' }).click();
+  await page.getByRole('link', { name: 'Edit Profile' }).click();
   await expect(page).toHaveURL('http://localhost:3000/editProfile');
   await expect(page.getByRole('heading', { name: 'Edit Profile' })).toBeVisible();
-  /*
-  await expect(page.getByLabel('First Name')).toBeVisible();
-  await expect(page.getByLabel('Club Interests')).toBeVisible();
+  await expect(page.getByText('First Name')).toBeVisible();
+  await expect(page.getByText('Club Interests')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Save' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Reset' })).toBeVisible();
-  */
 });
