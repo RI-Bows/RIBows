@@ -13,6 +13,7 @@ model User {
   email     String     @unique
   password  String
   interests Interest[]
+  rios      Rio[]
   role      Role       @default(USER)
 }
 
@@ -35,6 +36,7 @@ model Rio {
   interestId       Int
   bookmarks        Int      @default(0)
   interest         Interest @relation(fields: [interestId], references: [id])
+  users            User[] 
 }
 
 enum Role {
