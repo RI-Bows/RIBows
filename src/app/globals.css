@@ -24,6 +24,11 @@
 body {
   --bs-dark: var(--bowfolio-navbar-bg);
   --bs-dark-rgb: var(--bowfolio-navbar-bg-rgb);
+
+  --bs-primary: var(--rb-primary);
+  --bs-link-color: var(--rb-primary);
+  --bs-link-hover-color: var(--rb-primary-soft);
+
 }
 
 html, body {
@@ -244,24 +249,29 @@ html, body {
   background-color: #F6FFF8;
 }
 
+/* NEW: keep Sign In pill the same when active, and remove underline */
+.rb-navbar .rb-nav-cta.active {
+  color: #6B9080;
+  background-color: #F6FFF8;
+}
+
+.rb-navbar .rb-nav-cta.active::after {
+  content: none;
+}
+
 .rb-navbar .rb-nav-cta:hover,
 .rb-navbar .rb-nav-cta:focus {
-  background-color: var(--rb-surface-soft);   /* EAF4F4 */
-  border-color: #F6FFF8;
+  background-color: var(--rb-surface-soft);  /* EAF4F4 */
 }
+
 
 
 
 /* Footer styles */
 .rb-footer {
-  background: linear-gradient(
-    135deg,
-    var(--rb-primary) 0%,
-    #23463a 50%,
-    #1a3127 100%
-  );
-  color: var(--bowfolio-navbar-text);
-  padding: 3rem 0 2.5rem; /* more vertical space */
+   background-color: var(--rb-primary);        /* 6B9080 */
+  color: var(--bowfolio-navbar-text);          /* light text */
+  padding: 1.5rem 0 1.25rem;           
   text-align: center;
 }
 
@@ -291,7 +301,7 @@ html, body {
 
 /* RIBows block */
 .rb-footer-title {
-  margin-top: 2rem;        /* space between RB circle and RIBows text */
+  margin-top: 1.25rem;        /* space between RB circle and RIBows text */
   margin-bottom: 0.25rem;
   font-weight: 600;
   font-size: 1rem;

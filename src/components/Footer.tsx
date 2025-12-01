@@ -8,9 +8,9 @@ const Footer = () => (
       {/* Powered by + logo */}
       <Row className="justify-content-center">
         <Col xs="auto">
-          <div className="rb-footer-powered">Powered by</div>
+          <div className="rb-footer-powered">Made for</div>
           <div className="rb-footer-logo-circle">
-            <span className="rb-footer-logo-text">RB</span>
+            <span className="rb-footer-logo-text">UH</span>
           </div>
         </Col>
       </Row>
