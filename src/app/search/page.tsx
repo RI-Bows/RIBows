@@ -7,7 +7,6 @@ import { Col, Container, Row, Accordion, Form } from 'react-bootstrap';
 import pageStyle from '@/utilities/pageStyle';
 import { useState, useEffect } from 'react';
 // import { IRIO } from '@/lib/validationSchemas';
-// import { TrendingRio } from '@/lib/dbActions';
 // import { prisma } from '@/lib/prisma';
 
 // EC 11/28/25 - Adding temporary trending rios here
@@ -129,7 +128,7 @@ export default function SearchPage() {
       results = results.filter( 
         item => item.name.toLowerCase().includes(searchQuery.toLowerCase())
       || item.interest.toLowerCase().includes(searchQuery.toLowerCase())
-      || item.blurb.toLowerCase().includes(searchQuery.toLowerCase()),
+      || item.purposeStatement.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
   
@@ -276,7 +275,7 @@ export default function SearchPage() {
                 <Col key={rio.id}>
                   <div className="trending-card">
                     <h5 className="trending-card-title">{rio.name}</h5>
-                    <p className="trending-card-text">{rio.blurb}</p>
+                    <p className="trending-card-text">{rio.purposeStatement}</p>
                   </div>
                 </Col>
               ))}
