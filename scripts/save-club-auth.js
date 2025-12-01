@@ -10,8 +10,8 @@ const fs = require('fs');
 
   try {
     await page.goto('http://localhost:3000/auth/signin');
-    await page.fill('input[name="email"]', 'club@hawaii.edu'); // change when we have a club user
-    await page.fill('input[name="password"]', 'foo'); // change when we have a club user
+    await page.fill('input[name="email"]', 'phambrit@hawaii.edu'); // change when we have a club user
+    await page.fill('input[name="password"]', 'clubtest123'); // change when we have a club user
     await page.click('button[type="submit"]');
 
     // wait for navigation after successful login

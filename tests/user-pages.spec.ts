@@ -4,7 +4,7 @@ test.use({
   storageState: './user-auth.json',
 });
 
-test('User pages render successfully', async ({ page }) => {
+test('User pages test', async ({ page }) => {
   const response = await page.goto('http://localhost:3000');
   expect(response?.status()).toBeLessThan(400);
 

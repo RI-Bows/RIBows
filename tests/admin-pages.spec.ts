@@ -4,7 +4,7 @@ test.use({
   storageState: './admin-auth.json',
 });
 
-test('Admin pages render successfully', async ({ page }) => {
+test('Admin pages test', async ({ page }) => {
   const response = await page.goto('http://localhost:3000');
   expect(response?.status()).toBeLessThan(400);
 
