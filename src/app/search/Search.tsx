@@ -122,19 +122,40 @@ export default function SearchPage({ rioList, interests }: SearchProps) {
 
                 <Row>
                   <Form.Label>Club Type</Form.Label>
-                  {interestOptions.map((interestName) => (
-                    <Form.Check
-                      key={interestName}
-                      className="py-1"
-                      name="club-type"
-                      type="radio"
-                      id={`interest-${interestName === 'all' ? 'all' : interestName}`}
-                      label={interestName === 'all' ? 'All' : interestName}
-                      value={interestName}
-                      checked={selectedType === interestName}
-                      onChange={(e) => handleInterest(e.target.value)}
-                    />
-                  ))}
+
+                  {/* First Column (index 0–6) */}
+                  <Col xs={6}>
+                    {interestOptions.slice(0, 6).map((interestName) => (
+                      <Form.Check
+                        key={interestName}
+                        className="py-1"
+                        name="club-type"
+                        type="radio"
+                        id={`interest-${interestName === 'all' ? 'all' : interestName}`}
+                        label={interestName === 'all' ? 'All' : interestName}
+                        value={interestName}
+                        checked={selectedType === interestName}
+                        onChange={(e) => handleInterest(e.target.value)}
+                      />
+                    ))}
+                  </Col>
+
+                  {/* Second Column (index 7+) */}
+                  <Col xs={6}>
+                    {interestOptions.slice(6).map((interestName) => (
+                      <Form.Check
+                        key={interestName}
+                        className="py-1"
+                        name="club-type"
+                        type="radio"
+                        id={`interest-${interestName}`}
+                        label={interestName}
+                        value={interestName}
+                        checked={selectedType === interestName}
+                        onChange={(e) => handleInterest(e.target.value)}
+                      />
+                    ))}
+                  </Col>
                 </Row>
               </Accordion.Body>
             </Accordion.Item>
@@ -142,13 +163,13 @@ export default function SearchPage({ rioList, interests }: SearchProps) {
         </Col>
       </Row>
       <Row>
-        <div className="trending-panel py-1">
+        <div className="trending-panel py-2">
           {filteredItems.length === 0 ? (
             <div className="text-center py-5">
               <p className="text-muted">No clubs match your search.</p>
             </div>
           ) : (
-            <Row xs={1} md={3} className="g-4">
+            <Row xs={1} md={3} className="g-4 py-1">
               <RIOCardDisplay rioList={filteredItems} />
             </Row>
           )}
