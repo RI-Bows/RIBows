@@ -57,9 +57,9 @@ const NavBar: React.FC = () => {
             {currentUser && role === 'ADMIN' ? (
               <Nav.Link
                 id="admin-add-nav"
-                href="/addclub"
+                href="/addRio"
                 key="admin"
-                active={pathname === '/addclub'}
+                active={pathname === '/addRio'}
                 className="rb-nav-link"
               >
                 Add RIO
@@ -70,9 +70,9 @@ const NavBar: React.FC = () => {
             {currentUser && role === 'CLUB' && (
               <Nav.Link
                 id="admin-club-edit-nav"
-                active={pathname === '/editClub'}
-                href="/editClub"
-                key="editClub"
+                active={pathname === '/editRio'}
+                href="/editRio"
+                key="editRio"
                 className="rb-nav-link"
               >
                 Edit RIO
