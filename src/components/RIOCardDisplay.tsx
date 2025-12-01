@@ -19,7 +19,7 @@ const RIOCardDisplay: React.FC<Props> = ({ rioList }: Props) => {
             style={{ cursor: 'pointer', all: 'unset', display: 'block' }}
             onClick={() => setSelectedRio(rio)}
           >
-            <div className="trending-card h-100">
+            <div className="trending-card">
               <h5 className="trending-card-title">{rio.name}</h5>
               <p className="text-muted mb-1 text-center">{rio.interest.name}</p>
               <p className="trending-card-text">{rio.purposeStatement}</p>
