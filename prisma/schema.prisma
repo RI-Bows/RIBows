@@ -8,11 +8,19 @@ datasource db {
   directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
+model User {
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  password  String
+  interests Interest[]
+  role      Role       @default(USER)
+}
+
 model Interest {
-  id   Int    @id @default(autoincrement())
-  name String @unique
-  Rio  Rio[]
-  User User[]
+  id       Int               @id @default(autoincrement())
+  name     String            @unique
+  rios     Rio[]
+  users    User[]
 }
 
 model Rio {

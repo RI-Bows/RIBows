@@ -7,134 +7,24 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Seeding the database');
 
-  for (const project of config.defaultProjects) {
-    console.log(`  Creating/Updating project ${project.name}`);
-    for (const interest of project.interests) {
-      // console.log(`Project ${project.name} ${interest}`);
-      // eslint-disable-next-line no-await-in-loop
-      await prisma.interest.upsert({
-        where: { name: interest },
-        update: {},
-        create: { name: interest },
-      });
-      // eslint-disable-next-line no-await-in-loop
-      const dbProject = await prisma.project.upsert({
-        where: { name: project.name },
-        update: {},
-        create: {
-          name: project.name,
-          description: project.description,
-          homepage: project.homepage,
-          picture: project.picture,
-        },
-      });
-      for (const intere of project.interests) {
-        // eslint-disable-next-line no-await-in-loop
-        const dbInterest = await prisma.interest.findUnique({
-          where: { name: intere },
-        });
-        // console.log(`${dbProject.name} ${dbInterest!.name}, ${dbInterest}`);
-        // eslint-disable-next-line no-await-in-loop
-        const dbProjectInterest = await prisma.projectInterest.findMany({
-          where: { projectId: dbProject.id, interestId: dbInterest!.id },
-        });
-        if (dbProjectInterest.length === 0) {
-          // eslint-disable-next-line no-await-in-loop
-          await prisma.projectInterest.create({
-            data: {
-              projectId: dbProject.id,
-              interestId: dbInterest!.id,
-            },
-          });
-        }
-      }
-    }
-  }
+  // Seed default Users
+  for (const user of config.defaultUsers) {
+    console.log(`  Creating/Updating user ${user.email}`);
 
-  const password = await hash('foo', 10);
+    // eslint-disable-next-line no-await-in-loop
+    const password = await hash(user.password, 10);
+    const role = (user.role as Role) || Role.USER;
 
-  for (const profile of config.defaultProfiles) {
-    console.log(`  Creating/Updating profile ${profile.email}`);
-    // upsert interests from the profile
-    for (const interest of profile.interests) {
-      // eslint-disable-next-line no-await-in-loop
-      await prisma.interest.upsert({
-        where: { name: interest },
-        update: {},
-        create: { name: interest },
-      });
-    }
-    // Upsert/Create the user so they can login.
-    const role = (profile.role as Role) || Role.USER;
-    // console.log(`  Creating user: ${profile.email} with role: ${role}`);
     // eslint-disable-next-line no-await-in-loop
     await prisma.user.upsert({
-      where: { email: profile.email },
+      where: { email: user.email },
       update: {},
       create: {
-        email: profile.email,
+        email: user.email,
         password,
         role,
       },
     });
-    // Upsert/Create the profile.
-    // eslint-disable-next-line no-await-in-loop
-    const dbProfile = await prisma.profile.upsert({
-      where: { email: profile.email },
-      update: {},
-      create: {
-        email: profile.email,
-        firstName: profile.firstName,
-        lastName: profile.lastName,
-        bio: profile.bio,
-        picture: profile.picture,
-      },
-    });
-    for (const interest of profile.interests) {
-      // eslint-disable-next-line no-await-in-loop
-      const dbInterest = await prisma.interest.findUnique({
-        where: { name: interest },
-      });
-      // console.log(`${dbProfile.firstName} ${dbInterest!.name}`);
-      // eslint-disable-next-line no-await-in-loop
-      const dbProfileInterest = await prisma.profileInterest.findMany({
-        where: { profileId: dbProfile.id, interestId: dbInterest!.id },
-      });
-      if (dbProfileInterest.length === 0) {
-        // Create the profile interest
-        // eslint-disable-next-line no-await-in-loop
-        await prisma.profileInterest.create({
-          data: {
-            profileId: dbProfile.id,
-            interestId: dbInterest!.id,
-          },
-        });
-      }
-    }
-    // Upsert/Create the profile projects
-    for (const project of profile.projects) {
-      // console.log(`Project member ${dbProfile.firstName} ${project}`);
-      // eslint-disable-next-line no-await-in-loop
-      const dbProject = await prisma.project.findFirst({
-        where: { name: project },
-      });
-      const dbProfileProject = dbProject
-        // eslint-disable-next-line no-await-in-loop
-        ? await prisma.profileProject.findMany({
-          where: { profileId: dbProfile.id, projectId: dbProject.id },
-        })
-        : [];
-      if (dbProject && dbProfileProject.length === 0) {
-        // Create the profile project
-        // eslint-disable-next-line no-await-in-loop
-        await prisma.profileProject.create({
-          data: {
-            profileId: dbProfile.id,
-            projectId: dbProject.id,
-          },
-        });
-      }
-    }
   }
 
   // Seed default RIOs

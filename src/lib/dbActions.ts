@@ -33,19 +33,28 @@ export async function changePassword(credentials: { email: string; password: str
   });
 }
 
-export async function getRios() {
-  return prisma.rio.findMany();
-}
-
-// TODO: Delete this eslint override once DB updated
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function createUser(credentials: { email: string; password: string }, interests: Interest[]) {
   // console.log(`createUser data: ${JSON.stringify(credentials, null, 2)}`);
+  const email = credentials.email?.toLowerCase?.() ?? credentials.email;
+
+  // Enforce domain policy: only allow @hawaii.edu addresses
+  if (!email || !email.endsWith('@hawaii.edu')) {
+    throw new Error('INVALID_DOMAIN');
+  }
+
+  // Pre-check for existing user to provide a friendly error message
+  const existing = await getUser(email);
+  if (existing) {
+    throw new Error('DUPLICATE_EMAIL');
+  }
+
   const password = await hash(credentials.password, 10);
+
   await prisma.user.create({
     data: {
-      email: credentials.email,
+      email,
       password,
+      // role defaults to USER in schema; explicit assignment kept out to avoid accidental privilege elevation
       interests: {
         connectOrCreate: interests.map((interest) => ({
           where: { name: interest.name },
@@ -55,49 +64,6 @@ export async function createUser(credentials: { email: string; password: string 
     },
   });
 }
-
-export async function createProject(project: any) {
-  // console.log(`createProject data: ${JSON.stringify(project, null, 2)}`);
-  const dbProject = await prisma.project.create({
-    data: project,
-  });
-  return dbProject;
-}
-
-export type TrendingRio = {
-  id: number;
-  name: string;
-  blurb: string;
-  count: number;
-  interest: string;
-};
-
-// EC 11/24/25 - Commenting this out for now since schema was just updated and
-// popularity should be determined by something like number of bookmarks
-// TODO: Update this logic and reimplement it in the search/trending page
-// export const getTrendingRios = async (limit = 9): Promise<TrendingRio[]> => {
-//   const rios = await prisma.rio.findMany({
-//     take: limit,
-//     orderBy: {
-//       RioInterest: {
-//         _count: 'desc',
-//       },
-//     },
-//     include: {
-//       _count: {
-//         select: { RioInterest: true },
-//       },
-//     },
-//   });
-//
-//   return rios.map((r) => ({
-//     id: r.id,
-//     name: r.name,
-//     blurb: r.purposeStatement ?? 'No description yet.',
-//     // eslint-disable-next-line no-underscore-dangle
-//     count: r._count?.RioInterest ?? 0,
-//   }));
-// };
 
 export type RioType = {
   name: string;
@@ -162,111 +128,4 @@ export async function upsertRios(rios: RioType[]) {
  */
 export async function getInterests(): Promise<Interest[]> {
   return prisma.interest.findMany();
-}
-
-export async function upsertProject(project: any) {
-  // console.log(`upsertProject data: ${JSON.stringify(project, null, 2)}`);
-  const dbProject = await prisma.project.upsert({
-    where: { name: project.name },
-    update: {},
-    create: {
-      name: project.name,
-      description: project.description,
-      homepage: project.homepage,
-      picture: project.picture,
-    },
-  });
-  project.interests.forEach(async (interest: string) => {
-    const dbInterest = await prisma.interest.findUnique({
-      where: { name: interest },
-    });
-    // console.log(`${dbProject.name} ${dbInterest!.name}`);
-    const dbProjectInterest = await prisma.projectInterest.findMany({
-      where: { projectId: dbProject.id, interestId: dbInterest!.id },
-    });
-    if (dbProjectInterest.length === 0) {
-      await prisma.projectInterest.create({
-        data: {
-          projectId: dbProject.id,
-          interestId: dbInterest!.id,
-        },
-      });
-    }
-  });
-  project.participants.forEach(async (email: string) => {
-    const dbProfile = await prisma.profile.findUnique({
-      where: { email },
-    });
-    const dbProfileProject = await prisma.profileProject.findMany({
-      where: { projectId: dbProject.id, profileId: dbProfile!.id },
-    });
-    if (dbProfileProject.length === 0) {
-      await prisma.profileProject.create({
-        data: {
-          projectId: dbProject.id,
-          profileId: dbProfile!.id,
-        },
-      });
-    }
-  });
-  return dbProject;
-}
-
-export async function updateProfile(profile: any) {
-  console.log(`updateProfile data: ${JSON.stringify(profile, null, 2)}`);
-  const dbProfile = await prisma.profile.upsert({
-    where: { email: profile.email },
-    update: {
-      firstName: profile.firstName,
-      lastName: profile.lastName,
-      bio: profile.bio,
-    },
-    create: {
-      firstName: profile.firstName,
-      lastName: profile.lastName,
-      bio: profile.bio,
-      email: profile.email,
-    },
-  });
-  if (profile.interests) {
-    // Delete all profile interests
-    await prisma.profileInterest.deleteMany({
-      where: { profileId: dbProfile.id },
-    });
-    // Add the new profile interests
-    profile.interests.forEach(async (intere: string) => {
-      const dbInterest = await prisma.interest.findUnique({
-        where: { name: intere },
-      });
-      await prisma.profileInterest.create({
-        data: {
-          profileId: dbProfile.id,
-          interestId: dbInterest!.id,
-        },
-      });
-    });
-  }
-  if (profile.projects) {
-    // Delete all profile projects
-    await prisma.profileProject.deleteMany({
-      where: { profileId: dbProfile.id },
-    });
-    // Delete all the profile projects
-    await prisma.profileProject.deleteMany({
-      where: { profileId: dbProfile.id },
-    });
-    // Add the new profile projects
-    profile.projects.forEach(async (projectName: string) => {
-      const dbProject = await prisma.project.findUnique({
-        where: { name: projectName },
-      });
-      await prisma.profileProject.create({
-        data: {
-          profileId: dbProfile.id,
-          projectId: dbProject!.id,
-        },
-      });
-    });
-  }
-  return dbProfile;
 }
