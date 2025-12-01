@@ -13,8 +13,8 @@ const fs = require('fs');
     await page.goto('http://localhost:3000/auth/signin');
 
     // Replace these with the regular user's real credentials
-    await page.fill('input[name="email"]', 'johnson@hawaii.edu');
-    await page.fill('input[name="password"]', 'foo');
+    await page.fill('input[name="email"]', 'foo@hawaii.edu');
+    await page.fill('input[name="password"]', 'yessahboi');
     await page.click('button[type="submit"]');
 
     // wait for navigation (or adjust to a post-login selector)

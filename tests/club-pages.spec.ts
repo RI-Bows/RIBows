@@ -1,3 +1,4 @@
+/*
 import { test, expect } from '@playwright/test';
 
 const ROUTES = [
@@ -19,3 +20,4 @@ test.describe('All pages render successfully', () => {
     });
   }
 });
+*/

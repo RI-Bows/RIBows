@@ -12,8 +12,8 @@ const fs = require('fs');
     await page.goto('http://localhost:3000/auth/signin');
 
     // replace with the club user's real credentials
-    await page.fill('input[name="email"]', 'club@hawaii.edu');
-    await page.fill('input[name="password"]', 'foo');
+    await page.fill('input[name="email"]', 'club@hawaii.edu'); // change when we have a club user
+    await page.fill('input[name="password"]', 'foo'); // change when we have a club user
     await page.click('button[type="submit"]');
 
     // wait for navigation after successful login

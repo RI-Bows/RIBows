@@ -11,8 +11,8 @@ const { chromium } = require('@playwright/test');
   try {
     await page.goto('http://localhost:3000/auth/signin');
 
-    await page.fill('input[name="email"]', 'admin@foo.com'); // set correct creds
-    await page.fill('input[name="password"]', 'foo'); // set correct password
+    await page.fill('input[name="email"]', 'ribows@admin.com'); // set correct creds
+    await page.fill('input[name="password"]', '3N7T0w03l6&x'); // set correct password
     await page.click('button[type="submit"]');
 
     // wait for navigation or error query
