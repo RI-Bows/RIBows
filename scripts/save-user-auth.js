@@ -1,6 +1,5 @@
-/* eslint-disable */
 /* Standalone script to save a regular user session for Playwright tests */
-const { chromium } = require('@playwright/test');
+const { chromium } = require('playwright');
 const fs = require('fs');
 
 (async () => {

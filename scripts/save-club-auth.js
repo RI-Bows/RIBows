@@ -1,6 +1,5 @@
-/* eslint-disable */
 /* Save storage state for a club user so Playwright tests can use it */
-const { chromium } = require('@playwright/test');
+const { chromium } = require('playwright');
 const fs = require('fs');
 
 (async () => {
