@@ -37,14 +37,6 @@ model Rio {
   Interest         Interest @relation(fields: [interestId], references: [id])
 }
 
-model User {
-  id       Int        @id @default(autoincrement())
-  email    String     @unique
-  password String
-  role     Role       @default(USER)
-  Interest Interest[]
-}
-
 enum Role {
   USER
   ADMIN
