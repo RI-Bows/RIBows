@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import Papa from 'papaparse';
-import { RioType, upsertRios } from '@/lib/dbActions';
+import { ParsedRioType, upsertRios } from '@/lib/dbActions';
 
 const RIO_CSV_URL: string = 'https://docs.google.com/spreadsheets/d/'
   + '1vK_ixq3a86uXjHXy9oNnyYHwAvyU9smNPKuJU6OYd-Q/'
@@ -39,7 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Array of objects keyed by column headers
-    const rios: RioType[] = result.data.map((r: any) => ({
+    const rios: ParsedRioType[] = result.data.map((r: any) => ({
       name: r['Name of Organization'],
       approvalDate: new Date(Date.parse(r['Date Approved'])),
       expirationDate: new Date(Date.parse(r['Expiration Date'])),
