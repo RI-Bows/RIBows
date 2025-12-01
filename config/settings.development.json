@@ -16,6 +16,11 @@
         "email": "ribows@admin.com",
         "password": "3N7T0w03l6&x",
         "role": "ADMIN"
+      },
+      {
+        "email": "phambrit@hawaii.edu",
+        "password": "clubtest123",
+        "role": "CLUB"
       }
     ]
   }

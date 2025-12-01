@@ -1,11 +1,10 @@
-/*
 import { test, expect } from '@playwright/test';
 
 test.use({
   storageState: './club-auth.json',
 });
 
-test('User pages render successfully', async ({ page }) => {
+test('Club User pages test', async ({ page }) => {
   const response = await page.goto('http://localhost:3000');
   expect(response?.status()).toBeLessThan(400);
 
@@ -29,6 +28,17 @@ test('User pages render successfully', async ({ page }) => {
   // check edit RIO page
   await page.getByRole('link', { name: 'Edit RIO' }).click();
   await expect(page).toHaveURL('http://localhost:3000/editRio');
+  await expect(page.getByRole('heading', { name: 'Edit RIO' })).toBeVisible();
+  await expect(page.getByText('RIO Name')).toBeVisible();
+  await expect(page.getByText('Purpose Statement')).toBeVisible();
+  await expect(page.getByText('Main Contact')).toBeVisible();
+  await expect(page.getByText('Email')).toBeVisible();
+  await expect(page.getByText('Interests')).toBeVisible();
+  await expect(page.getByRole('group', { name: 'Selected interests' })).toBeVisible();
+  await expect(page.getByText('Image', { exact: true })).toBeVisible();
+  await expect(page.getByRole('img', { name: 'Current image' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Choose File' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Save Changes' })).toBeVisible();
 
   // check about us page
   await page.getByRole('link', { name: 'About Us' }).click();
@@ -41,7 +51,7 @@ test('User pages render successfully', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Bookmarks Page' })).toBeVisible();
 
   // check edit profile page
-  await page.getByRole('button', { name: 'foo@hawaii.edu' }).click();
+  await page.getByRole('button', { name: 'phambrit@hawaii.edu' }).click();
   await page.getByRole('link', { name: 'Edit Profile' }).click();
   await expect(page).toHaveURL('http://localhost:3000/editProfile');
   await expect(page.getByRole('heading', { name: 'Edit Profile' })).toBeVisible();
@@ -50,5 +60,3 @@ test('User pages render successfully', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Save' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Reset' })).toBeVisible();
 });
-
-*/

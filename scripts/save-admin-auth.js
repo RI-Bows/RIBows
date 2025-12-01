@@ -1,7 +1,6 @@
-/* eslint-disable */
 /* This file is a standalone Node script not included in tsconfig.json,
 disable ESLint for this file to avoid parserOptions.project errors. */
-const { chromium } = require('@playwright/test');
+const { chromium } = require('playwright');
 
 (async () => {
   const browser = await chromium.launch({ headless: false, slowMo: 50 });
