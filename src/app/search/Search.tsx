@@ -38,9 +38,9 @@ export default function SearchPage({ rioList, interests }: SearchProps) {
       case 'oldest':
         return sorted.sort((a, b) => a.approvalDate.getTime() - b.approvalDate.getTime());
       case 'alphabetical':
-        return sorted.sort((a, b) => a.name.localeCompare(b.name));
+        return sorted.sort((a, b) => a.name.localeCompare(b.name, 'en', { ignorePunctuation: true }));
       case 'reverse':
-        return sorted.sort((a, b) => b.name.localeCompare(a.name));
+        return sorted.sort((a, b) => b.name.localeCompare(a.name, 'en', { ignorePunctuation: true }));
       default:
         return sorted;
     }
