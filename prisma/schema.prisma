@@ -34,7 +34,7 @@ model Rio {
   approvalDate     DateTime @db.Date
   interestId       Int
   bookmarks        Int      @default(0)
-  Interest         Interest @relation(fields: [interestId], references: [id])
+  interest         Interest @relation(fields: [interestId], references: [id])
 }
 
 enum Role {
