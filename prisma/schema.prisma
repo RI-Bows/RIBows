@@ -26,13 +26,13 @@ model Interest {
 model Rio {
   id               Int      @id @default(autoincrement())
   name             String   @unique
-  approvalDate     DateTime @db.Date
   expirationDate   DateTime @db.Date
   purposeStatement String?
-  interestId       Int
   mainContact      String
   email            String
   image            String?
+  approvalDate     DateTime @db.Date
+  interestId       Int
   bookmarks        Int      @default(0)
   interest         Interest @relation(fields: [interestId], references: [id])
 }

@@ -8,6 +8,8 @@ import pageStyle from '@/utilities/pageStyle';
 import { useState, useEffect } from 'react';
 import { RioType } from '@/lib/dbActions';
 import { Interest } from '@prisma/client';
+import RIOCardDisplay from '@/components/RIOCardDisplay';
+
 // import { IRIO } from '@/lib/validationSchemas';
 // import { prisma } from '@/lib/prisma';
 
@@ -147,17 +149,7 @@ export default function SearchPage({ rioList, interests }: SearchProps) {
             </div>
           ) : (
             <Row xs={1} md={3} className="g-4">
-              {filteredItems.map((rio) => (
-                <Col key={rio.id}>
-                  <div className="trending-card">
-                    <h5 className="trending-card-title">{rio.name}</h5>
-                    <p className="text-muted mb-1">{`Approved: ${rio.approvalDate.toDateString()}`}</p>
-                    <p className="text-muted mb-1">{`Bookmarks: ${rio.bookmarks}`}</p>
-                    <p className="text-muted mb-1">{rio.interest.name}</p>
-                    <p className="trending-card-text">{rio.purposeStatement}</p>
-                  </div>
-                </Col>
-              ))}
+              <RIOCardDisplay rioList={filteredItems} />
             </Row>
           )}
         </div>
