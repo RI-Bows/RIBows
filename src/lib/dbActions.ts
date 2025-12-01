@@ -1,7 +1,7 @@
 'use server';
 
 import { compare, hash } from 'bcrypt';
-import { Interest } from '@prisma/client';
+import { Interest, Rio } from '@prisma/client';
 import { prisma } from './prisma';
 
 export async function getUser(email: string) {
@@ -65,7 +65,7 @@ export async function createUser(credentials: { email: string; password: string 
   });
 }
 
-export type RioType = {
+export type ParsedRioType = {
   name: string;
   approvalDate: Date;
   expirationDate: Date;
@@ -78,9 +78,9 @@ export type RioType = {
 
 /**
  * Upserts an rio.
- * @param {RioType} rio: The RIO to upsert.
+ * @param {ParsedRioType} rio: The RIO to upsert.
  */
-export async function upsertRio(rio: RioType) {
+export async function upsertRio(rio: ParsedRioType) {
   const interest = await prisma.interest.upsert({
     where: { name: rio.interestName },
     update: {},
@@ -113,13 +113,35 @@ export async function upsertRio(rio: RioType) {
 
 /**
  * Bulk upserts multiple rios.
- * @param {Array.<RioType>} rios: The RIOs to upsert.
+ * @param {Array.<ParsedRioType>} rios: The RIOs to upsert.
  */
-export async function upsertRios(rios: RioType[]) {
+export async function upsertRios(rios: ParsedRioType[]) {
   for (const rio of rios) {
     // eslint-disable-next-line no-await-in-loop
     await upsertRio(rio);
   }
+}
+
+export type RioType = Rio & {
+  interest: {
+    name: string;
+  };
+};
+
+/**
+ * Retrieves all RIOs with their interest.
+ * @returns {Promise<RioType[]>} The RIOs.
+ */
+export async function getRios(): Promise<RioType[]> {
+  return prisma.rio.findMany({
+    include: {
+      interest: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
 }
 
 /**
