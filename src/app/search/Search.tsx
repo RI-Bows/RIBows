@@ -123,8 +123,7 @@ export default function SearchPage({ rioList, interests }: SearchProps) {
                 <Row>
                   <Form.Label>Club Type</Form.Label>
 
-                  {/* First Column (index 0–6) */}
-                  <Col xs={6}>
+                  <Col xs={12} sm={12} xl={6}>
                     {interestOptions.slice(0, 6).map((interestName) => (
                       <Form.Check
                         key={interestName}
@@ -139,9 +138,7 @@ export default function SearchPage({ rioList, interests }: SearchProps) {
                       />
                     ))}
                   </Col>
-
-                  {/* Second Column (index 7+) */}
-                  <Col xs={6}>
+                  <Col xs={12} sm={12} xl={6}>
                     {interestOptions.slice(6).map((interestName) => (
                       <Form.Check
                         key={interestName}
