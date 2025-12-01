@@ -1,9 +1,9 @@
-
 'use client';
 
 import { Col, Container, Row, Accordion, Form } from 'react-bootstrap';
 import pageStyle from '@/utilities/pageStyle';
 import { useState, useEffect } from 'react';
+import RIOCardDisplay from '@/components/RIOCardDisplay';
 // import { IRIO } from '@/lib/validationSchemas';
 // import { prisma } from '@/lib/prisma';
 
@@ -13,59 +13,77 @@ const fallbackTrendingRios: any[] = [
     name: 'Ka Mea Kolo',
     purposeStatement: "Shares enthusiasm for Earth's diverse creatures, especially those that call Hawai'i home.",
     count: 0,
-    interest: 'Academic/Professional',
+    type: 'Academic/Professional',
+    mainContact: 'Britney Pham',
+    email: 'phambrit@hawaii.edu',
   },
   { id: 2,
     name: 'Women in STEM',
-    purposeStatement: 'Support, , and elevate students who identify as women pursuing degrees in STEM.',
+    purposeStatement: 'Support, and elevate students who identify as women pursuing degrees in STEM.',
     count: 0,
-    interest: 'Academic/Professional',
+    type: 'Academic/Professional',
+    mainContact: 'Britney Pham',
+    email: 'phambrit@hawaii.edu',
   },
   { id: 3,
     name: 'Natural Sciences Student Ambassadors',
     // eslint-disable-next-line max-len
     purposeStatement: 'Promote a welcoming and inclusive community for all students pursuing a degree in the Natural Sciences',
     count: 0,
-    interest: 'Academic/Professional',
+    type: 'Academic/Professional',
+    mainContact: 'Britney Pham',
+    email: 'phambrit@hawaii.edu',
   },
   { id: 4,
     name: 'K-pop Cardio Crew ',
     purposeStatement: 'Creating a supportive community for students who love K-Pop and dancing.',
     count: 0,
-    interest: 'Leisure/Recreational',
+    type: 'Leisure/Recreational',
+    mainContact: 'Britney Pham',
+    email: 'phambrit@hawaii.edu',
   },
   { id: 5,
     name: 'Beta Beta Gamma Sorority',
     // eslint-disable-next-line max-len
     purposeStatement: 'Cultivate lifelong friendships, celebrate diversity, and make meaningful contributions to society.',
     count: 0,
-    interest: 'Fraternity/Sorority',
+    type: 'Fraternity/Sorority',
+    mainContact: 'Britney Pham',
+    email: 'phambrit@hawaii.edu',
   },
   { id: 6,
     name: 'Cafe Hoppers',
     purposeStatement: 'We also explore and engage with small businesses owners within our community.',
     count: 0,
-    interest: 'Leisure/Recreational',
+    type: 'Leisure/Recreational',
+    mainContact: 'Britney Pham',
+    email: 'phambrit@hawaii.edu',
   },
   { id: 7,
     name: 'Chinese Club',
     // eslint-disable-next-line max-len
     purposeStatement: 'Create a community to learn, appreciate, and celebrate aspects of Chinese culture and language.',
     count: 0,
-    interest: 'Ethnic/Cultural',
+    type: 'Ethnic/Cultural',
+    mainContact: 'Britney Pham',
+    email: 'phambrit@hawaii.edu',
   },
   { id: 8,
     name: 'Hawaii Powerlifting Club',
     purposeStatement: 'Create a team that can represent the University at local,  state, and national competitions.',
     count: 0,
-    interest: 'Sports/Leisure',
+    type: 'Sports/Leisure',
+    mainContact: 'Britney Pham',
+    email: 'phambrit@hawaii.edu',
   },
   { id: 9,
     name: 'Inspire Church YA',
     // eslint-disable-next-line max-len
     purposeStatement: 'Provide a Christ- community where students can grow in their faith and build relationships.',
     count: 0,
-    interest: 'Religious/Spiritual',
+    type: 'Religious/Spiritual',
+    mainContact: 'Britney Pham',
+    email: 'phambrit@hawaii.edu',
   },
 ];
 
@@ -120,21 +138,21 @@ export default function SearchPage() {
   // Update your useEffect to handle interest filtering
   useEffect(() => {
     let results = rios;
-  
+
     // Filter by search query
     if (searchQuery !== '') {
-      results = results.filter( 
+      results = results.filter(
         item => item.name.toLowerCase().includes(searchQuery.toLowerCase())
-      || item.interest.toLowerCase().includes(searchQuery.toLowerCase())
+      || item.type.toLowerCase().includes(searchQuery.toLowerCase())
       || item.purposeStatement.toLowerCase().includes(searchQuery.toLowerCase()),
       );
     }
-  
+
     // Filter by interest/type
     if (selectedType !== 'all') {
-      results = results.filter(item => item.interest === selectedType);
+      results = results.filter(item => item.type === selectedType);
     }
-  
+
     // Apply sorting
     setFilteredItems(sortItems(results, sortBy));
   }, [searchQuery, rios, sortBy, selectedType]);
@@ -168,8 +186,8 @@ export default function SearchPage() {
                 <Row className="mb-3">
                   <Col md={6}>
                     <Form.Label>Sort By</Form.Label>
-                    <Form.Select 
-                      value={sortBy} 
+                    <Form.Select
+                      value={sortBy}
                       onChange={(e) => handleSort(e.target.value)}
                     >
                       <option value="trending">Trending</option>
@@ -178,7 +196,7 @@ export default function SearchPage() {
                     </Form.Select>
                   </Col>
                 </Row>
-          
+
                 <Row>
                   <Form.Label>Club Type</Form.Label>
                   <Col md={5}>
@@ -268,15 +286,8 @@ export default function SearchPage() {
               <p className="text-muted">No clubs match your search. </p>
             </div>
           ) : (
-            <Row xs={1} md={3} className="g-4">
-              {filteredItems.map((rio) => (
-                <Col key={rio.id}>
-                  <div className="trending-card">
-                    <h5 className="trending-card-title">{rio.name}</h5>
-                    <p className="trending-card-text">{rio.purposeStatement}</p>
-                  </div>
-                </Col>
-              ))}
+            <Row xs={1} md={3} className="g-4 py-3">
+              <RIOCardDisplay rioList={filteredItems} />
             </Row>
           )}
         </div>
