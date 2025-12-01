@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, Col, Modal, Row } from 'react-bootstrap';
+import { Button, Card, CardBody, Col, Modal, Row } from 'react-bootstrap';
 import { RioType } from '@/lib/dbActions';
 
 type Props = {
@@ -16,14 +16,16 @@ const RIOCardDisplay: React.FC<Props> = ({ rioList }: Props) => {
       {rioList.map((rio) => (
         <Col key={rio.id} md={4}>
           <Button
-            style={{ cursor: 'pointer', all: 'unset', display: 'block' }}
+            style={{ cursor: 'pointer', all: 'unset', display: 'flex', width: '100%', height: '100%' }}
             onClick={() => setSelectedRio(rio)}
           >
-            <div className="trending-card">
+            <Card className="trending-card ">
               <h5 className="trending-card-title">{rio.name}</h5>
               <p className="text-muted mb-1 text-center">{rio.interest.name}</p>
-              <p className="trending-card-text">{rio.purposeStatement}</p>
-            </div>
+              <CardBody>
+                <p className="trending-card-text">{rio.purposeStatement}</p>
+              </CardBody>
+            </Card>
           </Button>
         </Col>
       ))}

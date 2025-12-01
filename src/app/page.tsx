@@ -166,7 +166,7 @@ export default async function Home() {
                 Trendy RIOs
               </h2>
               <div className="trending-panel">
-                <Row xs={1} md={3} className="g-4">
+                <Row xs={1} md={3} className="g-4 py-1">
                   <RIOCardDisplay rioList={fallbackTrendingRios} />
                 </Row>
               </div>
