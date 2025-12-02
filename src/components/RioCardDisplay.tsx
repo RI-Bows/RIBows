@@ -8,7 +8,7 @@ type Props = {
   rioList: RioType[];
 };
 
-const RIOCardDisplay: React.FC<Props> = ({ rioList }: Props) => {
+const RioCardDisplay: React.FC<Props> = ({ rioList }: Props) => {
   const [selectedRio, setSelectedRio] = useState<RioType | null>(null);
 
   return (
@@ -67,4 +67,4 @@ const RIOCardDisplay: React.FC<Props> = ({ rioList }: Props) => {
   );
 };
 
-export default RIOCardDisplay;
+export default RioCardDisplay;
