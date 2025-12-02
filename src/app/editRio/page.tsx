@@ -5,7 +5,7 @@ import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 
-export default async function EditClubPage() {
+export default async function EditRIOPage() {
   // Get the current user session (pass authOptions)
   const session = await getServerSession(authOptions);
 

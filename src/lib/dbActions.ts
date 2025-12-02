@@ -151,3 +151,19 @@ export async function getRios(): Promise<RioType[]> {
 export async function getInterests(): Promise<Interest[]> {
   return prisma.interest.findMany();
 }
+
+/**
+ * Retrieves a single RIO by its ID.
+ * @param {number} id - The RIO's unique ID.
+ * @returns {Promise<RioType | null>}
+ */
+export async function getRioById(id: number): Promise<RioType | null> {
+  return prisma.rio.findUnique({
+    where: { id },
+    include: {
+      interest: {
+        select: { name: true },
+      },
+    },
+  });
+}

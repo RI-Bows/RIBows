@@ -35,7 +35,7 @@ const RIOCardDisplay: React.FC<Props> = ({
               tabIndex={0}
               onClick={() => setSelectedRio(rio)}
               onKeyDown={(e) => { if (e.key === 'Enter') setSelectedRio(rio); }}
-              style={{ display: 'block', cursor: 'pointer' }}
+              style={{ display: 'block', cursor: 'pointer', paddingBottom: '2.5rem' }}
             >
               <h5 className="trending-card-title">{rio.name}</h5>
               <p className="text-muted mb-1 text-center">{rio.interest?.name ?? ''}</p>
@@ -48,7 +48,7 @@ const RIOCardDisplay: React.FC<Props> = ({
                 size="sm"
                 onClick={(e) => {
                   e.stopPropagation();
-                  // navigate to edit page - replace with router if you prefer client routing
+                  // navigate to edit page
                   window.location.href = `/editRio/${rio.id}`;
                 }}
                 style={{
