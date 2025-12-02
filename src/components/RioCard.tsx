@@ -1,34 +1,27 @@
 'use client';
 
+import { RioType } from '@/lib/dbActions';
 import { Button, Card } from 'react-bootstrap';
 
-type RIO = {
-  name: string;
-  type: string;
-  main_contact: string;
-  email: string;
-  description: string;
-};
-
 /* Renders a single RIO card. */
-const RioCard = ({ name, type, main_contact, email, description }: RIO) => (
+const RioCard = ({ rio }: { rio: RioType }) => (
   <Card className="h-100">
     <Card.Header className="bg-light">
-      <Card.Title>{name}</Card.Title>
-      <Card.Subtitle>{type}</Card.Subtitle>
+      <Card.Title>{rio.name}</Card.Title>
+      <Card.Subtitle>{rio.interest.name}</Card.Subtitle>
     </Card.Header>
     <Card.Body>
-      <Card.Text>{description}</Card.Text>
+      <Card.Text>{rio.purposeStatement}</Card.Text>
       <Card.Text>
         Main Contact:&nbsp;
-        {main_contact}
+        {rio.mainContact}
       </Card.Text>
       <Card.Text>
         Email:&nbsp;
-        {email}
+        {rio.email}
       </Card.Text>
       <Button variant="success">
-        <a href={`mailto:${email}`} style={{ color: 'inherit', textDecoration: 'none' }}>Contact</a>
+        <a href={`mailto:${rio.email}`} style={{ color: 'inherit', textDecoration: 'none' }}>Contact</a>
       </Button>
     </Card.Body>
   </Card>
