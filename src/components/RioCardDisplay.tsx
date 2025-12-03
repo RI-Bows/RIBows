@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, Col, Modal, Row } from 'react-bootstrap';
+import { Button, Card, CardBody, Col, Modal, Row } from 'react-bootstrap';
 import { RioType } from '@/lib/dbActions';
 import { useSession } from 'next-auth/react';
 
@@ -27,41 +27,39 @@ const RIOCardDisplay: React.FC<Props> = ({
     <>
       {rioList.map((rio) => (
         <Col key={rio.id} md={4}>
-          <div style={{ position: 'relative' }}>
-            {/* clickable card */}
-            <div
-              className="trending-card"
-              role="button"
-              tabIndex={0}
-              onClick={() => setSelectedRio(rio)}
-              onKeyDown={(e) => { if (e.key === 'Enter') setSelectedRio(rio); }}
-              style={{ display: 'block', cursor: 'pointer', paddingBottom: '2.5rem' }}
-            >
+          <Button
+            style={{ cursor: 'pointer', all: 'unset', display: 'flex', width: '100%', height: '100%' }}
+            onClick={() => setSelectedRio(rio)}
+          >
+            <Card className="trending-card ">
               <h5 className="trending-card-title">{rio.name}</h5>
-              <p className="text-muted mb-1 text-center">{rio.interest?.name ?? ''}</p>
-              <p className="trending-card-text">{rio.purposeStatement}</p>
-            </div>
-
-            {currentUser && role === 'ADMIN' ? (
-              <Button
-                variant="outline-primary"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // navigate to edit page
-                  window.location.href = `/editRio/${rio.id}`;
-                }}
-                style={{
-                  position: 'absolute',
-                  bottom: 8,
-                  right: 8,
-                  zIndex: 10,
-                }}
-              >
-                Edit
-              </Button>
-            ) : ('')}
-          </div>
+              <p className="text-muted mb-1 text-center">{rio.interest.name}</p>
+              <CardBody>
+                <p className="trending-card-text">{rio.purposeStatement}</p>
+              </CardBody>
+              <div style={{ position: 'relative' }}>
+                {currentUser && role === 'ADMIN' ? (
+                  <Button
+                    variant="outline-primary"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // navigate to edit page
+                      window.location.href = `/editRio/${rio.id}`;
+                    }}
+                    style={{
+                      position: 'absolute',
+                      bottom: 8,
+                      right: 8,
+                      zIndex: 10,
+                    }}
+                  >
+                    Edit
+                  </Button>
+                ) : ('')}
+              </div>
+            </Card>
+          </Button>
         </Col>
       ))}
 

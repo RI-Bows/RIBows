@@ -87,7 +87,7 @@ const NavBar: React.FC = () => {
                 key="bookmarks"
                 className="rb-nav-link d-flex align-items-center gap-1"
               >
-                Saved
+                Bookmarks
                 <Bookmarks />
               </Nav.Link>
             ) : (

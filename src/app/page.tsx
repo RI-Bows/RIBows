@@ -1,6 +1,6 @@
 import { Container, Row, Col, Image } from 'react-bootstrap';
 import { PageIDs } from '@/utilities/ids';
-import RIOCardDisplay from '@/components/RIOCardDisplay';
+import RioCardDisplay from '@/components/RioCardDisplay';
 import { RioType } from '@/lib/dbActions';
 
 export default async function Home() {
@@ -166,8 +166,8 @@ export default async function Home() {
                 Trendy RIOs
               </h2>
               <div className="trending-panel">
-                <Row xs={1} md={3} className="g-4">
-                  <RIOCardDisplay rioList={fallbackTrendingRios} />
+                <Row xs={1} md={3} className="g-4 py-1">
+                  <RioCardDisplay rioList={fallbackTrendingRios} />
                 </Row>
               </div>
             </Container>

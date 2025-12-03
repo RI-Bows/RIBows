@@ -129,11 +129,31 @@ export type RioType = Rio & {
 };
 
 /**
- * Retrieves all RIOs with their interest.
+ * Retrieves all RIOs.
  * @returns {Promise<RioType[]>} The RIOs.
  */
 export async function getRios(): Promise<RioType[]> {
   return prisma.rio.findMany({
+    include: {
+      interest: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+}
+
+/**
+ * Retrieve RIO.
+ * @param {string} name: The name of the RIO.
+ * @returns {Promise<RioType | null>} The RIO.
+ */
+export async function getRio(name: string): Promise<RioType | null> {
+  return prisma.rio.findFirst({
+    where: {
+      name,
+    },
     include: {
       interest: {
         select: {
@@ -150,6 +170,93 @@ export async function getRios(): Promise<RioType[]> {
  */
 export async function getInterests(): Promise<Interest[]> {
   return prisma.interest.findMany();
+}
+
+/**
+ * Creates a bookmark that maps the user to the RIO and increments the RIO bookmarks counter.
+ * @param {string} email: The email of the user adding a bookmark.
+ * @param {string} rioName: The name of the RIO to add a bookmark to.
+ */
+export async function addBookmark(email: string, rioName: string) {
+  await prisma.$transaction(async (tx) => {
+    const rio = await tx.rio.findUnique({
+      where: { name: rioName },
+    });
+    if (!rio) {
+      throw new Error(`RIO ${rioName} does not exist`);
+    }
+    const user = await tx.user.findUnique({
+      where: { email },
+    });
+    if (!user) {
+      throw new Error(`User with email ${email} does not exist`);
+    }
+
+    // Prevent duplicate bookmarks
+    const alreadyBookmarked = await tx.user.findFirst({
+      where: {
+        email,
+        rios: {
+          some: { name: rioName },
+        },
+      },
+      select: { id: true },
+    });
+
+    if (alreadyBookmarked) {
+      return;
+    }
+
+    // Update user's connected RIOs
+    await tx.user.update({
+      where: { email },
+      data: {
+        rios: {
+          connect: { id: rio.id },
+        },
+      },
+    });
+
+    // Update RIO's bookmarks counter
+    await tx.rio.update({
+      where: { name: rioName },
+      data: {
+        bookmarks: {
+          increment: 1,
+        },
+      },
+    });
+  });
+}
+
+/**
+ * Retrieve bookmarked RIOs.
+ * @param {string} email: The email of the user.
+ * @returns {Promise<RioType[] | null>} The RIOs.
+ */
+export async function getBookmarkedRios(email: string): Promise<RioType[] | null> {
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+    include: {
+      rios: {
+        include: {
+          interest: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!user) {
+    throw new Error(`User with email ${email} does not exist`);
+  }
+
+  return user.rios;
 }
 
 /**
