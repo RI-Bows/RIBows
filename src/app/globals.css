@@ -502,7 +502,7 @@ html, body {
 
 
 /* Edit RIOs CSS */
-/* Box that holds selected interest badges */
+
 .rb-interests-selected-box {
   background-color: var(--rb-surface);   /* soft off-white */
   border-color: var(--rb-accent);        /* mint border */
