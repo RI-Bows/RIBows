@@ -78,9 +78,24 @@ const RIOCardDisplay: React.FC<Props> = ({
         </Modal.Header>
 
         <Modal.Body>
-          {`Bookmarks: ${selectedRio?.bookmarks ?? 0}`}
-          <br />
-          <br />
+          <div className="d-flex align-items-center justify-content-between mb-2">
+            <p>
+              {`Bookmarks: ${selectedRio?.bookmarks ?? 0}`}
+            </p>
+            {currentUser && role === 'ADMIN' ? (
+              <Button
+                variant="outline-primary"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // navigate to edit page
+                  window.location.href = `/editRio/${selectedRio.id}`;
+                }}
+              >
+                Edit
+              </Button>
+            ) : ('')}
+          </div>
           <p>{selectedRio?.purposeStatement}</p>
           Main Contact:&nbsp;
           {selectedRio?.mainContact ?? ''}
