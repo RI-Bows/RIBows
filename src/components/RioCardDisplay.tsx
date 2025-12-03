@@ -10,7 +10,7 @@ type Props = {
   rioList: RioType[];
 };
 
-const RIOCardDisplay: React.FC<Props> = ({ rioList }: Props) => {
+const RioCardDisplay: React.FC<Props> = ({ rioList }: Props) => {
   const { data: session } = useSession();
   const email = session?.user?.email;
 
@@ -164,4 +164,4 @@ const RIOCardDisplay: React.FC<Props> = ({ rioList }: Props) => {
   );
 };
 
-export default RIOCardDisplay;
+export default RioCardDisplay;

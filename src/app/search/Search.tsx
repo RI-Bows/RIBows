@@ -8,7 +8,7 @@ import pageStyle from '@/utilities/pageStyle';
 import { useState, useEffect } from 'react';
 import { RioType } from '@/lib/dbActions';
 import { Interest } from '@prisma/client';
-import RIOCardDisplay from '@/components/RIOCardDisplay';
+import RioCardDisplay from '@/components/RioCardDisplay';
 
 // import { IRIO } from '@/lib/validationSchemas';
 // import { prisma } from '@/lib/prisma';
@@ -167,7 +167,7 @@ export default function Search({ rioList, interests }: SearchProps) {
             </div>
           ) : (
             <Row xs={1} md={3} className="g-4 py-1">
-              <RIOCardDisplay rioList={filteredItems} />
+              <RioCardDisplay rioList={filteredItems} />
             </Row>
           )}
         </div>
