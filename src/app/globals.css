@@ -130,12 +130,6 @@ html, body {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
-.trending-card-button {
-  all: unset;
-  cursor: pointer;
-  display: block;
-  width: 100%;
-}
 
 .trending-heading {
   margin-bottom: 1.5rem;
@@ -154,13 +148,17 @@ html, body {
   min-height: 220px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   cursor: pointer;
   word-wrap: break-word; 
   line-clamp: 2;
   overflow: hidden;
+}
+
+.trending-card-button {
+  justify-content: center;
 }
 
 .trending-card:hover {

@@ -53,10 +53,10 @@ export default function Search({ rioList, interests }: SearchProps) {
   };
 
   const handleInterest = (interest: string) => {
-    setSelectedType(interest); // Just update state, let useEffect do the rest
+    setSelectedType(interest);
   };
 
-  // Update your useEffect to handle interest filtering
+  // useEffect handles interest filtering
   useEffect(() => {
     let results = rios;
 
