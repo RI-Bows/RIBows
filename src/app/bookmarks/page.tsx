@@ -17,27 +17,48 @@ const BookmarksPage = async () => {
   const email = session?.user?.email;
 
   if (!email) {
-    return <div>Error: user not logged in</div>;
+    return (
+      <main>
+        <Container className="py-5">
+          <Row>
+            <Col md="auto" className="text-center">
+              <p>Error: user not logged in</p>
+            </Col>
+          </Row>
+        </Container>
+      </main>
+    );
   }
 
-  const rios: RioType[] = await getBookmarkedRios(email) ?? [];
+  const rios: RioType[] = (await getBookmarkedRios(email)) ?? [];
 
   return (
     <main>
       <Container className="py-5">
-        <Row className="">
+        <Row>
           <Col className="text-center">
             <h1>Bookmarks</h1>
+            <h5 className="pt-2">All of your saved RIOs.</h5>
           </Col>
         </Row>
-        <Row>
-          <Col className="text-center pt-2">
-            <h5>All of your saved RIOs.</h5>
-          </Col>
-        </Row>
-        <Row xs={1} md={2} lg={3} className="trending-panel my-2 py-3">
-          <RioCardDisplay rioList={rios} />
-        </Row>
+
+        {rios.length === 0 ? (
+          // Empty state: panel with centered message
+          <Row className="trending-panel my-2 py-3 justify-content-center">
+            <Col md={8} className="text-center text-muted">
+              <p style={{ fontSize: '2.0rem' }}>
+                You have no bookmarked RIOs. To bookmark a RIO, navigate to the{' '}
+                <a href="/search">Search page</a> and click the bookmark icon on
+                a RIO to save it here.
+              </p>
+            </Col>
+          </Row>
+        ) : (
+          // Non-empty state: panel with grid of cards
+          <Row xs={1} md={2} lg={3} className="trending-panel my-2 py-3">
+            <RioCardDisplay rioList={rios} />
+          </Row>
+        )}
       </Container>
     </main>
   );
