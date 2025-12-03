@@ -258,3 +258,19 @@ export async function getBookmarkedRios(email: string): Promise<RioType[] | null
 
   return user.rios;
 }
+
+/**
+ * Retrieves a single RIO by its ID.
+ * @param {number} id - The RIO's unique ID.
+ * @returns {Promise<RioType | null>}
+ */
+export async function getRioById(id: number): Promise<RioType | null> {
+  return prisma.rio.findUnique({
+    where: { id },
+    include: {
+      interest: {
+        select: { name: true },
+      },
+    },
+  });
+}

@@ -8,11 +8,15 @@ import { useSession } from 'next-auth/react';
 
 type Props = {
   rioList: RioType[];
+  role?: string | null;
+  currentUser?: any;
 };
 
-const RioCardDisplay: React.FC<Props> = ({ rioList }: Props) => {
+const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser: propCurrentUser }: Props) => {
   const { data: session } = useSession();
   const email = session?.user?.email;
+  const role = propRole ?? (session?.user as any)?.role ?? null;
+  const currentUser = propCurrentUser ?? session?.user?.email ?? null;
 
   // Store only the IDs of bookmarked RIOs
   const [userBookmarkIds, setUserBookmarkIds] = useState<number[]>([]);
@@ -32,8 +36,21 @@ const RioCardDisplay: React.FC<Props> = ({ rioList }: Props) => {
 
       const data = await res.json();
       console.log('Bookmarks from API:', data);
-      // convert RIO objects → array of IDs
-      setUserBookmarkIds(data);
+
+      // Normalize response to number[] (support numbers, array of objects, or wrapper)
+      let ids: number[] = [];
+      if (Array.isArray(data)) {
+        if (data.length === 0) ids = [];
+        else if (typeof data[0] === 'number') {
+          ids = data as number[];
+        } else if (typeof data[0] === 'object') {
+          ids = data.map((d: any) => Number(d.rioId ?? d.id ?? d.rio?.id ?? d)).filter(Boolean);
+        }
+      } else if (data && typeof data === 'object') {
+        if (Array.isArray((data as any).ids)) ids = (data as any).ids.map(Number);
+      }
+
+      setUserBookmarkIds(ids);
     }
 
     if (email) {
@@ -95,7 +112,10 @@ const RioCardDisplay: React.FC<Props> = ({ rioList }: Props) => {
 
         return (
           <Col key={rio.id} md={4}>
-            <Card className="trending-card">
+            <Card
+              className="trending-card"
+              style={{ position: 'relative', paddingBottom: 30 }} // room for the Edit button
+            >
               <Row>
                 <Col sm={2}>
                   {email && (
@@ -121,6 +141,24 @@ const RioCardDisplay: React.FC<Props> = ({ rioList }: Props) => {
                   <p className="trending-card-text">{rio.purposeStatement}</p>
                 </CardBody>
               </Button>
+              {currentUser && role === 'ADMIN' && (
+                <Button
+                  variant="outline-primary"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation(); // don't open the card modal
+                    window.location.href = `/editRio/${rio.id}`;
+                  }}
+                  style={{
+                    position: 'absolute',
+                    bottom: 10,
+                    right: 10,
+                    zIndex: 10,
+                  }}
+                >
+                  Edit
+                </Button>
+              )}
             </Card>
           </Col>
         );
@@ -134,15 +172,30 @@ const RioCardDisplay: React.FC<Props> = ({ rioList }: Props) => {
       >
         <Modal.Header closeButton>
           <Row>
-            <Modal.Title>{selectedRio?.name}</Modal.Title>
-            <h6 className="py-1">{selectedRio?.interest.name}</h6>
+            <Modal.Title>{selectedRio?.name ?? ''}</Modal.Title>
+            <h6 className="py-1">{selectedRio?.interest?.name ?? ''}</h6>
           </Row>
         </Modal.Header>
 
         <Modal.Body>
-          {`Bookmarks: ${selectedRio?.bookmarks}`}
-          <br />
-          <br />
+          <div className="d-flex align-items-center justify-content-between mb-2">
+            <p>
+              {`Bookmarks: ${selectedRio?.bookmarks ?? 0}`}
+            </p>
+            {currentUser && role === 'ADMIN' ? (
+              <Button
+                variant="outline-primary"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  // navigate to edit page
+                  if (selectedRio?.id) window.location.href = `/editRio/${selectedRio.id}`;
+                }}
+              >
+                Edit
+              </Button>
+            ) : ('')}
+          </div>
           <p>{selectedRio?.purposeStatement}</p>
           Main Contact:&nbsp;
           {selectedRio?.mainContact}
@@ -150,7 +203,9 @@ const RioCardDisplay: React.FC<Props> = ({ rioList }: Props) => {
           Email:&nbsp;
           {selectedRio?.email}
           <br />
-          {`Approved: ${selectedRio?.approvalDate.toDateString()}`}
+          {`Approved: ${
+            selectedRio?.approvalDate ? new Date(selectedRio.approvalDate).toDateString() : ''
+          }`}
           <br />
           <br />
           <Row className="justify-content-center" md={3}>
@@ -162,6 +217,11 @@ const RioCardDisplay: React.FC<Props> = ({ rioList }: Props) => {
       </Modal>
     </>
   );
+};
+
+RioCardDisplay.defaultProps = {
+  role: null,
+  currentUser: null,
 };
 
 export default RioCardDisplay;
