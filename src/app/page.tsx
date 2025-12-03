@@ -1,6 +1,6 @@
 import { Container, Row, Col, Image } from 'react-bootstrap';
 import { PageIDs } from '@/utilities/ids';
-import RioCardDisplay from '@/components/RioCardDisplay';
+import RioCardDisplay from '@/components/RIOCardDisplay';
 import { RioType } from '@/lib/dbActions';
 
 export default async function Home() {

@@ -1,34 +1,84 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Card, CardBody, Col, Modal, Row } from 'react-bootstrap';
+import { Bookmark, BookmarkCheckFill } from 'react-bootstrap-icons';
 import { RioType } from '@/lib/dbActions';
+import { useSession } from 'next-auth/react';
 
 type Props = {
   rioList: RioType[];
 };
 
-const RioCardDisplay: React.FC<Props> = ({ rioList }: Props) => {
+const RIOCardDisplay: React.FC<Props> = ({ rioList }: Props) => {
+  const { data: session } = useSession();
+  // role for admin or club person to edit their club
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const role = (session?.user as any)?.role ?? null;
+  const email = session?.user?.email;
+
+  const [userBookmarks, setUserBookmarks] = useState<number[]>([]);
   const [selectedRio, setSelectedRio] = useState<RioType | null>(null);
+
+  useEffect(() => {
+    if (!email) return;
+
+    const fetchBookmarks = async () => {
+      const res = await fetch('/api/bookmarks', {
+        method: 'POST',
+        body: JSON.stringify({ email }),
+      });
+
+      const data: RioType[] = await res.json();
+      setUserBookmarks(data.map(rio => rio.id));
+    };
+
+    fetchBookmarks();
+  }, [email]);
+
+  const toggleBookmark = (rioId: number) => {
+    setUserBookmarks(prev => (prev.includes(rioId)
+      ? prev.filter(id => id !== rioId)
+      : [...prev, rioId]));
+  };
 
   return (
     <>
-      {rioList.map((rio) => (
-        <Col key={rio.id} md={4}>
-          <Button
-            style={{ cursor: 'pointer', all: 'unset', display: 'flex', width: '100%', height: '100%' }}
-            onClick={() => setSelectedRio(rio)}
-          >
-            <Card className="trending-card ">
-              <h5 className="trending-card-title">{rio.name}</h5>
-              <p className="text-muted mb-1 text-center">{rio.interest.name}</p>
-              <CardBody>
-                <p className="trending-card-text">{rio.purposeStatement}</p>
-              </CardBody>
+      {rioList.map((rio) => {
+        const isBookmarked = userBookmarks.includes(rio.id);
+
+        return (
+          <Col key={rio.id} md={4}>
+
+            <Card className="trending-card">
+              <Row>
+                <Col sm={2}>
+                  {email && (
+                  <Button
+                    style={{ cursor: 'pointer', all: 'unset' }}
+                    onClick={() => toggleBookmark(rio.id)}
+                    className="mb-3"
+                  >
+                    {isBookmarked ? <BookmarkCheckFill /> : <Bookmark />}
+                  </Button>
+                  )}
+                </Col>
+              </Row>
+              <Button
+                style={{ cursor: 'pointer', all: 'unset' }}
+                onClick={() => setSelectedRio(rio)}
+                className="trending-card-button"
+              >
+                <h5 className="trending-card-title">{rio.name}</h5>
+                <p className="text-muted mb-1 text-center">{rio.interest.name}</p>
+                <CardBody>
+                  <p className="trending-card-text">{rio.purposeStatement}</p>
+                </CardBody>
+              </Button>
             </Card>
-          </Button>
-        </Col>
-      ))}
+          </Col>
+        );
+      })}
 
       <Modal
         show={selectedRio !== null}
@@ -67,4 +117,4 @@ const RioCardDisplay: React.FC<Props> = ({ rioList }: Props) => {
   );
 };
 
-export default RioCardDisplay;
+export default RIOCardDisplay;

@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth';
 import { loggedInProtectedPage } from '@/lib/page-protection';
 import { authOptions } from '@/lib/auth';
 import { getBookmarkedRios, RioType } from '@/lib/dbActions';
-import RioCardDisplay from '@/components/RioCardDisplay';
+import RioCardDisplay from '@/components/RIOCardDisplay';
 
 const BookmarksPage = async () => {
   const session = await getServerSession(authOptions);

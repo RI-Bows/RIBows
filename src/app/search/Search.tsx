@@ -8,7 +8,7 @@ import pageStyle from '@/utilities/pageStyle';
 import { useState, useEffect } from 'react';
 import { RioType } from '@/lib/dbActions';
 import { Interest } from '@prisma/client';
-import RioCardDisplay from '@/components/RioCardDisplay';
+import RIOCardDisplay from '@/components/RIOCardDisplay';
 
 // import { IRIO } from '@/lib/validationSchemas';
 // import { prisma } from '@/lib/prisma';
@@ -53,10 +53,10 @@ export default function Search({ rioList, interests }: SearchProps) {
   };
 
   const handleInterest = (interest: string) => {
-    setSelectedType(interest); // Just update state, let useEffect do the rest
+    setSelectedType(interest);
   };
 
-  // Update your useEffect to handle interest filtering
+  // useEffect handles interest filtering
   useEffect(() => {
     let results = rios;
 
@@ -167,7 +167,7 @@ export default function Search({ rioList, interests }: SearchProps) {
             </div>
           ) : (
             <Row xs={1} md={3} className="g-4 py-1">
-              <RioCardDisplay rioList={filteredItems} />
+              <RIOCardDisplay rioList={filteredItems} />
             </Row>
           )}
         </div>
