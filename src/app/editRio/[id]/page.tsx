@@ -1,24 +1,19 @@
 import EditClubForm from '@/components/EditRioForm';
-import { prisma } from '@/lib/prisma';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import { redirect } from 'next/navigation';
+import { getRioById } from '@/lib/dbActions';
 import { Container, Row, Col, Button } from 'react-bootstrap';
+import { prisma } from '@/lib/prisma';
+import { authOptions } from '@/lib/auth';
+import { getServerSession } from 'next-auth';
+import { redirect } from 'next/navigation';
 
-export default async function EditClubPage() {
-  // Get the current user session (pass authOptions)
+export default async function EditRioPage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
 
-  console.log(session);
   if (!session?.user?.email) {
     redirect('/auth/signin');
   }
 
-  console.log('Test email:', session?.user?.email);
-  console.log('Test role:', (session?.user as any)?.role);
-  // Check authorization first
-  // Cast session.user to `any` to access custom `role` property added to the user object by NextAuth callbacks
-  if (!session.user || (((session.user as any).role !== 'CLUB') && ((session.user as any).role !== 'ADMIN'))) {
+  if (!session.user || ((session.user as any).role !== 'ADMIN')) {
     return (
       <Container>
         <Row className="py-3">
@@ -32,24 +27,25 @@ export default async function EditClubPage() {
     );
   }
 
-  // Find the RIO by the logged-in user's email
-  const rio = await prisma.rio.findFirst({
-    where: { email: session.user.email },
-    include: { interest: true },
-  });
+  const rioId = Number(params.id);
+  const rio = await getRioById(rioId);
 
   if (!rio) {
     return (
       <Container>
         <Row className="py-3">
           <Col className="text-center">
-            <h1>Error</h1>
+            <h1>Error Message</h1>
             <p>
-              Your RIO or Club was not found. Please contact support at
-              {' '}
-              <u>support@example.com</u>
-              {' '}
-              if you believe this is an error.
+              The RIO or Club was not found.
+              {'\n'}
+              RIO ID:
+              {rioId}
+              {'\n'}
+              RIO:
+              {rio}
+              {'\n'}
+              Check the database
             </p>
             <Button variant="primary" href="/">Go to Home</Button>
           </Col>
