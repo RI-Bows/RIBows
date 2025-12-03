@@ -157,8 +157,8 @@ export default function EditClubForm({
 
               {/* read-only box that looks like a select and displays badges */}
               <div
-                className="form-control d-flex flex-wrap align-items-center gap-2 mb-2"
-                style={{ minHeight: 37, padding: '6px 10px', backgroundColor: '#fff' }}
+                className="form-control d-flex flex-wrap align-items-center gap-2 mb-2 rb-interests-selected-box"
+                style={{ minHeight: 37, padding: '6px 10px' }}
                 role="group"
                 aria-label="Selected interests"
               >
