@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Button, Card, CardBody, Col, Modal, Row } from 'react-bootstrap';
+import { Button, Card, CardBody, Col, Modal, Row, Toast, ToastContainer } from 'react-bootstrap';
 import { Bookmark, BookmarkCheckFill } from 'react-bootstrap-icons';
 import { RioType } from '@/lib/dbActions';
 import { useSession } from 'next-auth/react';
@@ -12,65 +12,111 @@ type Props = {
 
 const RIOCardDisplay: React.FC<Props> = ({ rioList }: Props) => {
   const { data: session } = useSession();
-  // role for admin or club person to edit their club
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const role = (session?.user as any)?.role ?? null;
   const email = session?.user?.email;
 
-  const [userBookmarks, setUserBookmarks] = useState<number[]>([]);
+  // Store only the IDs of bookmarked RIOs
+  const [userBookmarkIds, setUserBookmarkIds] = useState<number[]>([]);
   const [selectedRio, setSelectedRio] = useState<RioType | null>(null);
+  // toast is the notification that will display when user bookmarks
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
+  // Fetch user's bookmarks on load
   useEffect(() => {
-    if (!email) return;
-
-    const fetchBookmarks = async () => {
-      const res = await fetch('/api/bookmarks', {
+    async function fetchBookmarks() {
+      const res = await fetch('/api/bookmarks/get', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
 
-      const data: RioType[] = await res.json();
-      setUserBookmarks(data.map(rio => rio.id));
-    };
+      const data = await res.json();
+      console.log('Bookmarks from API:', data);
+      // convert RIO objects → array of IDs
+      setUserBookmarkIds(data);
+    }
 
-    fetchBookmarks();
+    if (email) {
+      fetchBookmarks();
+    }
   }, [email]);
 
-  const toggleBookmark = (rioId: number) => {
-    setUserBookmarks(prev => (prev.includes(rioId)
-      ? prev.filter(id => id !== rioId)
-      : [...prev, rioId]));
+  // Toggle bookmark
+  const toggleBookmark = async (rioId: number) => {
+    if (!email) return;
+
+    try {
+      const res = await fetch('/api/bookmarks/toggle', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, rioId }),
+      });
+
+      const data = await res.json();
+
+      if (data.bookmarked === true) {
+        setUserBookmarkIds((prev) => [...prev, rioId]);
+        setToastMessage('Added to bookmarks!');
+        setShowToast(true);
+      } else {
+        setUserBookmarkIds((prev) => prev.filter((id) => id !== rioId));
+        setToastMessage('Removed from bookmarks!');
+        setShowToast(true);
+      }
+    } catch (err) {
+      console.error('Error toggling bookmark:', err);
+      setToastMessage('Error updating bookmark');
+      setShowToast(true);
+    }
   };
 
   return (
     <>
+      {/* Toast Notification */}
+      <ToastContainer position="top-end" className="p-3" style={{ zIndex: 9999 }}>
+        <Toast
+          show={showToast}
+          onClose={() => setShowToast(false)}
+          delay={2000}
+          autohide
+          bg={toastMessage.includes('Error') ? 'danger' : 'success'}
+        >
+          <Toast.Header>
+            <strong className="me-auto white">Bookmark</strong>
+          </Toast.Header>
+          <Toast.Body className={toastMessage.includes('Error') ? 'text-white' : ''}>
+            {toastMessage}
+          </Toast.Body>
+        </Toast>
+      </ToastContainer>
+
       {rioList.map((rio) => {
-        const isBookmarked = userBookmarks.includes(rio.id);
+        const isBookmarked = userBookmarkIds.includes(rio.id);
 
         return (
           <Col key={rio.id} md={4}>
-
             <Card className="trending-card">
               <Row>
                 <Col sm={2}>
                   {email && (
-                  <Button
-                    style={{ cursor: 'pointer', all: 'unset' }}
-                    onClick={() => toggleBookmark(rio.id)}
-                    className="mb-3"
-                  >
-                    {isBookmarked ? <BookmarkCheckFill /> : <Bookmark />}
-                  </Button>
+                    <Button
+                      style={{ cursor: 'pointer', all: 'unset' }}
+                      onClick={() => toggleBookmark(rio.id)}
+                    >
+                      {isBookmarked ? <BookmarkCheckFill /> : <Bookmark />}
+                    </Button>
                   )}
                 </Col>
               </Row>
+
               <Button
                 style={{ cursor: 'pointer', all: 'unset' }}
                 onClick={() => setSelectedRio(rio)}
-                className="trending-card-button"
               >
                 <h5 className="trending-card-title">{rio.name}</h5>
-                <p className="text-muted mb-1 text-center">{rio.interest.name}</p>
+                <p className="text-muted mb-1 text-center">
+                  {rio.interest.name}
+                </p>
                 <CardBody>
                   <p className="trending-card-text">{rio.purposeStatement}</p>
                 </CardBody>
@@ -80,6 +126,7 @@ const RIOCardDisplay: React.FC<Props> = ({ rioList }: Props) => {
         );
       })}
 
+      {/* Modal */}
       <Modal
         show={selectedRio !== null}
         onHide={() => setSelectedRio(null)}
