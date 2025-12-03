@@ -12,7 +12,7 @@ const defaultInterestOptions = [
   'Other',
 ];
 
-export default function EditClubForm({
+export default function EditRioForm({
   rio, interestOptions = defaultInterestOptions }: { rio: any; interestOptions: string[] }) {
   // use server-provided options when available
   const options = Array.isArray(interestOptions) && interestOptions.length > 0
@@ -188,7 +188,7 @@ export default function EditClubForm({
               </Form.Select>
             </Form.Group>
 
-            <Button className="mt-3" type="submit">Save Changes</Button>
+            <Button variant="primary" className="mt-3" type="submit">Save Changes</Button>
           </Col>
 
           {/* Right column: image preview + upload */}
@@ -223,6 +223,16 @@ export default function EditClubForm({
               <Form.Control type="file" accept="image/*" onChange={handleImageChange} />
               <Form.Text className="text-muted">Choose a new image to replace the existing one.</Form.Text>
             </Form.Group>
+            <div className="d-flex justify-content-end">
+              <Button
+                variant="primary"
+                className="mt-3"
+                style={{ position: 'absolute', bottom: '20px', right: '20px', zIndex: 999 }}
+                onClick={() => window.history.back()}
+              >
+                Go back
+              </Button>
+            </div>
           </Col>
         </Row>
       </Form>

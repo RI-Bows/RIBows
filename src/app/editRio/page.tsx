@@ -1,4 +1,4 @@
-import EditClubForm from '@/components/EditClubForm';
+import EditRioForm from '@/components/EditRioForm';
 import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
@@ -9,13 +9,13 @@ export default async function EditRIOPage() {
   // Get the current user session (pass authOptions)
   const session = await getServerSession(authOptions);
 
-  console.log(session);
+  // console.log(session);
   if (!session?.user?.email) {
     redirect('/auth/signin');
   }
 
-  console.log('Test email:', session?.user?.email);
-  console.log('Test role:', (session?.user as any)?.role);
+  // console.log('Test email:', session?.user?.email);
+  // console.log('Test role:', (session?.user as any)?.role);
   // Check authorization first
   // Cast session.user to `any` to access custom `role` property added to the user object by NextAuth callbacks
   if (!session.user || (((session.user as any).role !== 'CLUB') && ((session.user as any).role !== 'ADMIN'))) {
@@ -70,7 +70,7 @@ export default async function EditRIOPage() {
       </Row>
       <Row className="justify-content-center">
         <Col md={12} lg={10}>
-          <EditClubForm rio={rio} interestOptions={interestNames} />
+          <EditRioForm rio={rio} interestOptions={interestNames} />
         </Col>
       </Row>
     </Container>
