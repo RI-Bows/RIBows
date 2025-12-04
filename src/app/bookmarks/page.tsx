@@ -34,33 +34,29 @@ const BookmarksPage = async () => {
 
   return (
     <main>
-      <Container className="py-5">
-        <Row>
-          <Col className="text-center pb-4">
-            <h1>Bookmarks</h1>
-            <h5 className="pt-2">All of your saved RIOs.</h5>
-          </Col>
+      <Container fluid className="">
+        <Row className="bg-light p-4">
+          <Container className="pt-4 w-75">
+            <h2 className="text-primary fw-bold text-center pb-4">
+              Bookmarked RIOs
+            </h2>
+            <div className="trending-panel">
+              <Row xs={1} md={3} className="g-4 py-1 justify-content-center">
+                {rios.length === 0 ? (
+                  <Col className="text-center">
+                    <p>
+                      You have no bookmarked RIOs. To bookmark an RIO, navigate to the{' '}
+                      <a href="/search">Search Page</a> and click the bookmark icon on
+                      an RIO to save it.
+                    </p>
+                  </Col>
+                ) : (
+                  <RioCardDisplay rioList={rios} />
+                )}
+              </Row>
+            </div>
+          </Container>
         </Row>
-
-        {rios.length === 0 ? (
-          // Empty state: panel with centered message
-          <Row className="trending-panel my-2 py-2 justify-content-center">
-            <Col md={8} className="text-center text-muted py-2">
-              <p style={{ fontSize: '1.0rem' }}>
-                You have no bookmarked RIOs. To bookmark a RIO, navigate to the{' '}
-                <a href="/search">Search page</a> and click the bookmark icon on
-                a RIO to save it here.
-              </p>
-            </Col>
-          </Row>
-        ) : (
-          // Non-empty state: panel with grid of cards
-          <div className="trending-panel">
-            <Row xs={1} md={3} className="g-4">
-              <RioCardDisplay rioList={rios} />
-            </Row>
-          </div>
-        )}
       </Container>
     </main>
   );
