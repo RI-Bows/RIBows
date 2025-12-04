@@ -7,19 +7,24 @@ import { Button, Col, Row } from 'react-bootstrap';
 const SignOut = () => (
   <Col id="signout-page" className="text-center py-3">
     <h2>Do you want to sign out?</h2>
-    <Row>
-      <Col xs={4} />
-      <Col>
-        <Button variant="danger" onClick={() => signOut({ callbackUrl: '/', redirect: true })}>
-          Sign Out
-        </Button>
-      </Col>
-      <Col>
-        <Button variant="secondary" href="/">
+    <Row className="justify-content-center mt-3">
+      <Col xs="auto">
+        <Button
+          variant="outline-secondary"
+          href="/"
+          className="me-2"
+        >
           Cancel
         </Button>
       </Col>
-      <Col xs={4} />
+      <Col xs="auto">
+        <Button
+          variant="primary"
+          onClick={() => signOut({ callbackUrl: '/', redirect: true })}
+        >
+          Sign Out
+        </Button>
+      </Col>
     </Row>
   </Col>
 );

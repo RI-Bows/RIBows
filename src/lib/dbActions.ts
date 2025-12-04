@@ -165,6 +165,27 @@ export async function getRio(name: string): Promise<RioType | null> {
 }
 
 /**
+ * Retrieves most popular RIOs.
+ * @param {number} count: The number of RIOs to retrieve.
+ * @returns {Promise<RioType[]>} The trending RIOs.
+ */
+export async function getTrendingRios(count: number): Promise<RioType[]> {
+  return prisma.rio.findMany({
+    take: count,
+    orderBy: {
+      bookmarks: 'desc',
+    },
+    include: {
+      interest: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+}
+
+/**
  * Retrieves all interests.
  * @returns {Promise<Interest[]>} The interests.
  */
