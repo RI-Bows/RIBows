@@ -1,37 +1,53 @@
 /* Use Open Sans as the default sans serif font. */
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,700|Source+Code+Pro:300,400,500,700");
 
-/* Create some Bowfolio CSS variables. */
 :root {
-  --bowfolio-navbar-bg: #6B9080;
-  --bowfolio-navbar-bg-rgb: 107, 144, 128;
-  --bowfolio-navbar-text: #ffffff;
-  --bowfolio-navbar-highlight-text: #CCE3DE;
+  --ribows-white: #FFFFFF;
+  --ribows-white-rgb: 255, 255, 255;
+  --ribows-black: #000000;
+  --ribows-black-rgb: 0, 0, 0;
+  --ribows-green: #024731;
+  --ribows-green-rgb: 2, 71, 49;
+  --ribows-gray: #7C7A7A;
+  --ribows-gray-rgb: 124, 122, 122;
+  --ribows-beige: #DCE2BD;
+  --ribows-beige-rgb: 220, 226, 189;
+  --ribows-light-green: #CCE3DE;
 
   /* RIBows theme tokens hooked into existing colors */
-  --rb-primary: #6B9080;          /* main green */
-  --rb-primary-soft: #A4C3B2;     /* hover/soft green */
-  --rb-accent: #CCE3DE;           /* accent highlight */
-  --rb-surface: #F6FFF8;          /* page/card surface */
-  --rb-surface-soft: #EAF4F4;     /* subtle panel bg */
-  --rb-text-main: #123b2c;        /* dark text */
-  --rb-text-muted: #4f6d61;       /* muted nav links */
+  --rb-primary: #6B9080;   
+  --rb-accent: #CCE3DE;    
+  --rb-surface: #F6FFF8;   /* cards / navbar surface */
+  --rb-surface-soft: #EAF4F4; 
+  --ribows-text-main: #123b2c;    /* dark text */
+  --ribows-text-muted: #4f6d61;     /* muted nav links */
 }
 
 /* Change bootstrap variable values.
  See https://getbootstrap.com/docs/5.2/customize/css-variables/
  */
 body {
-  --bs-dark: var(--bowfolio-navbar-bg);
-  --bs-dark-rgb: var(--bowfolio-navbar-bg-rgb);
+  --bs-primary: var(--ribows-green);
+  --bs-primary-rgb: var(--ribows-green-rgb);
+  
+  --bs-secondary: var(--ribows-gray);
+  --bs-secondary-rgb: var(--ribows-gray-rgb);
 
-  --bs-primary: var(--rb-primary);
+  --bs-dark: var(--ribows-black);
+  --bs-dark-rgb: var(--ribows-black-rgb);
+  
+  --bs-light: var(--ribows-white);
+  --bs-light-rgb: var(--ribows-white-rgb);
+
+  --bs-info: var(--ribows-beige);
+  --bs-info-rgb: var(--ribows-beige-rgb);
+
   --bs-link-color: var(--rb-primary);
-  --bs-link-hover-color: var(--rb-primary-soft);
+  --bs-link-hover-color: var(--ribows-light-green);
+}
 
-  /* NEW: apply theme surface + text globally */
-  background-color: var(--rb-surface);
-  color: var(--rb-text-main);
+html {
+  background-color: var(--ribows-green);
 }
 
 html, body {
@@ -48,68 +64,15 @@ html, body {
   flex-direction: column;
 }
 
-/* Color the light Brand and links with dark color */
-.bg-light span, .bg-light a {
-  color:  var(--bowfolio-navbar-bg);
-}
-
-/* When logged in we switch the NavBar to bg-dark so we need to override the styles to give light text. */
-.bg-dark span, .bg-dark a {
-  color: var(--bowfolio-navbar-text);
-}
-
-/* When logged in we highlight the selected route. */
-.bg-dark a.nav-link.active {
-  color: var(--bowfolio-navbar-highlight-text);
-}
-
-/* Override the color on the dropdown when logged in. */
-.bg-dark a.dropdown-item {
-  color: var(--bowfolio-navbar-bg);
-}
-
-/* Landing page color blocking */
-.landing-green-background {
-  background-color: var(--bowfolio-navbar-bg);
-  color: var(--bowfolio-navbar-text);
-  padding-top: 20px;
-}
-
-.landing-white-background {
-  background-color: var(--bowfolio-navbar-text);
-  color: var(--bowfolio-navbar-bg);
-  padding-top: 20px;
-}
-
-.reset-margins {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.hero-simple-subtitle {
-  font-size: 5.5rem; 
-  font-weight: 500;
-  color: #ffffff;
-}
-
-.hero-simple-subtitle-under {
-  font-size: 3rem;
-  font-weight: 400;
-  margin-top: 40px;
-  margin-bottom: 40px;
-  color: #ffffff;
-}
-
-.Hero-background-image {
+.home-background-image {
   position: relative;
   width: 100%;
+  height: 60vh;
   background-image: url('/images/manoa.jpg'); 
   background-size: cover;
-  background-position: center;
+  background-position: center 10%;
   background-repeat: no-repeat;
-
-  padding-top: 3rem;    
-  padding-bottom: 6rem; 
+  overflow-x: hidden;
 }
 
 /*  start of trending section styles  */
@@ -123,13 +86,12 @@ html, body {
   border-radius: 12px;
 }
 
-.trending-panel {
-  /* CHANGED: use theme panel color */
-  background-color: var(--rb-accent);
+/* .trending-panel {
+  background-color: #d5ece7;
   border-radius: 24px;
   padding: 2rem 2.5rem;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-}
+} */
 
 .trending-heading {
   margin-bottom: 1.5rem;
@@ -198,45 +160,66 @@ html, body {
 }
 /* end of trending section styles */
 
+.search-input {
+  padding-left: 1rem;
+}
+
 /* === RIBows Navbar Theme === */
 
-.rb-navbar {
-  background-color: var(--rb-primary);         /* 6B9080 */
+.ribows-navbar {
+  background-color: var(--ribows-green);
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.rb-brand-text {
+.ribows-brand-text {
+  color: var(--ribows-white);
   font-weight: 800;
   font-size: 1.7rem;
   letter-spacing: 0.03em;
-  color: #F6FFF8;                             /* light text on green */
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  /* gap: 0.4rem; */
+}
+
+.ribows-brand-text:hover,
+.ribows-brand-text:focus {
+  color: var(--ribows-light-green);
 }
 
 /* Base nav link style */
-.rb-navbar .rb-nav-link {
-  color: #F6FFF8;                             /* white-ish */
+.ribows-navbar {
+  background-color: var(--ribows-green);
   font-weight: 500;
-  font-size: 0.98rem;
-  padding-inline: 0.9rem;
+  /* font-size: 0.98rem;
+  padding-inline: 0.9rem; */
   position: relative;
 }
 
+.ribows-nav-link {
+  color: var(--ribows-white);
+  font-weight: 500;
+  /* font-size: 0.98rem;
+  padding-inline: 0.9rem; */
+  position: relative;
+}
+
+#currentUserDropdown {
+  color: white;
+}
+
 /* Hover / focus */
-.rb-navbar .rb-nav-link:hover,
-.rb-navbar .rb-nav-link:focus {
-  color: var(--rb-primary-soft);              /* A4C3B2 */
+.ribows-navbar .ribows-nav-link:hover,
+.ribows-navbar .ribows-nav-link:focus {
+  color: var(--ribows-light-green);
 }
 
 /* Active */
-.rb-navbar .rb-nav-link.active {
+.ribows-navbar .ribows-nav-link.active {
   color: #F6FFF8;
 }
 
-.rb-navbar .rb-nav-link.active::after {
+.ribows-navbar .ribows-nav-link.active::after {
   content: '';
   position: absolute;
   left: 18%;
@@ -251,33 +234,10 @@ html, body {
   );
 }
 
-/* Sign-in CTA stays light */
-.rb-navbar .rb-nav-cta {
-  border-radius: 999px;
-  border: 1px solid #F6FFF8;
-  color: #6B9080;                             /* text on white pill */
-  background-color: #F6FFF8;
-}
-
-/* keep Sign In pill the same when active, and remove underline */
-.rb-navbar .rb-nav-cta.active {
-  color: #6B9080;
-  background-color: #F6FFF8;
-}
-
-.rb-navbar .rb-nav-cta.active::after {
-  content: none;
-}
-
-.rb-navbar .rb-nav-cta:hover,
-.rb-navbar .rb-nav-cta:focus {
-  background-color: var(--rb-surface-soft);  /* EAF4F4 */
-}
-
 /* Footer styles */
 .rb-footer {
-  background-color: var(--rb-primary);        /* 6B9080 */
-  color: var(--bowfolio-navbar-text);         /* light text */
+  background-color: var(--ribows-green);
+  color: var(--ribows-white);          /* light text */
   padding: 1.5rem 0 1.25rem;           
   text-align: center;
 }

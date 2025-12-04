@@ -17,16 +17,16 @@ const NavBar: React.FC = () => {
   // const userWithRole = session?.user as { email: string; randomKey: string };
   const role = (session?.user as any)?.role ?? null;
   const menuStyle = { marginBottom: '0px' };
-  const navbarClassName = 'rb-navbar';
+  const navbarClassName = 'ribows-navbar';
   // const navbarVariant = currentUser ? 'dark' : 'light';
   return (
     <Navbar expand="lg" style={menuStyle} className={navbarClassName}>
       <Container>
         <Navbar.Brand
           href="/"
-          className="rb-brand-text"
+          className="ribows-brand-text"
         >
-          <span style={{ fontWeight: 800, fontSize: '30px', color: 'var(--rb-surface-soft)' }}>
+          <span className="ribows-brand-text">
             RIBows
             <Image src="/images/logo.png" width={30} height={30} style={{ marginBottom: 3 }} alt="Rainbow" />
           </span>
@@ -39,7 +39,7 @@ const NavBar: React.FC = () => {
               active={pathname === '/search'}
               href="/search"
               key="search"
-              className="rb-nav-link"
+              className="ribows-nav-link"
             >
               Search
             </Nav.Link>
@@ -49,7 +49,7 @@ const NavBar: React.FC = () => {
                 href="/addRio"
                 key="admin"
                 active={pathname === '/addRio'}
-                className="rb-nav-link"
+                className="ribows-nav-link"
               >
                 Add RIO
               </Nav.Link>
@@ -62,7 +62,7 @@ const NavBar: React.FC = () => {
                 active={pathname === '/editRio'}
                 href="/editRio"
                 key="editRio"
-                className="rb-nav-link"
+                className="ribows-nav-link"
               >
                 Edit RIO
               </Nav.Link>
@@ -74,7 +74,7 @@ const NavBar: React.FC = () => {
               active={pathname === '/about'}
               href="/about"
               key="about"
-              className="rb-nav-link d-flex align-items-center"
+              className="ribows-nav-link d-flex align-items-center"
 
             >
               About Us
@@ -85,7 +85,7 @@ const NavBar: React.FC = () => {
                 active={pathname === '/bookmarks'}
                 href="/bookmarks"
                 key="bookmarks"
-                className="rb-nav-link d-flex align-items-center gap-1"
+                className="ribows-nav-link d-flex align-items-center gap-1"
               >
                 Bookmarks
                 <Bookmarks />
@@ -96,18 +96,20 @@ const NavBar: React.FC = () => {
             {currentUser ? (
               <NavDropdown
                 id={ComponentIDs.currentUserDropdown}
-                title={currentUser}
-                className="rb-user-dropdown nav-link"
+                title={
+                  <span className="text-white">{currentUser}</span>
+                }
+                className="ribows-nav-link"
               >
                 <NavDropdown.Item id="editProfile" href="/editProfile">
-                  <Container className="ps-0 d-flex align-items-center gap-1">
+                  <Container className="text-primary ps-0 d-flex align-items-center gap-1">
                     <Pen />
                     Edit Profile
                   </Container>
 
                 </NavDropdown.Item>
                 <NavDropdown.Item id={ComponentIDs.currentUserDropdownSignOut} href="/auth/signout">
-                  <Container className="ps-0 d-flex align-items-center gap-1">
+                  <Container className="text-primary ps-0 d-flex align-items-center gap-1">
                     <BoxArrowRight />
                     Sign out
                   </Container>
@@ -119,7 +121,7 @@ const NavBar: React.FC = () => {
                 active={pathname === '/auth/signin'}
                 href="/auth/signin"
                 key="signin"
-                className="rb-nav-link rb-nav-cta"
+                className="ribows-nav-link"
               >
                 <Container className="d-flex align-items-center gap-1">
                   <PersonFill />

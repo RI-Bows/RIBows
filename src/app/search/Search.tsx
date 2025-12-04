@@ -4,7 +4,6 @@
 'use client';
 
 import { Col, Container, Row, Accordion, Form } from 'react-bootstrap';
-import pageStyle from '@/utilities/pageStyle';
 import { useState, useEffect } from 'react';
 import { RioType } from '@/lib/dbActions';
 import { Interest } from '@prisma/client';
@@ -79,28 +78,27 @@ export default function Search({ rioList, interests }: SearchProps) {
   }, [searchQuery, rios, sortBy, selectedType]);
 
   return (
-    <Container style={pageStyle}>
-      <Row>
-        <Col className="text-center">
-          <h1>Search for Clubs</h1>
+    <Container fluid className="">
+      <Row className="g-0 p-4">
+        <Container className="pt-4 w-75">
+          <h2 className="text-primary fw-bold text-center">
+            Search for RIOs
+          </h2>
+        </Container>
+      </Row>
+      <Row className="justify-content-center p-4 w-75 mx-auto">
+        <Col md={8} className="pe-2">
+          <input
+            type="text"
+            value={searchQuery}
+            placeholder="Search"
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="search-input w-100 py-3 border border-gray-300 
+                      rounded-5"
+          />
         </Col>
-      </Row>
-      <Row className="py-3">
-        <input
-          type="text"
-          value={searchQuery}
-          placeholder="Search for clubs..."
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="block
-                    w-full
-                    pl-10
-                    pr-4
-                    py-3 border border-gray-300 rounded-5 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-        />
-      </Row>
-      <Row>
-        <Col md={5}>
-          <Accordion defaultActiveKey="" className="pb-3">
+        <Col md={4}>
+          <Accordion defaultActiveKey="">
             <Accordion.Item eventKey="0">
               <Accordion.Header>Filters</Accordion.Header>
               <Accordion.Body>
@@ -159,18 +157,21 @@ export default function Search({ rioList, interests }: SearchProps) {
           </Accordion>
         </Col>
       </Row>
-      <Row>
-        <div className="trending-panel py-2">
-          {filteredItems.length === 0 ? (
-            <div className="text-center py-5">
-              <p className="text-muted">No clubs match your search.</p>
-            </div>
-          ) : (
-            <Row xs={1} md={3} className="g-4 py-1">
-              <RioCardDisplay rioList={filteredItems} />
-            </Row>
-          )}
-        </div>
+
+      <Row className="bg-light justify-content-center p-4">
+        <Container className="pt-4 w-75">
+          <div className="trending-panel">
+            {filteredItems.length === 0 ? (
+              <div className="text-center py-5">
+                <p className="text-muted">No clubs match your search.</p>
+              </div>
+            ) : (
+              <Row xs={1} md={3} className="g-4 py-1">
+                <RioCardDisplay rioList={filteredItems} />
+              </Row>
+            )}
+          </div>
+        </Container>
       </Row>
     </Container>
   );
