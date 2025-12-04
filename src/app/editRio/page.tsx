@@ -62,7 +62,7 @@ export default async function EditClubPage() {
   const interestNames = allInterests.map((i) => i.name);
 
   return (
-    <Container>
+    <Container fluid className="p-4 bg-white">
       <Row className="py-3">
         <Col className="text-center">
           <h1>Edit RIO</h1>

@@ -508,3 +508,9 @@ select[multiple] option:checked {
   cursor: pointer;
 }
 
+.form-bg {
+  background: #fff; /* or your desired color */
+  min-height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+}
