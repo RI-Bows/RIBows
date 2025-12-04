@@ -65,6 +65,28 @@ export async function createUser(credentials: { email: string; password: string 
   });
 }
 
+export async function updateUser(credentials: { email: string; }, interests: Interest[]) {
+  const email = credentials.email?.toLowerCase?.() ?? credentials.email;
+
+  // Enforce domain policy: only allow @hawaii.edu addresses
+  if (!email || !email.endsWith('@hawaii.edu')) {
+    throw new Error('INVALID_DOMAIN');
+  }
+
+  await prisma.user.update({
+    where: { email },
+    data: {
+      interests: {
+        set: [],
+        connectOrCreate: interests.map((interest) => ({
+          where: { name: interest.name },
+          create: { name: interest.name },
+        })),
+      },
+    },
+  });
+}
+
 export type ParsedRioType = {
   name: string;
   approvalDate: Date;
