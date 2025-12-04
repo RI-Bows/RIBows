@@ -2,27 +2,29 @@ import { Container, Row, Col } from 'react-bootstrap';
 import { PageIDs } from '@/utilities/ids';
 import RioCardDisplay from '@/components/RioCardDisplay';
 import { getTrendingRios, RioType } from '@/lib/dbActions';
+import { ChevronDown } from 'react-bootstrap-icons';
 
 export default async function Home() {
   const rios: RioType[] = await getTrendingRios(9);
 
   return (
-    <Container fluid className="g-0 pt-5">
+    <Container fluid className="g-0 pt-5 bg-primary">
       <div className="home-background-image g-0 pt-5">
-        <Row className="d-flex text-light text-center h-100 align-items-center">
-          <Col className="justify-content-center">
+        <Row className="d-flex text-light text-center h-100 align-items-center pb-4">
+          <Col className="justify-content-center pb-5">
             <h1 className="fw-bold py-3">
               Find and join RIO&apos;s
               <br />
               at UH Mānoa
             </h1>
-            <h2 className="py-3">
+            <h2 className="pt-3">
               Use the search tab to
               <br />
               search by category or
               <br />
               keywords, or browse below
             </h2>
+            <ChevronDown />
           </Col>
         </Row>
       </div>
