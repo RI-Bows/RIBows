@@ -7,8 +7,8 @@ export default async function Home() {
   const rios: RioType[] = await getTrendingRios(9);
 
   return (
-    <Container fluid className="g-0">
-      <div className="home-background-image g-0">
+    <Container fluid className="g-0 pt-5">
+      <div className="home-background-image g-0 pt-5">
         <Row className="d-flex text-light text-center h-100 align-items-center">
           <Col className="justify-content-center">
             <h1 className="fw-bold py-3">

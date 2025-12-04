@@ -5,8 +5,8 @@ import EditProfileForm from '@/components/EditProfileForm';
 const EditProfilePage = async () => {
   return (
     <main>
-      <Container>
-        <Row className="py-3">
+      <Container fluid className="pt-5 p-4 bg-white">
+        <Row className="py-3 pt-5">
           <Col className="text-center">
             <h1>Edit Profile</h1>
           </Col>

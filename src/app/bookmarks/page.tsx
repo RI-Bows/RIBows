@@ -34,7 +34,7 @@ const BookmarksPage = async () => {
 
   return (
     <main>
-      <Container fluid className="">
+      <Container fluid className="pt-5">
         <Row className="bg-light p-4">
           <Container className="pt-4 w-75">
             <h2 className="text-primary fw-bold text-center pb-4">

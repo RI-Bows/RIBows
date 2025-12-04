@@ -107,7 +107,7 @@ const SignUp = ({ interests }: SignUpProps) => {
 
   return (
     <main>
-      <Container>
+      <Container fluid className="pt-5 p-4 bg-white">
         <ToastContainer
           className="p-3"
           position="top-center"
@@ -123,7 +123,7 @@ const SignUp = ({ interests }: SignUpProps) => {
             <Toast.Body className={toastBg === 'danger' ? 'text-white' : ''}>{toastMessage}</Toast.Body>
           </Toast>
         </ToastContainer>
-        <Row className="py-3 mb-3 justify-content-center">
+        <Row className="pt-5 py-3 mb-3 justify-content-center">
           <Col xs={8}>
             <h1 className="text-center">Sign Up</h1>
             <Card className="shadow-sm mt-3">

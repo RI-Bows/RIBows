@@ -58,8 +58,8 @@ export default async function EditRioPage({ params }: { params: { id: string } }
   const interestNames = allInterests.map((i) => i.name);
 
   return (
-    <Container fluid className="p-4 bg-white">
-      <Row className="py-3">
+    <Container fluid className="pt-5 p-4 bg-white">
+      <Row className="py-3 g-0 pt-5">
         <Col className="text-center">
           <h1>Edit RIO</h1>
         </Col>
