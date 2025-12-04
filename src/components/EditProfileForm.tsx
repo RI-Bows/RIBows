@@ -3,7 +3,7 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import { Button, Card, Container, Form, Toast, ToastContainer } from 'react-bootstrap';
+import { Button, Card, Container, Form } from 'react-bootstrap';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import swal from 'sweetalert';
@@ -13,7 +13,6 @@ import { Interest } from '@prisma/client';
 import { updateUser } from '@/lib/dbActions';
 import Multiselect from 'multiselect-react-dropdown';
 import { CaretDownFill, ArrowLeft } from 'react-bootstrap-icons';
-import { signIn } from 'next-auth/react';
 
 type EditClubForm = {
   email: string;
@@ -53,9 +52,6 @@ export default function EditProfileForm({
 
   const [selectedInterests, setSelectedInterests] = useState<string[]>(normalizeInterests());
   const [loading, setLoading] = useState(false);
-  const [toastShow, setToastShow] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
-  const [toastBg, setToastBg] = useState<'success' | 'danger' | 'info'>('danger');
 
   const multiselectRef = useRef<any>(null);
   const router = useRouter();
@@ -86,8 +82,7 @@ export default function EditProfileForm({
     setLoading(true);
     try {
       // prefer form email but fall back to local state
-      const email = data.email || user?.email;
-      const password = data.password || user?.password;
+      const emailFromForm = data.email?.trim();
 
       // selected interests come from the local interests state (string[] of names)
       const selected = selectedInterests ?? [];
@@ -111,11 +106,7 @@ export default function EditProfileForm({
         })
         .filter((i) => i.name && i.name.trim().length > 0);
 
-      await updateUser({ email }, normalized);
-      setToastBg('success');
-      setToastMessage('Account created — signing you in...');
-      setToastShow(true);
-      await signIn('credentials', { callbackUrl: '/', email, password });
+      await updateUser(user.id, emailFromForm, normalized);
       swal('Success', 'Your profile has been updated', 'success', { timer: 2000 });
     } catch (err) {
       // log & notify user
@@ -130,21 +121,6 @@ export default function EditProfileForm({
   return (
     <main>
       <Container>
-        <ToastContainer
-          className="p-3"
-          position="top-center"
-          style={{
-            position: 'fixed',
-            top: '1rem',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 1060,
-          }}
-        >
-          <Toast onClose={() => setToastShow(false)} show={toastShow} bg={toastBg} delay={5000} autohide>
-            <Toast.Body className={toastBg === 'danger' ? 'text-white' : ''}>{toastMessage}</Toast.Body>
-          </Toast>
-        </ToastContainer>
         <Card className="shadow-sm p-3 mb-4">
           <div className="mb-3">
             <Button

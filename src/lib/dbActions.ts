@@ -65,17 +65,18 @@ export async function createUser(credentials: { email: string; password: string 
   });
 }
 
-export async function updateUser(credentials: { email: string; }, interests: Interest[]) {
-  const email = credentials.email?.toLowerCase?.() ?? credentials.email;
+export async function updateUser(userId: number, newEmail: string | undefined, interests: Interest[]) {
+  const emailToSet = newEmail?.toLowerCase?.() ?? newEmail;
 
   // Enforce domain policy: only allow @hawaii.edu addresses
-  if (!email || !email.endsWith('@hawaii.edu')) {
+  if (emailToSet && !emailToSet.endsWith('@hawaii.edu')) {
     throw new Error('INVALID_DOMAIN');
   }
 
   await prisma.user.update({
-    where: { email },
+    where: { id: userId },
     data: {
+      ...(emailToSet ? { email: emailToSet } : {}),
       interests: {
         set: [],
         connectOrCreate: interests.map((interest) => ({
