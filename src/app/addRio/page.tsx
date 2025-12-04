@@ -16,7 +16,7 @@ export default async function AddRioPage() {
 
   if (!session.user || ((session.user as any).role !== 'ADMIN')) {
     return (
-      <Container>
+      <Container className="pb-5">
         <Row className="py-3">
           <Col className="text-center">
             <h1>Error</h1>
@@ -29,13 +29,13 @@ export default async function AddRioPage() {
   }
 
   return (
-    <Container>
-      <Row className="py-3">
+    <Container fluid className="p-4 bg-white">
+      <Row className="py-3 g-0">
         <Col className="text-center">
           <h1>Add RIO</h1>
         </Col>
       </Row>
-      <Row className="justify-content-center">
+      <Row className="justify-content-center g-0">
         <Col md={12} lg={10}>
           <AddRioForm interestOptions={interestNames} />
         </Col>
