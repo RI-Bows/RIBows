@@ -6,7 +6,7 @@
 import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import { Container, Image, Nav, Navbar, NavDropdown } from 'react-bootstrap';
-import { BoxArrowRight, PersonFill, Pen, Bookmarks } from 'react-bootstrap-icons';
+import { BoxArrowRight, Person, Pen, Bookmarks, InfoCircle, Search } from 'react-bootstrap-icons';
 // eslint-disable-next-line import/extensions
 import { ComponentIDs } from '@/utilities/ids';
 
@@ -40,8 +40,9 @@ const NavBar: React.FC = () => {
                 active={pathname === '/search'}
                 href="/search"
                 key="search"
-                className="ribows-nav-link"
+                className="ribows-nav-link d-flex align-items-center gap-2"
               >
+                <Search />
                 Search
               </Nav.Link>
             ) : (
@@ -89,9 +90,10 @@ const NavBar: React.FC = () => {
               active={pathname === '/about'}
               href="/about"
               key="about"
-              className="ribows-nav-link d-flex align-items-center"
+              className="ribows-nav-link d-flex align-items-center gap-2"
 
             >
+              <InfoCircle />
               About Us
             </Nav.Link>
             {currentUser ? (
@@ -100,10 +102,10 @@ const NavBar: React.FC = () => {
                 active={pathname === '/bookmarks'}
                 href="/bookmarks"
                 key="bookmarks"
-                className="ribows-nav-link d-flex align-items-center gap-1"
+                className="ribows-nav-link d-flex align-items-center gap-2"
               >
-                Bookmarks
                 <Bookmarks />
+                Bookmarks
               </Nav.Link>
             ) : (
               ''
@@ -117,14 +119,14 @@ const NavBar: React.FC = () => {
                 className="ribows-nav-link"
               >
                 <NavDropdown.Item id="editProfile" href="/editProfile">
-                  <Container className="text-primary ps-0 d-flex align-items-center gap-1">
+                  <Container className="text-primary ps-0 d-flex align-items-center gap-2">
                     <Pen />
                     Edit Profile
                   </Container>
 
                 </NavDropdown.Item>
                 <NavDropdown.Item id={ComponentIDs.currentUserDropdownSignOut} href="/auth/signout">
-                  <Container className="text-primary ps-0 d-flex align-items-center gap-1">
+                  <Container className="text-primary ps-0 d-flex align-items-center gap-2">
                     <BoxArrowRight />
                     Sign out
                   </Container>
@@ -138,8 +140,8 @@ const NavBar: React.FC = () => {
                 key="signin"
                 className="ribows-nav-link"
               >
-                <Container className="d-flex align-items-center gap-1">
-                  <PersonFill />
+                <Container className="d-flex align-items-center gap-2">
+                  <Person />
                   Sign In
                 </Container>
               </Nav.Link>
