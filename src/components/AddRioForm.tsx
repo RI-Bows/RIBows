@@ -3,8 +3,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import swal from 'sweetalert';
-import { Form, Button, Col, Row, Card, Image } from 'react-bootstrap';
+import { Form, Button, Col, Row, Card, Image, Toast, ToastContainer } from 'react-bootstrap';
 
 type Props = {
   rio?: any | null;
@@ -21,15 +20,30 @@ const defaultInterestOptions = [
 ];
 
 export default function AddRioForm({ rio = null, interestOptions = defaultInterestOptions }: Props) {
-  const [submitting, setSubmitting] = useState(false);
+  // use server-provided options when available
+  const options = Array.isArray(interestOptions) && interestOptions.length > 0
+    ? interestOptions
+    : defaultInterestOptions;
+
+  // Normalize incoming rio interests into a string[] so .map is always safe
+  const normalizeInterests = (): string[] => {
+    if (Array.isArray(rio?.RioInterest) && rio.RioInterest.length > 0) {
+      // RioInterest entries might be objects; extract a name field if present
+      return rio.RioInterest.map((ri: any) => ri.name ?? ri.interest?.name ?? String(ri));
+    }
+    if (rio?.interest) {
+      // singular relation case
+      return [rio.interest.name ?? String(rio.interest)];
+    }
+    return [];
+  };
 
   // controlled fields
-  const [name, setName] = useState<string>(rio?.name ?? '');
-  const [purposeStatement, setPurposeStatement] = useState<string>(rio?.purposeStatement ?? '');
-  const [mainContact, setMainContact] = useState<string>(rio?.mainContact ?? '');
-  const [email, setEmail] = useState<string>(rio?.email ?? '');
-  const [interests, setInterests] = useState<string[]>(Array.isArray(rio?.interests) ? rio.interests : []);
-  const [options, setOptions] = useState<string[]>(interestOptions ?? defaultInterestOptions);
+  const [name, setName] = useState(rio?.name ?? '');
+  const [purposeStatement, setPurposeStatement] = useState(rio?.purposeStatement ?? '');
+  const [mainContact, setMainContact] = useState(rio?.mainContact ?? '');
+  const [email, setEmail] = useState(rio?.email ?? '');
+  const [interests, setInterests] = useState(normalizeInterests());
 
   // image handling
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -37,29 +51,25 @@ export default function AddRioForm({ rio = null, interestOptions = defaultIntere
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(rio?.image ?? null);
 
   useEffect(() => {
-    setOptions(interestOptions && interestOptions.length > 0 ? interestOptions : defaultInterestOptions);
-  }, [interestOptions]);
+    if (!imageFile) {
+      setImagePreview(null);
+      return () => {};
+    }
+    const url = URL.createObjectURL(imageFile);
+    setImagePreview(url);
+    return () => {
+      URL.revokeObjectURL(url);
+    };
+  }, [imageFile]);
 
-  useEffect(() => () => {
-    // cleanup preview object URL on unmount / change
-    if (imagePreview) URL.revokeObjectURL(imagePreview);
-  }, [imagePreview]);
-
-  const handleInterestsChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selected = Array.from(e.target.selectedOptions).map((o) => o.value);
+  const handleInterestsChange = (e: any) => {
+    const selected = Array.from(e.target.selectedOptions as HTMLOptionElement[]).map(o => o.value);
     setInterests(selected);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files && e.target.files[0];
-    if (file) {
-      setImageFile(file);
-      const url = URL.createObjectURL(file);
-      setImagePreview(url);
-    } else {
-      setImageFile(null);
-      setImagePreview(null);
-    }
+    const f = e.target.files?.[0] ?? null;
+    setImageFile(f);
   };
 
   const resetForm = () => {
@@ -73,11 +83,35 @@ export default function AddRioForm({ rio = null, interestOptions = defaultIntere
     setCurrentImageUrl(rio?.image ?? null);
   };
 
-  const onSubmit = async (e?: React.FormEvent) => {
-    e?.preventDefault();
-    try {
-      setSubmitting(true);
+  // helper to add Rio on the server
+  const saveRio = async (data: {
+    name: string;
+    purposeStatement: string;
+    mainContact: string;
+    email: string;
+    interests: string[];
+    image?: string | null;
+  }) => {
+    const url = rio?.id ? `/api/rio/${rio.id}` : '/api/rio';
+    const method = rio?.id ? 'PUT' : 'POST';
 
+    const res = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  };
+
+  const [showToast, setShowToast] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
       // upload image if present
       let uploadedImageUrl: string | null = null;
       if (imageFile) {
@@ -103,45 +137,28 @@ export default function AddRioForm({ rio = null, interestOptions = defaultIntere
         mainContact,
         email,
         interests,
+        ...(uploadedImageUrl ? { image: uploadedImageUrl } : {}),
       };
 
-      if (uploadedImageUrl) payload.image = uploadedImageUrl;
-      else if (currentImageUrl) payload.image = currentImageUrl;
+      // call helper to update DB
+      await saveRio(payload);
 
-      const endpoint = rio ? `/api/rio/${rio.id}` : '/api/rio';
-      const method = rio ? 'PUT' : 'POST';
-
-      const res = await fetch(endpoint, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || `Save failed (${res.status})`);
-      }
-
-      swal('Success', rio ? 'RIO updated' : 'RIO added', 'success', { timer: 2000 });
-      resetForm();
+      // reflect changes locally
+      if (uploadedImageUrl) setCurrentImageUrl(uploadedImageUrl);
+      setShowToast(true);
     } catch (err: any) {
-      console.error(err);
-      swal('Error', err?.message ?? 'Save failed', 'error');
+      console.error('Save failed', err);
+      // optionally show an error toast/modal here
     } finally {
       setSubmitting(false);
     }
   };
 
-  // compute submit button label without nested ternary
-  let submitLabel = 'Submit';
-  if (submitting) submitLabel = 'Saving…';
-  else if (rio) submitLabel = 'Save Changes';
-
   return (
     <Card className="py-3 mb-4">
       <Card.Body>
-        <Form onSubmit={onSubmit}>
-          <Row className="mb-3">
+        <Form onSubmit={handleSubmit}>
+          <Row>
             <Col md={7}>
               <Form.Group controlId="name" className="mb-2">
                 <Form.Label>RIO Name</Form.Label>
@@ -211,12 +228,7 @@ export default function AddRioForm({ rio = null, interestOptions = defaultIntere
                   ))}
                 </Form.Select>
               </Form.Group>
-
-              <div className="mt-3">
-                <Button variant="primary" type="submit" disabled={submitting}>
-                  {submitLabel}
-                </Button>{' '}
-              </div>
+              <Button className="mt-3" type="submit">Submit</Button>
             </Col>
 
             <Col md={5}>
@@ -266,6 +278,14 @@ export default function AddRioForm({ rio = null, interestOptions = defaultIntere
           </Row>
         </Form>
       </Card.Body>
+      <ToastContainer position="middle-center" className="p-3">
+        <Toast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide>
+          <Toast.Header>
+            <strong className="me-auto">Success</strong>
+          </Toast.Header>
+          <Toast.Body>RIO updated!</Toast.Body>
+        </Toast>
+      </ToastContainer>
     </Card>
   );
 }
