@@ -26,7 +26,7 @@ const SignIn = () => {
 
   return (
     <main>
-      <Container>
+      <Container fluid className="pt-5 p-4 bg-white">
         <Row className="pt-5 justify-content-center">
           <Col xs={5}>
             <h1 className="text-center">Sign In</h1>

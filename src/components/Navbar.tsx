@@ -20,7 +20,7 @@ const NavBar: React.FC = () => {
   const navbarClassName = 'ribows-navbar';
   // const navbarVariant = currentUser ? 'dark' : 'light';
   return (
-    <Navbar expand="lg" style={menuStyle} className={navbarClassName}>
+    <Navbar expand="lg" fixed="top" style={menuStyle} className={navbarClassName}>
       <Container>
         <Navbar.Brand
           href="/"
@@ -34,25 +34,40 @@ const NavBar: React.FC = () => {
         <Navbar.Toggle aria-controls={ComponentIDs.basicNavbarNav} />
         <Navbar.Collapse id={ComponentIDs.basicNavbarNav}>
           <Nav className="me-auto justify-content-start">
-            <Nav.Link
-              id="search-nav"
-              active={pathname === '/search'}
-              href="/search"
-              key="search"
-              className="ribows-nav-link"
-            >
-              Search
-            </Nav.Link>
-            {currentUser && role === 'ADMIN' ? (
+            {!currentUser || role !== 'ADMIN' ? (
               <Nav.Link
-                id="admin-add-nav"
-                href="/addRio"
-                key="admin"
-                active={pathname === '/addRio'}
+                id="search-nav"
+                active={pathname === '/search'}
+                href="/search"
+                key="search"
                 className="ribows-nav-link"
               >
-                Add RIO
+                Search
               </Nav.Link>
+            ) : (
+              ''
+            )}
+            {currentUser && role === 'ADMIN' ? (
+              <>
+                <Nav.Link
+                  id="search-nav"
+                  active={pathname === '/search'}
+                  href="/search"
+                  key="search"
+                  className="ribows-nav-link"
+                >
+                  Admin Search
+                </Nav.Link>
+                <Nav.Link
+                  id="admin-add-nav"
+                  href="/addRio"
+                  key="admin"
+                  active={pathname === '/addRio'}
+                  className="ribows-nav-link"
+                >
+                  Add RIO
+                </Nav.Link>
+              </>
             ) : (
               ''
             )}
@@ -97,7 +112,7 @@ const NavBar: React.FC = () => {
               <NavDropdown
                 id={ComponentIDs.currentUserDropdown}
                 title={
-                  <span className="text-white">{currentUser}</span>
+                  <span className="ribows-nav-link">{currentUser}</span>
                 }
                 className="ribows-nav-link"
               >

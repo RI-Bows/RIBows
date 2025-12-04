@@ -78,7 +78,7 @@ export default function Search({ rioList, interests }: SearchProps) {
   }, [searchQuery, rios, sortBy, selectedType]);
 
   return (
-    <Container fluid className="">
+    <Container fluid className="pt-5">
       <Row className="g-0 p-4">
         <Container className="pt-4 w-75">
           <h2 className="text-primary fw-bold text-center">
