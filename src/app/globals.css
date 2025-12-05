@@ -67,12 +67,27 @@ html, body {
 .home-background-image {
   position: relative;
   width: 100%;
-  height: 60vh;
-  background-image: url('/images/manoa.jpg'); 
+  /* Taller hero and responsive: */
+  min-height: 80vh;
+
+  /* Background image – make sure file is at public/images/manoa.jpg */
+  background-image: url('/images/manoa.jpg');
   background-size: cover;
   background-position: center 10%;
   background-repeat: no-repeat;
-  overflow-x: hidden;
+
+  /* Center the hero content vertically */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Anything inside should sit above the overlay */
+.home-hero-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
 }
 
 /*  start of trending section styles  */
