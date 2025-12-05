@@ -29,21 +29,28 @@ const Footer = () => (
             <br />
           </div>
 
-          <a
-            href="https://ri-bows.github.io"
-            target="_blank"
-            rel="noreferrer"
-            className="rb-footer-link"
-          >
-            https://ri-bows.github.io
+          <a href="https://ri-bows.github.io" target="_blank" rel="noreferrer" className="rb-footer-link">
+            <strong>
+              https://ri-bows.github.io
+            </strong>
           </a>
 
           {/* eslint-disable-next-line no-trailing-spaces, react/jsx-one-expression-per-line */}
           <div className="rb-footer-feedback">
             We would love to hear your&nbsp;
             <a href="/feedback" className="rb-footer-link">
-              feedback!
+              <strong>
+                feedback!
+              </strong>
             </a>
+          </div>
+          {/* Help / FAQ link */}
+          <div className="rb-footer-help">
+            Need help? Visit our{' '}
+            <a href="/help" className="rb-footer-link">
+              <strong>Help page</strong>
+            </a>
+            .
           </div>
         </Col>
       </Row>
