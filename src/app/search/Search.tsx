@@ -15,15 +15,22 @@ import RioCardDisplay from '@/components/RioCardDisplay';
 type SearchProps = {
   rioList: RioType[];
   interests: Interest[];
+  // eslint-disable-next-line react/require-default-props
+  initialQuery?: string;
 };
 
-export default function Search({ rioList, interests }: SearchProps) {
-  const [searchQuery, setSearchQuery] = useState('');
+export default function Search({ rioList, interests, initialQuery = '' }: SearchProps) {
+  const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [rios] = useState<RioType[]>(rioList);
   const [filteredItems, setFilteredItems] = useState<RioType[]>(rioList);
   const [sortBy, setSortBy] = useState('trending');
   const [selectedType, setSelectedType] = useState('all');
   const interestOptions = ['all', ...interests.map((i) => i.name)];
+
+  // If the initialQuery prop changes (new URL), sync it into local state
+  useEffect(() => {
+    setSearchQuery(initialQuery);
+  }, [initialQuery]);
 
   // sorting function
   const sortItems = (items: RioType[], sortType: string) => {
@@ -61,16 +68,17 @@ export default function Search({ rioList, interests }: SearchProps) {
 
     // Filter by search query
     if (searchQuery !== '') {
+      const q = searchQuery.toLowerCase();
       results = results.filter(
-        item => item.name.toLowerCase().includes(searchQuery.toLowerCase())
-          || item.interest.name.toLowerCase().includes(searchQuery.toLowerCase())
-          || item.purposeStatement?.toLowerCase().includes(searchQuery.toLowerCase()),
+        (item) => item.name.toLowerCase().includes(q)
+          || item.interest.name.toLowerCase().includes(q)
+          || item.purposeStatement?.toLowerCase().includes(q),
       );
     }
 
     // Filter by interest/type
     if (selectedType !== 'all') {
-      results = results.filter(item => item.interest.name === selectedType);
+      results = results.filter((item) => item.interest.name === selectedType);
     }
 
     // Apply sorting
@@ -93,8 +101,7 @@ export default function Search({ rioList, interests }: SearchProps) {
             value={searchQuery}
             placeholder="Search"
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="search-input w-100 py-3 border border-gray-300 
-                      rounded-5"
+            className="search-input w-100 py-3 border border-gray-300 rounded-5"
           />
         </Col>
         <Col md={4}>
