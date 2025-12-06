@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Button, Card, CardBody, Col, Modal, Row, Toast, ToastContainer } from 'react-bootstrap';
-import { Bookmark, BookmarkCheckFill } from 'react-bootstrap-icons';
+import { Bookmark, BookmarkCheckFill, BookmarkFill, Envelope } from 'react-bootstrap-icons';
 import { RioType } from '@/lib/dbActions';
 import { useSession } from 'next-auth/react';
 
@@ -101,9 +101,7 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
           <Toast.Header>
             <strong className="me-auto white">Bookmark</strong>
           </Toast.Header>
-          <Toast.Body className={toastMessage.includes('Error') ? 'text-white' : ''}>
-            {toastMessage}
-          </Toast.Body>
+          <Toast.Body className={toastMessage.includes('Error') ? 'text-white' : ''}>{toastMessage}</Toast.Body>
         </Toast>
       </ToastContainer>
 
@@ -119,31 +117,23 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
               <Row>
                 <Col sm={2}>
                   {email && (
-                    <Button
-                      style={{ cursor: 'pointer', all: 'unset' }}
-                      onClick={() => toggleBookmark(rio.id)}
-                    >
+                    <Button style={{ cursor: 'pointer', all: 'unset' }} onClick={() => toggleBookmark(rio.id)}>
                       {isBookmarked ? <BookmarkCheckFill /> : <Bookmark />}
                     </Button>
                   )}
                 </Col>
               </Row>
 
-              <Button
-                style={{ cursor: 'pointer', all: 'unset' }}
-                onClick={() => setSelectedRio(rio)}
-              >
+              <Button style={{ cursor: 'pointer', all: 'unset' }} onClick={() => setSelectedRio(rio)}>
                 <h5 className="trending-card-title">{rio.name}</h5>
-                <p className="text-muted mb-1 text-center">
-                  {rio.interest.name}
-                </p>
+                <p className="text-muted mb-1 text-center">{rio.interest.name}</p>
                 <CardBody>
                   <p className="trending-card-text">{rio.purposeStatement}</p>
                 </CardBody>
               </Button>
               {currentUser && role === 'ADMIN' && (
                 <Button
-                  variant="outline-primary"
+                  variant="outline-warning"
                   size="sm"
                   onClick={(e) => {
                     e.stopPropagation(); // don't open the card modal
@@ -169,6 +159,8 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
         show={selectedRio !== null}
         onHide={() => setSelectedRio(null)}
         centered
+        size="xl" // react-bootstrap sizes: sm, lg, xl
+        dialogClassName="modal-90w" // custom class to further control width
       >
         <Modal.Header closeButton>
           <Row>
@@ -179,13 +171,16 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
 
         <Modal.Body>
           <div className="d-flex align-items-center justify-content-between mb-2">
-            <p>
-              {`Bookmarks: ${selectedRio?.bookmarks ?? 0}`}
-            </p>
+            <div
+              className="text-dark border border-black rounded px-2 py-2"
+              style={{ color: 'inherit', backgroundColor: '#ffffff' }}
+            >
+              <BookmarkFill size={20} className="me-1" />
+              {selectedRio?.bookmarks ?? 0}
+            </div>
             {currentUser && role === 'ADMIN' ? (
               <Button
-                variant="outline-primary"
-                size="sm"
+                variant="outline-warning"
                 onClick={(e) => {
                   e.stopPropagation();
                   // navigate to edit page
@@ -194,25 +189,35 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
               >
                 Edit
               </Button>
-            ) : ('')}
+            ) : (
+              ''
+            )}
           </div>
-          <p>{selectedRio?.purposeStatement}</p>
-          Main Contact:&nbsp;
-          {selectedRio?.mainContact}
-          <div className="py-2" />
-          Email:&nbsp;
-          {selectedRio?.email}
           <br />
-          {`Approved: ${
-            selectedRio?.approvalDate ? new Date(selectedRio.approvalDate).toDateString() : ''
-          }`}
-          <br />
-          <br />
-          <Row className="justify-content-center" md={3}>
-            <Button variant="success">
-              <a href={`mailto:${selectedRio?.email}`} style={{ color: 'inherit', textDecoration: 'none' }}>Contact</a>
-            </Button>
+          <Row className="justify-content-between">
+            <Col xs={12} md={11} lg={8}>
+              <strong>Purpose Statement:</strong>
+              <p>{selectedRio?.purposeStatement}</p>
+            </Col>
+            <Col xs={7} md={6} lg={4}>
+              <strong>Main Contact:&nbsp;</strong>
+              {selectedRio?.mainContact}
+              <br />
+              <strong>Email:&nbsp;</strong>
+              {selectedRio?.email}
+              <br />
+              <strong>Approved:&nbsp;</strong>
+              {selectedRio?.approvalDate ? new Date(selectedRio.approvalDate).toDateString() : ''}
+              <br />
+            </Col>
           </Row>
+          <div className="d-flex justify-content-end">
+            <Button variant="outline-primary" size="lg" className="mt-3">
+              <a href={`mailto:${selectedRio?.email}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                <Envelope size={25} />
+              </a>
+            </Button>
+          </div>
         </Modal.Body>
       </Modal>
     </>
