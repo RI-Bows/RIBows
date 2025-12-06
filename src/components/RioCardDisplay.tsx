@@ -133,7 +133,7 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
               </Button>
               {currentUser && role === 'ADMIN' && (
                 <Button
-                  variant="outline-primary"
+                  variant="outline-warning"
                   size="sm"
                   onClick={(e) => {
                     e.stopPropagation(); // don't open the card modal
@@ -211,11 +211,13 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
               <br />
             </Col>
           </Row>
-          <Button variant="outline-primary" className="mt-3 me-3">
-            <a href={`mailto:${selectedRio?.email}`} style={{ color: 'inherit', textDecoration: 'none' }}>
-              <Envelope size={20} />
-            </a>
-          </Button>
+          <div className="d-flex justify-content-end">
+            <Button variant="outline-primary" size="lg" className="mt-3">
+              <a href={`mailto:${selectedRio?.email}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                <Envelope size={25} />
+              </a>
+            </Button>
+          </div>
         </Modal.Body>
       </Modal>
     </>
