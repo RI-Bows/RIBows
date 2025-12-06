@@ -336,8 +336,8 @@ html, body {
 /* Outline variants using theme green */
 .btn-outline-primary,
 .btn-outline-success {
-  color: var(--rb-primary);
-  border-color: var(--rb-primary);
+  color: var(--ribows-green);
+  border-color: var(--ribows-green);
   background-color: transparent;
 }
 
@@ -348,8 +348,8 @@ html, body {
 .btn-outline-success:focus,
 .btn-outline-success:active {
   color: #ffffff;
-  background-color: var(--rb-primary);
-  border-color: var(--rb-primary);
+  background-color: var(--ribows-green);
+  border-color: var(--ribows-green);
 }
 
 /* Secondary/muted buttons */
@@ -397,6 +397,11 @@ html, body {
   overflow-y: auto;
   border: var(--bs-border-width) solid var(--bs-border-color);
   border-radius: var(--bs-border-radius);
+}
+
+/* Custom modal width helper used by dialogClassName="modal-90w" */
+.modal-90w .modal-dialog {
+  max-width: 90% !important; /* adjust percent as needed */
 }
 
 .multiselect-container .searchBox {
