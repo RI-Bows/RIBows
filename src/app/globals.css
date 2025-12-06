@@ -67,51 +67,11 @@ html, body {
 .home-background-image {
   position: relative;
   width: 100%;
-  /* Taller hero and responsive: */
-  min-height: 80vh;
-
-  /* Background image – make sure file is at public/images/manoa.jpg */
+  min-height: 70vh;
   background-image: url('/images/manoa.jpg');
   background-size: cover;
   background-position: center 10%;
   background-repeat: no-repeat;
-
-  /* Center the hero content vertically */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-/* Anything inside should sit above the overlay */
-.home-hero-content {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-}
-
-/*  start of trending section styles  */
-
-.trending-section {
-  padding: 3rem 1rem 4rem;
-  /* CHANGED: use theme surface-soft instead of off-palette hex */
-  background-color: var(--rb-surface-soft);
-  max-width: 1200px;
-  margin: 0 auto;
-  border-radius: 12px;
-}
-
-/* .trending-panel {
-  background-color: #d5ece7;
-  border-radius: 24px;
-  padding: 2rem 2.5rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-} */
-
-.trending-heading {
-  margin-bottom: 1.5rem;
-  color: #123b2c;
-  font-weight: 800;
 }
 
 /* Make the tiles look like uniform squares/rectangles */
