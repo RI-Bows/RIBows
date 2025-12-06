@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Button, Card, CardBody, Col, Modal, Row, Toast, ToastContainer } from 'react-bootstrap';
-import { Bookmark, BookmarkCheckFill } from 'react-bootstrap-icons';
+import { Bookmark, BookmarkCheckFill, BookmarkFill, Envelope } from 'react-bootstrap-icons';
 import { RioType } from '@/lib/dbActions';
 import { useSession } from 'next-auth/react';
 
@@ -179,12 +179,13 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
 
         <Modal.Body>
           <div className="d-flex align-items-center justify-content-between mb-2">
-            <p>
-              {`Bookmarks: ${selectedRio?.bookmarks ?? 0}`}
-            </p>
+            <div className="text-white rounded px-2 py-2" style={{ color: 'inherit', backgroundColor: '#6c757d' }}>
+              <BookmarkFill size={15} className="me-1" />
+              {selectedRio?.bookmarks ?? 0}
+            </div>
             {currentUser && role === 'ADMIN' ? (
               <Button
-                variant="outline-primary"
+                variant="outline-warning"
                 size="sm"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -196,21 +197,23 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
               </Button>
             ) : ('')}
           </div>
+          <br />
           <p>{selectedRio?.purposeStatement}</p>
-          Main Contact:&nbsp;
+          <strong>Main Contact:&nbsp;</strong>
           {selectedRio?.mainContact}
-          <div className="py-2" />
-          Email:&nbsp;
+          <br />
+          <strong>Email:&nbsp;</strong>
           {selectedRio?.email}
           <br />
-          {`Approved: ${
-            selectedRio?.approvalDate ? new Date(selectedRio.approvalDate).toDateString() : ''
-          }`}
+          <strong>Approved:&nbsp;</strong>
+          {selectedRio?.approvalDate ? new Date(selectedRio.approvalDate).toDateString() : ''}
           <br />
           <br />
-          <Row className="justify-content-center" md={3}>
-            <Button variant="success">
-              <a href={`mailto:${selectedRio?.email}`} style={{ color: 'inherit', textDecoration: 'none' }}>Contact</a>
+          <Row className="justify-content-end" xs={6}>
+            <Button variant="outline-primary" className="me-3">
+              <a href={`mailto:${selectedRio?.email}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                <Envelope size={20} />
+              </a>
             </Button>
           </Row>
         </Modal.Body>
