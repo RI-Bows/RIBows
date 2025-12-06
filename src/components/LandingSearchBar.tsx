@@ -8,6 +8,7 @@ import {
   Row,
   Toast,
   ToastContainer,
+  Container,
 } from 'react-bootstrap';
 import { useSession } from 'next-auth/react';
 import { Bookmark, BookmarkCheckFill } from 'react-bootstrap-icons';
@@ -135,7 +136,7 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
   };
 
   return (
-    <>
+    <Container style={{ position: 'absolute' }}>
       {/* Toast (top-right, same as Search page) */}
       <ToastContainer position="top-end" className="p-3" style={{ zIndex: 9999 }}>
         <Toast
@@ -156,7 +157,7 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
 
       {/* Search + suggestions */}
       <div
-        className="rb-landing-search-wrapper w-100 d-flex flex-column align-items-center"
+        className="w-100 d-flex flex-column align-items-center"
         onBlur={(e) => {
           if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
             setIsFocused(false);
@@ -182,32 +183,34 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
         {/* Autocomplete dropdown */}
         <div className="w-100 d-flex justify-content-center" style={{ maxWidth: '900px' }}>
           {isFocused && suggestions.length > 0 && (
-            <div className="rb-landing-search-suggestions w-100 mt-2">
+            <div className="w-100 mt-2">
               <ul
                 className="list-group shadow-sm"
                 style={{
-                  maxHeight: '380px',
+                  maxHeight: '200px',
                   overflowY: 'auto',
                   borderRadius: '18px',
+                  // position: 'absolute',
+                  zIndex: 9999,
                 }}
               >
                 {suggestions.map((rio) => {
                   const isBookmarked = userBookmarkIds.includes(rio.id);
 
                   return (
-                    <li key={rio.id} className="list-group-item rb-suggestion-item p-0">
+                    <li key={rio.id} className="list-group-item p-0">
                       <button
                         type="button"
-                        className="rb-suggestion-button w-100 text-start border-0 bg-transparent px-3 py-2"
+                        className="w-100 text-start border-0 bg-transparent px-3 py-2"
                         onMouseDown={(e) => {
                           e.preventDefault(); // keep focus on input
                           handleSuggestionClick(rio);
                         }}
                       >
                         <div className="d-flex align-items-center justify-content-between">
-                          <div className="rb-suggestion-main">
-                            <div className="rb-suggestion-name">{rio.name}</div>
-                            <div className="rb-suggestion-interest">{rio.interest.name}</div>
+                          <div className="">
+                            <div className="">{rio.name}</div>
+                            <div className="">{rio.interest.name}</div>
                           </div>
 
                           {email && (
@@ -274,7 +277,7 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
           )}
         </Modal.Body>
       </Modal>
-    </>
+    </Container>
   );
 };
 
