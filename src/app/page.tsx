@@ -1,4 +1,4 @@
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row } from 'react-bootstrap';
 import { PageIDs } from '@/utilities/ids';
 import RioCardDisplay from '@/components/RioCardDisplay';
 import LandingSearchBar from '@/components/LandingSearchBar';
