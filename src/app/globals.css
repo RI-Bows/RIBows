@@ -16,6 +16,7 @@
 
   /* RIBows theme tokens hooked into existing colors */
   --rb-primary: #6B9080;   
+  --ribows-green-soft: #036445;
   --rb-accent: #CCE3DE;    
   --rb-surface: #F6FFF8;   /* cards / navbar surface */
   --rb-surface-soft: #EAF4F4; 
@@ -274,11 +275,11 @@ html, body {
 
 /* === THEMED BUTTONS (Issue 119: recolor to match palette) === */
 
-/* Primary actions: main green */
+/* Primary actions: use ribows-green with lighter hover */
 .btn-primary,
 .btn-success {
-  background-color: var(--rb-primary);
-  border-color: var(--rb-primary);
+  background-color: var(--ribows-green);
+  border-color: var(--ribows-green);
   color: #ffffff;
 }
 
@@ -288,10 +289,11 @@ html, body {
 .btn-success:hover,
 .btn-success:focus,
 .btn-success:active {
-  background-color: var(--rb-primary-soft);
-  border-color: var(--rb-primary-soft);
+  background-color: var(--ribows-green-soft);
+  border-color: var(--ribows-green-soft);
   color: #ffffff;
 }
+
 
 /* Outline variants using theme green */
 .btn-outline-primary,
@@ -444,14 +446,18 @@ html, body {
 /* Edit RIOs CSS */
 
 .rb-interests-selected-box {
-  background-color: var(--rb-surface);   /* soft off-white */
-  border-color: var(--rb-accent);        /* mint border */
+  background-color: var(--ribows-white);   /* was var(--rb-surface) */
+  border-color: var(--rb-accent);
 }
+
 
 /* Make the badges use theme primary (just in case bootstrap is still blue) */
 .badge.bg-primary {
-  background-color: var(--rb-primary) !important;
+  background-color: var(--ribows-green) !important;
+  border-color: var(--ribows-green) !important;
+  color: #ffffff;
 }
+
 
 /* Multi-select highlight uses theme instead of harsh OS blue */
 select[multiple] option:checked {
@@ -461,29 +467,89 @@ select[multiple] option:checked {
 
 /* === Themed file input button ("Choose File") === */
 
+/* Standard browsers */
 .form-control[type="file"]::file-selector-button {
-  background-color: var(--rb-primary);
-  color: #ffffff;
-  border: 1px solid var(--rb-primary);
+  background-color: var(--ribows-green) !important;
+  color: #ffffff !important;
+  border: 1px solid var(--ribows-green) !important;
   padding: 0.375rem 0.75rem;
   margin-right: 0.75rem;
   border-radius: 0.375rem;
   cursor: pointer;
 }
 
-.form-control[type="file"]::file-selector-button:hover,
-.form-control[type="file"]::file-selector-button:focus {
-  background-color: var(--rb-primary-soft);
-  border-color: var(--rb-primary-soft);
+/* Hover/focus: slightly lighter green */
+.form-control[type="file"]:hover::file-selector-button,
+.form-control[type="file"]:focus::file-selector-button {
+  background-color: var(--ribows-green-soft) !important;
+  border-color: var(--ribows-green-soft) !important;
+  color: #ffffff !important;
 }
 
-/* Safari / older WebKit fallback */
+/* Safari / older WebKit fallback – match green theme */
 .form-control[type="file"]::-webkit-file-upload-button {
-  background-color: var(--rb-primary);
-  color: #ffffff;
-  border: 1px solid var(--rb-primary);
+  background-color: var(--ribows-green) !important;
+  color: #ffffff !important;
+  border: 1px solid var(--ribows-green) !important;
   padding: 0.375rem 0.75rem;
   margin-right: 0.75rem;
   border-radius: 0.375rem;
   cursor: pointer;
+}
+
+.form-control[type="file"]:hover::-webkit-file-upload-button,
+.form-control[type="file"]:focus::-webkit-file-upload-button {
+  background-color: var(--ribows-green-soft) !important;
+  border-color: var(--ribows-green-soft) !important;
+  color: #ffffff !important;
+}
+
+/* Keep primary/success buttons green in ALL states (no Bootstrap blue flash) */
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active,
+.btn-success.active,
+.btn-check:focus + .btn-primary,
+.btn-check:checked + .btn-primary,
+.btn-check:active + .btn-primary,
+.show > .btn-primary.dropdown-toggle,
+.btn-check:focus + .btn-success,
+.btn-check:checked + .btn-success,
+.btn-check:active + .btn-success,
+.show > .btn-success.dropdown-toggle {
+  background-color: var(--ribows-green);
+  border-color: var(--ribows-green);
+  color: #ffffff;
+  box-shadow: 0 0 0 0.25rem rgba(var(--ribows-green-rgb), 0.35);
+}
+
+/* Disabled still green */
+.btn-primary:disabled,
+.btn-primary.disabled,
+.btn-success:disabled,
+.btn-success.disabled {
+  background-color: var(--ribows-green);
+  border-color: var(--ribows-green);
+  color: #ffffff;
+}
+
+/* Landing page search bookmark icons */
+.rb-bookmark-icon {
+  color: #6c757d; /* unbookmarked = gray */
+}
+
+/* Bookmarked: solid black */
+.rb-bookmark-icon-active {
+  color: #000000;
+}
+
+/* Keep active ones black even on hover/focus/active */
+.rb-landing-search-suggestions .btn-link:hover .rb-bookmark-icon-active,
+.rb-landing-search-suggestions .btn-link:focus .rb-bookmark-icon-active,
+.rb-landing-search-suggestions .btn-link:active .rb-bookmark-icon-active {
+  color: #000000;
 }
