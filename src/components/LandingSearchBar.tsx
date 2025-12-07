@@ -2,9 +2,9 @@
 
 import { useMemo, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Modal, Row, Toast, ToastContainer, Container } from 'react-bootstrap';
+import { Button, Modal, Row, Toast, ToastContainer, Container, Col } from 'react-bootstrap';
 import { useSession } from 'next-auth/react';
-import { Bookmark, BookmarkCheckFill } from 'react-bootstrap-icons';
+import { Bookmark, BookmarkCheckFill, BookmarkFill, Envelope } from 'react-bootstrap-icons';
 import type { RioType } from '@/lib/dbActions';
 
 type Props = {
@@ -102,8 +102,8 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
       // eslint-disable-next-line react/prop-types
       base = rioList.filter(
         (rio) => rio.name.toLowerCase().includes(q)
-          || rio.interest.name.toLowerCase().includes(q)
-          || rio.purposeStatement?.toLowerCase().includes(q),
+        || rio.interest.name.toLowerCase().includes(q)
+        || rio.purposeStatement?.toLowerCase().includes(q),
       );
     }
 
@@ -198,9 +198,9 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
                         }}
                       >
                         <div className="d-flex align-items-center justify-content-between">
-                          <div className="">
-                            <div className="">{rio.name}</div>
-                            <div className="">{rio.interest.name}</div>
+                          <div>
+                            <div>{rio.name}</div>
+                            <div>{rio.interest.name}</div>
                           </div>
 
                           {email && (
@@ -232,8 +232,14 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
         </div>
       </div>
 
-      {/* Pop-up RIO card (Modal) */}
-      <Modal show={selectedRio !== null} onHide={() => setSelectedRio(null)} centered>
+      {/* Updated pop-up RIO card (matches RioCardDisplay modal) */}
+      <Modal
+        show={selectedRio !== null}
+        onHide={() => setSelectedRio(null)}
+        centered
+        size="xl"
+        dialogClassName="modal-90w"
+      >
         <Modal.Header closeButton>
           <Row>
             <Modal.Title>{selectedRio?.name ?? ''}</Modal.Title>
@@ -242,28 +248,40 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
         </Modal.Header>
 
         <Modal.Body>
-          {selectedRio && (
-            <>
-              <p>{`Bookmarks: ${selectedRio.bookmarks ?? 0}`}</p>
-              <p>{selectedRio.purposeStatement}</p>
-              Main Contact:&nbsp;
-              {selectedRio.mainContact}
-              <div className="py-2" />
-              Email:&nbsp;
-              {selectedRio.email}
+          <div className="d-flex align-items-center justify-content-between mb-2">
+            <div
+              className="text-dark border border-black rounded px-2 py-2"
+              style={{ color: 'inherit', backgroundColor: '#ffffff' }}
+            >
+              <BookmarkFill size={20} className="me-1" />
+              {selectedRio?.bookmarks ?? 0}
+            </div>
+          </div>
+          <br />
+          <Row className="justify-content-between">
+            <Col xs={12} md={11} lg={8}>
+              <strong>Purpose Statement:</strong>
+              <p>{selectedRio?.purposeStatement}</p>
+            </Col>
+            <Col xs={7} md={6} lg={4}>
+              <strong>Main Contact:&nbsp;</strong>
+              {selectedRio?.mainContact}
               <br />
-              {`Approved: ${selectedRio.approvalDate ? new Date(selectedRio.approvalDate).toDateString() : ''}`}
+              <strong>Email:&nbsp;</strong>
+              {selectedRio?.email}
               <br />
+              <strong>Approved:&nbsp;</strong>
+              {selectedRio?.approvalDate ? new Date(selectedRio.approvalDate).toDateString() : ''}
               <br />
-              <Row className="justify-content-center" md={3}>
-                <Button variant="success">
-                  <a href={`mailto:${selectedRio.email}`} style={{ color: 'inherit', textDecoration: 'none' }}>
-                    Contact
-                  </a>
-                </Button>
-              </Row>
-            </>
-          )}
+            </Col>
+          </Row>
+          <div className="d-flex justify-content-end">
+            <Button variant="outline-primary" size="lg" className="mt-3">
+              <a href={`mailto:${selectedRio?.email}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                <Envelope size={25} />
+              </a>
+            </Button>
+          </div>
         </Modal.Body>
       </Modal>
     </Container>
