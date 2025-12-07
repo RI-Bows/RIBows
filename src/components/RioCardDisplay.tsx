@@ -25,9 +25,10 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
-  // Fetch user's bookmarks on load
+  let rioBookmarks = selectedRio ? selectedRio.bookmarks : 0;
+  // Fetch user's and each rio cards bookmarks on load
   useEffect(() => {
-    async function fetchBookmarks() {
+    async function fetchUserBookmarks() {
       const res = await fetch('/api/bookmarks/get', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -52,11 +53,18 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
 
       setUserBookmarkIds(ids);
     }
-
     if (email) {
-      fetchBookmarks();
+      fetchUserBookmarks();
     }
   }, [email]);
+
+  // when rio card is clicked, it gathers bookmarks from database and displays it
+  const clickRioCard = async (rio: RioType) => {
+    setSelectedRio(rio);
+    const bookmarkRes = await fetch(`/api/bookmarks/amount/${rio.id}`);
+    const bookmarkData = await bookmarkRes.json();
+    rioBookmarks = bookmarkData;
+  };
 
   // Toggle bookmark
   const toggleBookmark = async (rioId: number) => {
@@ -90,7 +98,7 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
   return (
     <>
       {/* Toast Notification */}
-      <ToastContainer position="top-end" className="p-3" style={{ zIndex: 9999 }}>
+      <ToastContainer className="position-fixed bottom-0 end-0 p-3" style={{ zIndex: 9999 }}>
         <Toast
           show={showToast}
           onClose={() => setShowToast(false)}
@@ -107,7 +115,6 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
 
       {rioList.map((rio) => {
         const isBookmarked = userBookmarkIds.includes(rio.id);
-
         return (
           <Col key={rio.id} md={4}>
             <Card
@@ -124,7 +131,7 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
                 </Col>
               </Row>
 
-              <Button style={{ cursor: 'pointer', all: 'unset' }} onClick={() => setSelectedRio(rio)}>
+              <Button style={{ cursor: 'pointer', all: 'unset' }} onClick={() => clickRioCard(rio)}>
                 <h5 className="trending-card-title">{rio.name}</h5>
                 <p className="text-muted mb-1 text-center">{rio.interest.name}</p>
                 <CardBody>
@@ -176,7 +183,7 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
               style={{ color: 'inherit', backgroundColor: '#ffffff' }}
             >
               <BookmarkFill size={20} className="me-1" />
-              {selectedRio?.bookmarks ?? 0}
+              {rioBookmarks}
             </div>
             {currentUser && role === 'ADMIN' ? (
               <Button
