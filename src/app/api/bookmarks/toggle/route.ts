@@ -46,15 +46,6 @@ export async function POST(req: Request) {
         },
       });
 
-      await prisma.rio.update({
-        where: { id: rioId },
-        data: {
-          bookmarks: {
-            decrement: 1,
-          },
-        },
-      });
-
       return NextResponse.json({ bookmarked: false });
     }
 
@@ -64,16 +55,6 @@ export async function POST(req: Request) {
       data: {
         rios: {
           connect: { id: rioId },
-        },
-      },
-    });
-
-    // increase bookmark count
-    await prisma.rio.update({
-      where: { id: rioId },
-      data: {
-        bookmarks: {
-          increment: 1,
         },
       },
     });
