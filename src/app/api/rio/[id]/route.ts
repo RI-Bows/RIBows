@@ -44,3 +44,21 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     return NextResponse.json({ error: err.message ?? 'Unknown' }, { status: 500 });
   }
 }
+
+export async function POST(req: Request) {
+  try {
+    const { id } = await req.json();
+
+    if (!id) {
+      return new Response(JSON.stringify({ error: 'Missing id' }), { status: 400 });
+    }
+
+    await prisma.rio.delete({
+      where: { id: Number(id) },
+    });
+
+    return new Response(JSON.stringify({ success: true }), { status: 200 });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: 'Delete failed' }), { status: 500 });
+  }
+}
