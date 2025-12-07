@@ -9,26 +9,27 @@ test('Club User pages test', async ({ page }) => {
   expect(response?.status()).toBeLessThan(400);
 
   // check navbar links
-  await expect(page.getByRole('link', { name: 'RIBowsRainbow' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'RIBows Rainbow' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Search' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'About Us' })).toBeVisible();
-  /*
   await expect(page.getByRole('link', { name: 'Edit RIO' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Saved' })).toBeVisible();
-  */
+  await expect(page.getByRole('link', { name: 'Bookmarks' })).toBeVisible();
 
   // check home page
-  await page.getByRole('link', { name: 'RIBowsRainbow' }).click();
+  await page.getByRole('link', { name: 'RIBows Rainbow' }).click();
   await expect(page).toHaveURL('http://localhost:3000/');
   await expect(page.getByRole('heading', { name: 'Find and join RIO\'s at UH Mānoa' })).toBeVisible();
 
   // check search page
   await page.getByRole('link', { name: 'Search' }).click();
   await expect(page).toHaveURL('http://localhost:3000/search');
-  await expect(page.getByRole('heading', { name: 'Search for Clubs' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Search for RIOs' })).toBeVisible();
+  await expect(page.getByRole('textbox', { name: 'Search' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Filters' })).toBeVisible();
+  await page.getByRole('button', { name: 'Filters' }).click();
+  await page.getByRole('button', { name: 'Filters' }).click();
 
   // check edit RIO page
-  /*
   await page.getByRole('link', { name: 'Edit RIO' }).click();
   await expect(page).toHaveURL('http://localhost:3000/editRio');
   await expect(page.getByRole('heading', { name: 'Edit RIO' })).toBeVisible();
@@ -42,19 +43,19 @@ test('Club User pages test', async ({ page }) => {
   await expect(page.getByRole('img', { name: 'Current image' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Choose File' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Save Changes' })).toBeVisible();
-  */
 
   // check about us page
   await page.getByRole('link', { name: 'About Us' }).click();
   await expect(page).toHaveURL('http://localhost:3000/about');
   await expect(page.getByRole('heading', { name: 'About Us' })).toBeVisible();
+  await page.getByRole('button', { name: 'Feedback Page' }).click();
+  await expect(page).toHaveURL('http://localhost:3000/feedback');
+  await expect(page.locator('iframe[title="Feedback Form"]').contentFrame().locator('div').first()).toBeVisible();
 
   // check bookmarks page
-  /*
-  await page.getByRole('link', { name: 'Saved' }).click();
+  await page.getByRole('link', { name: 'Bookmarks' }).click();
   await expect(page).toHaveURL('http://localhost:3000/bookmarks');
-  await expect(page.getByRole('heading', { name: 'Bookmarks Page' })).toBeVisible();
-  */
+  await expect(page.getByRole('heading', { name: 'Bookmarked RIOs' })).toBeVisible();
 
   // check edit profile page
   /*

@@ -18,8 +18,25 @@ jobs:
           node-version: lts/*
       - name: Install dependencies
         run: npm ci
+      - name: Build Next.js app
+        run: npm run build
+      - name: Start server
+        run: npx next start &
+        env:
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: "http://localhost:3000"
+          GITHUB_CLIENT_ID: ${{ secrets.GITHUB_CLIENT_ID }}
+          GITHUB_CLIENT_SECRET: ${{ secrets.GITHUB_CLIENT_SECRET }}
+        shell: bash
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+      - name: Wait for server to be ready
+        run: npx wait-on http://localhost:3000
+      - name: Run setup scripts
+        run: |
+          node scripts/save-admin-auth.js
+          node scripts/save-club-auth.js
+          node scripts/save-user-auth.js
       - name: Run Playwright tests
         run: npx playwright test
       - uses: actions/upload-artifact@v4
