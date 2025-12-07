@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Button, Card, CardBody, Col, Modal, Row, Toast, ToastContainer } from 'react-bootstrap';
-import { Bookmark, BookmarkCheckFill, BookmarkFill, Envelope } from 'react-bootstrap-icons';
+import { Bookmark, BookmarkCheckFill, BookmarkFill, Envelope, Trash3 } from 'react-bootstrap-icons';
 import { RioType } from '@/lib/dbActions';
 import { useSession } from 'next-auth/react';
 
@@ -211,13 +211,31 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
               <br />
             </Col>
           </Row>
-          <div className="d-flex justify-content-end">
-            <Button variant="outline-primary" size="lg" className="mt-3">
-              <a href={`mailto:${selectedRio?.email}`} style={{ color: 'inherit', textDecoration: 'none' }}>
-                <Envelope size={25} />
-              </a>
-            </Button>
-          </div>
+          <Row>
+            <Col className="d-flex justify-content-start align-items-end">
+              {currentUser && role === 'ADMIN' ? (
+                <Button
+                  variant="danger"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // navigate to delete page
+                    if (selectedRio?.id) window.location.href = `/deleteRio/${selectedRio.id}`;
+                  }}
+                >
+                  Delete <Trash3 />
+                </Button>
+              ) : (
+                ''
+              )}
+            </Col>
+            <Col className="d-flex justify-content-end">
+              <Button variant="outline-primary" size="lg" className="mt-3">
+                <a href={`mailto:${selectedRio?.email}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                  <Envelope size={25} />
+                </a>
+              </Button>
+            </Col>
+          </Row>
         </Modal.Body>
       </Modal>
     </>
