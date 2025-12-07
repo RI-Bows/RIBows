@@ -221,7 +221,7 @@ export async function getInterests(): Promise<Interest[]> {
  * @param {string} email: The email of the user adding a bookmark.
  * @param {string} rioName: The name of the RIO to add a bookmark to.
  */
-export async function addBookmark(email: string, rioName: string) {
+export async function toggleBookmark(email: string, rioName: string) {
   await prisma.$transaction(async (tx) => {
     const rio = await tx.rio.findUnique({
       where: { name: rioName },
@@ -248,6 +248,24 @@ export async function addBookmark(email: string, rioName: string) {
     });
 
     if (alreadyBookmarked) {
+      // Remove from user bookmarks and decrement rio bookmark count
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          rios: {
+            disconnect: { id: rio.id },
+          },
+        },
+      });
+
+      await tx.rio.update({
+        where: { name: rioName },
+        data: {
+          bookmarks: {
+            decrement: 1,
+          },
+        },
+      });
       return;
     }
 
