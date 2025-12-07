@@ -20,6 +20,11 @@ jobs:
         run: npm ci
       - name: Build Next.js app
         run: npm run build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: "http://localhost:3000"
+          STACK_SECRET_SERVER_KEY: ${{ secrets.STACK_SECRET_SERVER_KEY }}
       - name: Start server
         run: npx next start &
         env:
