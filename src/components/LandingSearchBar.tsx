@@ -2,14 +2,7 @@
 
 import { useMemo, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  Button,
-  Modal,
-  Row,
-  Toast,
-  ToastContainer,
-  Container,
-} from 'react-bootstrap';
+import { Button, Modal, Row, Toast, ToastContainer, Container } from 'react-bootstrap';
 import { useSession } from 'next-auth/react';
 import { Bookmark, BookmarkCheckFill } from 'react-bootstrap-icons';
 import type { RioType } from '@/lib/dbActions';
@@ -149,9 +142,7 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
           <Toast.Header>
             <strong className="me-auto">Bookmark</strong>
           </Toast.Header>
-          <Toast.Body className={toastMessage.includes('Error') ? 'text-white' : ''}>
-            {toastMessage}
-          </Toast.Body>
+          <Toast.Body className={toastMessage.includes('Error') ? 'text-white' : ''}>{toastMessage}</Toast.Body>
         </Toast>
       </ToastContainer>
 
@@ -185,12 +176,11 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
           {isFocused && suggestions.length > 0 && (
             <div className="w-100 mt-2">
               <ul
-                className="list-group shadow-sm"
+                className="list-group shadow-sm rb-landing-search-suggestions"
                 style={{
                   maxHeight: '200px',
                   overflowY: 'auto',
                   borderRadius: '18px',
-                  // position: 'absolute',
                   zIndex: 9999,
                 }}
               >
@@ -224,7 +214,11 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
                                 toggleBookmark(rio.id);
                               }}
                             >
-                              {isBookmarked ? <BookmarkCheckFill /> : <Bookmark />}
+                              {isBookmarked ? (
+                                <BookmarkCheckFill className="rb-bookmark-icon rb-bookmark-icon-active" />
+                              ) : (
+                                <Bookmark className="rb-bookmark-icon" />
+                              )}
                             </button>
                           )}
                         </div>
@@ -258,17 +252,12 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
               Email:&nbsp;
               {selectedRio.email}
               <br />
-              {`Approved: ${
-                selectedRio.approvalDate ? new Date(selectedRio.approvalDate).toDateString() : ''
-              }`}
+              {`Approved: ${selectedRio.approvalDate ? new Date(selectedRio.approvalDate).toDateString() : ''}`}
               <br />
               <br />
               <Row className="justify-content-center" md={3}>
                 <Button variant="success">
-                  <a
-                    href={`mailto:${selectedRio.email}`}
-                    style={{ color: 'inherit', textDecoration: 'none' }}
-                  >
+                  <a href={`mailto:${selectedRio.email}`} style={{ color: 'inherit', textDecoration: 'none' }}>
                     Contact
                   </a>
                 </Button>

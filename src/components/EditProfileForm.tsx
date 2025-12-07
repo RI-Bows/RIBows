@@ -178,7 +178,7 @@ export default function EditProfileForm({
                 {loading ? 'Saving...' : 'Save Changes'}
               </Button>
               <Button
-                variant="outline-secondary"
+                variant="outline-primary"
                 onClick={() => {
                   reset();
                   setSelectedInterests(normalizeInterests());
