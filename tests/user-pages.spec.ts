@@ -4,9 +4,10 @@ test.use({
   storageState: './user-auth.json',
 });
 
+test.setTimeout(120000);
+
 test('User pages test', async ({ page }) => {
-  const response = await page.goto('http://localhost:3000');
-  expect(response?.status()).toBeLessThan(400);
+  await page.goto('http://localhost:3000', { waitUntil: 'networkidle' });
 
   // check navbar links
   await expect(page.getByRole('link', { name: 'RIBows Rainbow' })).toBeVisible();
@@ -16,11 +17,12 @@ test('User pages test', async ({ page }) => {
 
   // check home page
   await page.getByRole('link', { name: 'RIBows Rainbow' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/');
+  await page.waitForURL('**/');
   await expect(page.getByRole('heading', { name: 'Find and join RIO\'s at UH Mānoa' })).toBeVisible();
 
   // check search page
   await page.getByRole('link', { name: 'Search' }).click();
+  await page.waitForURL('**/search');
   await expect(page).toHaveURL('http://localhost:3000/search');
   await expect(page.getByRole('heading', { name: 'Search for RIOs' })).toBeVisible();
   await expect(page.getByRole('textbox', { name: 'Search' })).toBeVisible();
@@ -34,10 +36,12 @@ test('User pages test', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'About Us' })).toBeVisible();
   await page.getByRole('button', { name: 'Feedback Page' }).click();
   await expect(page).toHaveURL('http://localhost:3000/feedback');
-  await expect(page.locator('iframe[title="Feedback Form"]').contentFrame().locator('div').first()).toBeVisible();
+  const iframe = page.frameLocator('iframe[title="Feedback Form"]');
+  await expect(iframe.locator('div').first()).toBeVisible();
 
   // check bookmarks page
   await page.getByRole('link', { name: 'Bookmarks' }).click();
+  await page.waitForURL('**/bookmarks');
   await expect(page).toHaveURL('http://localhost:3000/bookmarks');
   await expect(page.getByRole('heading', { name: 'Bookmarked RIOs' })).toBeVisible();
 

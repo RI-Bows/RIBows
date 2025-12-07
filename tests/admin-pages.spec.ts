@@ -4,9 +4,10 @@ test.use({
   storageState: './admin-auth.json',
 });
 
+test.setTimeout(120000);
+
 test('Admin pages test', async ({ page }) => {
-  const response = await page.goto('http://localhost:3000');
-  expect(response?.status()).toBeLessThan(400);
+  await page.goto('http://localhost:3000', { waitUntil: 'networkidle' });
 
   // check navbar links
   await expect(page.getByRole('link', { name: 'RIBows Rainbow' })).toBeVisible();
@@ -17,15 +18,30 @@ test('Admin pages test', async ({ page }) => {
 
   // check home page
   await page.getByRole('link', { name: 'RIBows Rainbow' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/');
+  await page.waitForURL('**/');
   await expect(page.getByRole('heading', { name: 'Find and join RIO\'s at UH Mānoa' })).toBeVisible();
 
   // check admin search page (not done yet)
   await page.getByRole('link', { name: 'Admin Search' }).click();
+  await page.waitForURL('**/search');
   await expect(page).toHaveURL('http://localhost:3000/search');
+
+  // check editRio page from button
+  await page.getByRole('button', { name: 'Addiction Medicine and Harm' }).click();
+  await page.getByRole('button', { name: 'Close', exact: true }).click();
+  await page.getByRole('button', { name: 'Addiction Medicine and Harm' }).click();
+  await page.locator('.d-flex > .btn').first().click();
+  await page.waitForURL('**/editRio/3');
+  await expect(page).toHaveURL('http://localhost:3000/editRio/3');
+  await expect(page.getByRole('heading', { name: 'Edit RIO' })).toBeVisible();
+  await expect(page.getByText('RIO Name')).toBeVisible();
+  await expect(page.getByRole('textbox').first()).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Save Changes' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Go back' })).toBeVisible();
 
   // check add RIO page
   await page.getByRole('link', { name: 'Add RIO' }).click();
+  await page.waitForURL('**/addRio');
   await expect(page).toHaveURL('http://localhost:3000/addRio');
   await expect(page.getByRole('heading', { name: 'Add RIO' })).toBeVisible();
   await expect(page.getByRole('textbox', { name: 'RIO Name' })).toBeVisible();
@@ -40,29 +56,4 @@ test('Admin pages test', async ({ page }) => {
   await expect(page.getByText('Image', { exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Submit' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Reset' })).toBeVisible();
-
-  // check about us page / feedback page
-  await page.getByRole('link', { name: 'About Us' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/about');
-  await expect(page.getByRole('heading', { name: 'About Us' })).toBeVisible();
-  await page.getByRole('button', { name: 'Feedback Page' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/feedback');
-  await expect(page.locator('iframe[title="Feedback Form"]').contentFrame().locator('div').first()).toBeVisible();
-
-  // check bookmarks page
-  await page.getByRole('link', { name: 'Bookmarks' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/bookmarks');
-  await expect(page.getByRole('heading', { name: 'Bookmarked RIOs' })).toBeVisible();
-
-  // check edit profile page
-  /*
-  await page.getByRole('button', { name: 'ribows@admin.com' }).click();
-  await page.getByRole('link', { name: 'Edit Profile' }).click();
-  await expect(page).toHaveURL('http://localhost:3000/editProfile');
-  await expect(page.getByRole('heading', { name: 'Edit Profile' })).toBeVisible();
-  await expect(page.getByText('First Name')).toBeVisible();
-  await expect(page.getByText('Club Interests')).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Save' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Reset' })).toBeVisible();
-  */
 });

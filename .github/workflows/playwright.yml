@@ -26,8 +26,7 @@ jobs:
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
           NEXTAUTH_URL: "http://localhost:3000"
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          GITHUB_CLIENT_ID: ${{ secrets.GITHUB_CLIENT_ID }}
-          GITHUB_CLIENT_SECRET: ${{ secrets.GITHUB_CLIENT_SECRET }}
+          STACK_SECRET_SERVER_KEY: ${{ secrets.STACK_SECRET_SERVER_KEY }}
         shell: bash
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
