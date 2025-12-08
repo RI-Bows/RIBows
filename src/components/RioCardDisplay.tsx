@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Button, Card, CardBody, Col, Modal, Row, Toast, ToastContainer } from 'react-bootstrap';
+import { Button, Card, CardBody, Col, Modal, Row, Toast, ToastContainer, Image } from 'react-bootstrap';
 import { Bookmark, BookmarkCheckFill, Envelope, Trash3 } from 'react-bootstrap-icons';
 import { RioType } from '@/lib/dbActions';
 import { useSession } from 'next-auth/react';
@@ -18,20 +18,25 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
   const role = propRole ?? (session?.user as any)?.role ?? null;
   const currentUser = propCurrentUser ?? session?.user?.email ?? null;
 
-  // Store only the IDs of bookmarked RIOs
+  // IDs of RIOs this user has bookmarked
   const [userBookmarkIds, setUserBookmarkIds] = useState<number[]>([]);
   const [selectedRio, setSelectedRio] = useState<RioType | null>(null);
 
-  // bookmark count for the selected RIO in the modal
-  const [rioBookmarks, setRioBookmarks] = useState<number>(0);
-
-  // toast is the notification that will display when user bookmarks
+  // toast for bookmark feedback
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
-  // Fetch user's bookmarks on load
+  // bookmark count shown in the modal pill
+  const [rioBookmarks, setRioBookmarks] = useState<number>(0);
+
+  // ---------------- Fetch user's bookmarked IDs ----------------
   useEffect(() => {
     async function fetchUserBookmarks() {
+      if (!email) {
+        setUserBookmarkIds([]);
+        return;
+      }
+
       const res = await fetch('/api/bookmarks/get', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -41,7 +46,6 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
       const data = await res.json();
       console.log('Bookmarks from API:', data);
 
-      // Normalize response to number[] (support numbers, array of objects, or wrapper)
       let ids: number[] = [];
       if (Array.isArray(data)) {
         if (data.length === 0) ids = [];
@@ -51,37 +55,33 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
           ids = data.map((d: any) => Number(d.rioId ?? d.id ?? d.rio?.id ?? d)).filter(Boolean);
         }
       } else if (data && typeof data === 'object') {
-        if (Array.isArray((data as any).ids)) ids = (data as any).ids.map(Number);
+        if (Array.isArray((data as any).ids)) {
+          ids = (data as any).ids.map(Number);
+        }
       }
 
       setUserBookmarkIds(ids);
     }
 
     if (email) {
-      fetchUserBookmarks();
+      // eslint-disable-next-line no-void
+      void fetchUserBookmarks();
     }
   }, [email]);
 
-  // when rio card is clicked, it gathers bookmarks from database and displays it
-  const getRioBookmarks = async (rio: RioType) => {
-    try {
-      const bookmarkRes = await fetch(`/api/bookmarks/amount/${rio.id}`);
-      const bookmarkData = await bookmarkRes.json();
-      setRioBookmarks(typeof bookmarkData === 'number' ? bookmarkData : (rio.bookmarks ?? 0));
-    } catch (err) {
-      console.error('Error fetching bookmark count:', err);
-      setRioBookmarks(rio.bookmarks ?? 0);
-    }
-  };
+  // Is the RIO currently in the modal bookmarked by this user?
+  const isSelectedBookmarked = !!selectedRio && userBookmarkIds.includes(selectedRio.id);
 
-  function clickRioCard(rio: RioType) {
-    getRioBookmarks(rio);
-    setSelectedRio(rio);
-  }
-
-  // Toggle bookmark
-  const toggleBookmark = async (rioId: number) => {
-    if (!email) return;
+  // ---------------------- Toggle bookmark helper ----------------------
+  /**
+   * Toggle bookmark for a specific RIO.
+   * Returns:
+   *  - true  => now bookmarked
+   *  - false => now unbookmarked
+   *  - null  => no-op (not logged in or error)
+   */
+  const toggleBookmark = async (rioId: number): Promise<boolean | null> => {
+    if (!email) return null;
 
     try {
       const res = await fetch('/api/bookmarks/toggle', {
@@ -93,38 +93,59 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
       const data = await res.json();
 
       if (data.bookmarked === true) {
-        // add to list of bookmarked IDs
         setUserBookmarkIds((prev) => (prev.includes(rioId) ? prev : [...prev, rioId]));
-
-        // if the modal is open for this rio, bump count +1
-        if (selectedRio && selectedRio.id === rioId) {
-          setRioBookmarks((prev) => prev + 1);
-          setSelectedRio((prev) => (prev ? { ...prev, bookmarks: (prev.bookmarks ?? 0) + 1 } : prev));
-        }
-
         setToastMessage('Added to bookmarks!');
-      } else {
-        // remove from list of bookmarked IDs
-        setUserBookmarkIds((prev) => prev.filter((id) => id !== rioId));
-
-        // if the modal is open for this rio, decrement down to 0 min
-        if (selectedRio && selectedRio.id === rioId) {
-          setRioBookmarks((prev) => Math.max(0, prev - 1));
-          setSelectedRio((prev) => (prev ? { ...prev, bookmarks: Math.max(0, (prev.bookmarks ?? 1) - 1) } : prev));
-        }
-
-        setToastMessage('Removed from bookmarks!');
+        setShowToast(true);
+        return true;
       }
 
+      setUserBookmarkIds((prev) => prev.filter((id) => id !== rioId));
+      setToastMessage('Removed from bookmarks!');
       setShowToast(true);
+      return false;
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('Error toggling bookmark:', err);
       setToastMessage('Error updating bookmark');
       setShowToast(true);
+      return null;
     }
   };
 
-  const isSelectedBookmarked = !!selectedRio && userBookmarkIds.includes(selectedRio.id);
+  // Card-level icon click (doesn't need to update the count)
+  const handleCardBookmarkClick = async (rioId: number, e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation(); // ⬅️ prevent card click (modal) from firing
+    // eslint-disable-next-line no-void
+    void toggleBookmark(rioId);
+  };
+
+  // Modal bookmark click: toggle and adjust modal count
+  const handleModalBookmarkClick = async () => {
+    if (!selectedRio) return;
+    const result = await toggleBookmark(selectedRio.id);
+    if (result === true) {
+      setRioBookmarks((prev) => prev + 1);
+    } else if (result === false) {
+      setRioBookmarks((prev) => Math.max(prev - 1, 0));
+    }
+  };
+
+  // ---------------- Open modal & fetch bookmark count ----------------
+  const clickRioCard = async (rio: RioType) => {
+    setSelectedRio(rio);
+
+    try {
+      const res = await fetch(`/api/bookmarks/amount/${rio.id}`);
+      const data = await res.json();
+      const countRaw = typeof data === 'number' ? data : Number(data.count ?? data.bookmarks ?? 0);
+
+      setRioBookmarks(Number.isFinite(countRaw) ? countRaw : (rio.bookmarks ?? 0));
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Error fetching bookmark count for modal:', err);
+      setRioBookmarks(rio.bookmarks ?? 0);
+    }
+  };
 
   return (
     <>
@@ -146,28 +167,31 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
 
       {rioList.map((rio) => {
         const isBookmarked = userBookmarkIds.includes(rio.id);
+
         return (
           <Col key={rio.id} md={4}>
-            <Card
-              className="trending-card"
-              style={{ position: 'relative', paddingBottom: 30 }} // room for the Edit button
-            >
+            <Card className="trending-card" style={{ position: 'relative', paddingBottom: 30 }}>
               <Row>
                 <Col sm={2}>
                   {email && (
-                    <Button
-                      style={{ cursor: 'pointer', all: 'unset' }}
-                      onClick={() => {
-                        toggleBookmark(rio.id);
-                        getRioBookmarks(rio);
-                      }}
+                    <button
+                      type="button"
+                      className="btn p-0 border-0 bg-transparent"
                       aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
+                      onClick={(e) => {
+                        // ⬅️ THIS is the important bit so the card bookmark is actually clickable
+                        // and doesn’t just open the modal.
+                        // eslint-disable-next-line no-void
+                        void handleCardBookmarkClick(rio.id, e);
+                      }}
                     >
                       {isBookmarked ? <BookmarkCheckFill /> : <Bookmark />}
-                    </Button>
+                    </button>
                   )}
                 </Col>
               </Row>
+
+              {/* Clicking the rest of the card opens the modal */}
               <Button style={{ cursor: 'pointer', all: 'unset' }} onClick={() => clickRioCard(rio)}>
                 <h5 className="trending-card-title">{rio.name}</h5>
                 <p className="text-muted mb-1 text-center">{rio.interest.name}</p>
@@ -175,6 +199,7 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
                   <p className="trending-card-text">{rio.purposeStatement}</p>
                 </CardBody>
               </Button>
+
               {currentUser && role === 'ADMIN' && (
                 <Button
                   variant="outline-warning"
@@ -203,8 +228,8 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
         show={selectedRio !== null}
         onHide={() => setSelectedRio(null)}
         centered
-        size="xl" // react-bootstrap sizes: sm, lg, xl
-        dialogClassName="modal-90w" // custom class to further control width
+        size="xl"
+        dialogClassName="modal-90w"
       >
         <Modal.Header closeButton>
           <Row>
@@ -214,75 +239,91 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
         </Modal.Header>
 
         <Modal.Body>
-          <div className="d-flex align-items-center justify-content-between mb-2">
-            {/* CLICKABLE bookmark + count */}
-            <button
-              type="button"
-              className="btn p-0 border-0 bg-transparent"
-              onClick={() => selectedRio && toggleBookmark(selectedRio.id)}
-              aria-label={isSelectedBookmarked ? 'Remove bookmark' : 'Add bookmark'}
-            >
-              <div
-                className="text-dark border border-black rounded px-2 py-2"
-                style={{ color: 'inherit', backgroundColor: '#ffffff' }}
-              >
-                {isSelectedBookmarked ? (
-                  <BookmarkCheckFill size={20} className="me-1" />
-                ) : (
-                  <Bookmark size={20} className="me-1" />
+          {/* Top row: info + optional image (same layout you wanted) */}
+          <Row className="mb-3">
+            <Col xs={12} md={selectedRio?.image ? 8 : 12}>
+              <div className="d-flex align-items-center justify-content-between mb-2">
+                {selectedRio && (
+                  <button
+                    type="button"
+                    className="btn p-0 border-0 bg-transparent"
+                    onClick={handleModalBookmarkClick}
+                    aria-label={isSelectedBookmarked ? 'Remove bookmark' : 'Add bookmark'}
+                  >
+                    <div
+                      className="text-dark border border-black rounded px-2 py-2"
+                      style={{
+                        color: 'inherit',
+                        backgroundColor: '#ffffff',
+                      }}
+                    >
+                      {isSelectedBookmarked ? (
+                        <BookmarkCheckFill size={20} className="me-1" />
+                      ) : (
+                        <Bookmark size={20} className="me-1" />
+                      )}
+                      {rioBookmarks}
+                    </div>
+                  </button>
                 )}
-                {rioBookmarks}
-              </div>
-            </button>
 
-            {currentUser && role === 'ADMIN' ? (
-              <Button
-                variant="outline-warning"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // navigate to edit page
-                  if (selectedRio?.id) window.location.href = `/editRio/${selectedRio.id}`;
-                }}
-              >
-                Edit
-              </Button>
-            ) : (
-              ''
-            )}
-          </div>
-          <br />
-          <Row className="justify-content-between">
-            <Col xs={12} md={11} lg={8}>
+                {currentUser && role === 'ADMIN' && selectedRio && (
+                  <Button
+                    variant="outline-warning"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (selectedRio?.id) {
+                        window.location.href = `/editRio/${selectedRio.id}`;
+                      }
+                    }}
+                  >
+                    Edit
+                  </Button>
+                )}
+              </div>
+
               <strong>Purpose Statement:</strong>
               <p>{selectedRio?.purposeStatement}</p>
+
+              <div className="mt-3">
+                <p>
+                  <strong>Main Contact:&nbsp;</strong>
+                  {selectedRio?.mainContact}
+                </p>
+                <p>
+                  <strong>Email:&nbsp;</strong>
+                  {selectedRio?.email}
+                </p>
+                <p>
+                  <strong>Approved:&nbsp;</strong>
+                  {selectedRio?.approvalDate ? new Date(selectedRio.approvalDate).toDateString() : ''}
+                </p>
+              </div>
             </Col>
-            <Col xs={7} md={6} lg={4}>
-              <strong>Main Contact:&nbsp;</strong>
-              {selectedRio?.mainContact}
-              <br />
-              <strong>Email:&nbsp;</strong>
-              {selectedRio?.email}
-              <br />
-              <strong>Approved:&nbsp;</strong>
-              {selectedRio?.approvalDate ? new Date(selectedRio.approvalDate).toDateString() : ''}
-              <br />
-            </Col>
+
+            {selectedRio?.image && (
+              <Col xs={12} md={4} className="d-flex justify-content-center mt-3 mt-md-0">
+                <div className="rb-rio-modal-image-wrapper">
+                  <Image src={selectedRio.image} alt={`${selectedRio.name} logo`} className="rb-rio-modal-image" />
+                </div>
+              </Col>
+            )}
           </Row>
+
           <Row>
             <Col className="d-flex justify-content-start align-items-end">
-              {currentUser && role === 'ADMIN' ? (
+              {currentUser && role === 'ADMIN' && selectedRio && (
                 <Button
                   variant="danger"
                   onClick={(e) => {
                     e.stopPropagation();
-                    // navigate to delete page
-                    if (selectedRio?.id) window.location.href = `/deleteRio/${selectedRio.id}`;
+                    if (selectedRio?.id) {
+                      window.location.href = `/deleteRio/${selectedRio.id}`;
+                    }
                   }}
                 >
                   Delete <Trash3 />
                 </Button>
-              ) : (
-                ''
               )}
             </Col>
             <Col className="d-flex justify-content-end">
