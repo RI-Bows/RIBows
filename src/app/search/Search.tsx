@@ -94,8 +94,8 @@ export default function Search({ rioList, interests, initialQuery = '' }: Search
           </h2>
         </Container>
       </Row>
-      <Row className="justify-content-center p-4 w-75 mx-auto">
-        <Col md={8} className="pe-2">
+      <Row className="p-2 w-75 mx-auto">
+        <Col className="pe-2">
           <input
             type="text"
             value={searchQuery}
@@ -104,69 +104,69 @@ export default function Search({ rioList, interests, initialQuery = '' }: Search
             className="search-input w-100 py-3 border border-gray-300 rounded-5"
           />
         </Col>
-        <Col md={4}>
-          <Accordion defaultActiveKey="">
-            <Accordion.Item eventKey="0">
-              <Accordion.Header>Filters</Accordion.Header>
-              <Accordion.Body>
-                <Row className="mb-3">
-                  <Col md={6}>
-                    <Form.Label>Sort By</Form.Label>
-                    <Form.Select
-                      value={sortBy}
-                      onChange={(e) => handleSort(e.target.value)}
-                    >
-                      <option value="trending">Trending</option>
-                      <option value="newest">Newest</option>
-                      <option value="oldest">Oldest</option>
-                      <option value="alphabetical">Alphabetical (A-Z)</option>
-                      <option value="reverse">Alphabetical (Z-A)</option>
-                    </Form.Select>
-                  </Col>
-                </Row>
-
-                <Row>
-                  <Form.Label>Club Type</Form.Label>
-
-                  <Col xs={12} sm={12} xl={6}>
-                    {interestOptions.slice(0, 6).map((interestName) => (
-                      <Form.Check
-                        key={interestName}
-                        className="py-1"
-                        name="club-type"
-                        type="radio"
-                        id={`interest-${interestName === 'all' ? 'all' : interestName}`}
-                        label={interestName === 'all' ? 'All' : interestName}
-                        value={interestName}
-                        checked={selectedType === interestName}
-                        onChange={(e) => handleInterest(e.target.value)}
-                      />
-                    ))}
-                  </Col>
-                  <Col xs={12} sm={12} xl={6}>
-                    {interestOptions.slice(6).map((interestName) => (
-                      <Form.Check
-                        key={interestName}
-                        className="py-1"
-                        name="club-type"
-                        type="radio"
-                        id={`interest-${interestName}`}
-                        label={interestName}
-                        value={interestName}
-                        checked={selectedType === interestName}
-                        onChange={(e) => handleInterest(e.target.value)}
-                      />
-                    ))}
-                  </Col>
-                </Row>
-              </Accordion.Body>
-            </Accordion.Item>
-          </Accordion>
-        </Col>
+        <Row>
+          <Col md={6} className="pt-4">
+            <Accordion defaultActiveKey="">
+              <Accordion.Item eventKey="0">
+                <Accordion.Header>Filters</Accordion.Header>
+                <Accordion.Body>
+                  <Row className="mb-1">
+                    <Col md={6}>
+                      <Form.Label>Sort By</Form.Label>
+                      <Form.Select
+                        value={sortBy}
+                        onChange={(e) => handleSort(e.target.value)}
+                      >
+                        <option value="trending">Trending</option>
+                        <option value="newest">Newest</option>
+                        <option value="oldest">Oldest</option>
+                        <option value="alphabetical">Alphabetical (A-Z)</option>
+                        <option value="reverse">Alphabetical (Z-A)</option>
+                      </Form.Select>
+                    </Col>
+                  </Row>
+                  <Row className="pt-2">
+                    <Form.Label>Club Type</Form.Label>
+                    <Col xs={12} sm={12} lg={12} xl={6}>
+                      {interestOptions.slice(0, 6).map((interestName) => (
+                        <Form.Check
+                          key={interestName}
+                          className="py-1"
+                          name="club-type"
+                          type="radio"
+                          id={`interest-${interestName === 'all' ? 'all' : interestName}`}
+                          label={interestName === 'all' ? 'All' : interestName}
+                          value={interestName}
+                          checked={selectedType === interestName}
+                          onChange={(e) => handleInterest(e.target.value)}
+                        />
+                      ))}
+                    </Col>
+                    <Col>
+                      {interestOptions.slice(6).map((interestName) => (
+                        <Form.Check
+                          key={interestName}
+                          className="py-1"
+                          name="club-type"
+                          type="radio"
+                          id={`interest-${interestName}`}
+                          label={interestName}
+                          value={interestName}
+                          checked={selectedType === interestName}
+                          onChange={(e) => handleInterest(e.target.value)}
+                        />
+                      ))}
+                    </Col>
+                  </Row>
+                </Accordion.Body>
+              </Accordion.Item>
+            </Accordion>
+          </Col>
+        </Row>
       </Row>
 
-      <Row className="bg-light justify-content-center p-4">
-        <Container className="pt-4 w-75">
+      <Row className="bg-light justify-content-center p-2">
+        <Container className="pt-3 w-75">
           <div className="trending-panel">
             {filteredItems.length === 0 ? (
               <div className="text-center py-5">
