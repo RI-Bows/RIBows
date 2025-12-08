@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Button, Card, CardBody, Col, Modal, Row, Toast, ToastContainer } from 'react-bootstrap';
-import { Bookmark, BookmarkCheckFill, BookmarkFill, Envelope, Trash } from 'react-bootstrap-icons';
+import { Bookmark, BookmarkCheckFill, Envelope, Trash3 } from 'react-bootstrap-icons';
 import { RioType } from '@/lib/dbActions';
 import { useSession } from 'next-auth/react';
 
@@ -21,13 +21,17 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
   // Store only the IDs of bookmarked RIOs
   const [userBookmarkIds, setUserBookmarkIds] = useState<number[]>([]);
   const [selectedRio, setSelectedRio] = useState<RioType | null>(null);
+
+  // bookmark count for the selected RIO in the modal
+  const [rioBookmarks, setRioBookmarks] = useState<number>(0);
+
   // toast is the notification that will display when user bookmarks
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
   // Fetch user's bookmarks on load
   useEffect(() => {
-    async function fetchBookmarks() {
+    async function fetchUserBookmarks() {
       const res = await fetch('/api/bookmarks/get', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -54,9 +58,26 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
     }
 
     if (email) {
-      fetchBookmarks();
+      fetchUserBookmarks();
     }
   }, [email]);
+
+  // when rio card is clicked, it gathers bookmarks from database and displays it
+  const getRioBookmarks = async (rio: RioType) => {
+    try {
+      const bookmarkRes = await fetch(`/api/bookmarks/amount/${rio.id}`);
+      const bookmarkData = await bookmarkRes.json();
+      setRioBookmarks(typeof bookmarkData === 'number' ? bookmarkData : (rio.bookmarks ?? 0));
+    } catch (err) {
+      console.error('Error fetching bookmark count:', err);
+      setRioBookmarks(rio.bookmarks ?? 0);
+    }
+  };
+
+  function clickRioCard(rio: RioType) {
+    getRioBookmarks(rio);
+    setSelectedRio(rio);
+  }
 
   // Toggle bookmark
   const toggleBookmark = async (rioId: number) => {
@@ -72,14 +93,30 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
       const data = await res.json();
 
       if (data.bookmarked === true) {
-        setUserBookmarkIds((prev) => [...prev, rioId]);
+        // add to list of bookmarked IDs
+        setUserBookmarkIds((prev) => (prev.includes(rioId) ? prev : [...prev, rioId]));
+
+        // if the modal is open for this rio, bump count +1
+        if (selectedRio && selectedRio.id === rioId) {
+          setRioBookmarks((prev) => prev + 1);
+          setSelectedRio((prev) => (prev ? { ...prev, bookmarks: (prev.bookmarks ?? 0) + 1 } : prev));
+        }
+
         setToastMessage('Added to bookmarks!');
-        setShowToast(true);
       } else {
+        // remove from list of bookmarked IDs
         setUserBookmarkIds((prev) => prev.filter((id) => id !== rioId));
+
+        // if the modal is open for this rio, decrement down to 0 min
+        if (selectedRio && selectedRio.id === rioId) {
+          setRioBookmarks((prev) => Math.max(0, prev - 1));
+          setSelectedRio((prev) => (prev ? { ...prev, bookmarks: Math.max(0, (prev.bookmarks ?? 1) - 1) } : prev));
+        }
+
         setToastMessage('Removed from bookmarks!');
-        setShowToast(true);
       }
+
+      setShowToast(true);
     } catch (err) {
       console.error('Error toggling bookmark:', err);
       setToastMessage('Error updating bookmark');
@@ -87,10 +124,12 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
     }
   };
 
+  const isSelectedBookmarked = !!selectedRio && userBookmarkIds.includes(selectedRio.id);
+
   return (
     <>
       {/* Toast Notification */}
-      <ToastContainer position="top-end" className="p-3" style={{ zIndex: 9999 }}>
+      <ToastContainer className="position-fixed bottom-0 end-0 p-3" style={{ zIndex: 9999 }}>
         <Toast
           show={showToast}
           onClose={() => setShowToast(false)}
@@ -107,7 +146,6 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
 
       {rioList.map((rio) => {
         const isBookmarked = userBookmarkIds.includes(rio.id);
-
         return (
           <Col key={rio.id} md={4}>
             <Card
@@ -117,14 +155,20 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
               <Row>
                 <Col sm={2}>
                   {email && (
-                    <Button style={{ cursor: 'pointer', all: 'unset' }} onClick={() => toggleBookmark(rio.id)}>
+                    <Button
+                      style={{ cursor: 'pointer', all: 'unset' }}
+                      onClick={() => {
+                        toggleBookmark(rio.id);
+                        getRioBookmarks(rio);
+                      }}
+                      aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
+                    >
                       {isBookmarked ? <BookmarkCheckFill /> : <Bookmark />}
                     </Button>
                   )}
                 </Col>
               </Row>
-
-              <Button style={{ cursor: 'pointer', all: 'unset' }} onClick={() => setSelectedRio(rio)}>
+              <Button style={{ cursor: 'pointer', all: 'unset' }} onClick={() => clickRioCard(rio)}>
                 <h5 className="trending-card-title">{rio.name}</h5>
                 <p className="text-muted mb-1 text-center">{rio.interest.name}</p>
                 <CardBody>
@@ -189,13 +233,26 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
 
         <Modal.Body>
           <div className="d-flex align-items-center justify-content-between mb-2">
-            <div
-              className="text-dark border border-black rounded px-2 py-2"
-              style={{ color: 'inherit', backgroundColor: '#ffffff' }}
+            {/* CLICKABLE bookmark + count */}
+            <button
+              type="button"
+              className="btn p-0 border-0 bg-transparent"
+              onClick={() => selectedRio && toggleBookmark(selectedRio.id)}
+              aria-label={isSelectedBookmarked ? 'Remove bookmark' : 'Add bookmark'}
             >
-              <BookmarkFill size={20} className="me-1" />
-              {selectedRio?.bookmarks ?? 0}
-            </div>
+              <div
+                className="text-dark border border-black rounded px-2 py-2"
+                style={{ color: 'inherit', backgroundColor: '#ffffff' }}
+              >
+                {isSelectedBookmarked ? (
+                  <BookmarkCheckFill size={20} className="me-1" />
+                ) : (
+                  <Bookmark size={20} className="me-1" />
+                )}
+                {rioBookmarks}
+              </div>
+            </button>
+
             {currentUser && role === 'ADMIN' ? (
               <div className="d-flex justify-content-end gap-2">
                 <Button
@@ -241,13 +298,31 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
               <br />
             </Col>
           </Row>
-          <div className="d-flex justify-content-end">
-            <Button variant="outline-primary" size="lg" className="mt-3">
-              <a href={`mailto:${selectedRio?.email}`} style={{ color: 'inherit', textDecoration: 'none' }}>
-                <Envelope size={25} />
-              </a>
-            </Button>
-          </div>
+          <Row>
+            <Col className="d-flex justify-content-start align-items-end">
+              {currentUser && role === 'ADMIN' ? (
+                <Button
+                  variant="danger"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // navigate to delete page
+                    if (selectedRio?.id) window.location.href = `/deleteRio/${selectedRio.id}`;
+                  }}
+                >
+                  Delete <Trash3 />
+                </Button>
+              ) : (
+                ''
+              )}
+            </Col>
+            <Col className="d-flex justify-content-end">
+              <Button variant="outline-primary" size="lg" className="mt-3">
+                <a href={`mailto:${selectedRio?.email}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                  <Envelope size={25} />
+                </a>
+              </Button>
+            </Col>
+          </Row>
         </Modal.Body>
       </Modal>
     </>

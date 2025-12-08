@@ -13,11 +13,15 @@ const defaultInterestOptions = [
 ];
 
 export default function EditRioForm({
-  rio, interestOptions = defaultInterestOptions }: { rio: any; interestOptions: string[] }) {
+  rio,
+  interestOptions = defaultInterestOptions,
+}: {
+  rio: any;
+  interestOptions: string[];
+}) {
   // use server-provided options when available
-  const options = Array.isArray(interestOptions) && interestOptions.length > 0
-    ? interestOptions
-    : defaultInterestOptions;
+  // eslint-disable-next-line max-len
+  const options = Array.isArray(interestOptions) && interestOptions.length > 0 ? interestOptions : defaultInterestOptions;
 
   const [name, setName] = useState(rio.name);
   const [purposeStatement, setPurposeStatement] = useState(rio.purposeStatement || '');
@@ -56,7 +60,7 @@ export default function EditRioForm({
   }, [imageFile]);
 
   const handleInterestsChange = (e: any) => {
-    const selected = Array.from(e.target.selectedOptions as HTMLOptionElement[]).map(o => o.value);
+    const selected = Array.from(e.target.selectedOptions as HTMLOptionElement[]).map((o) => o.value);
     setInterests(selected);
   };
 
@@ -188,7 +192,9 @@ export default function EditRioForm({
               </Form.Select>
             </Form.Group>
 
-            <Button className="mt-3" type="submit">Save Changes</Button>
+            <Button className="mt-3" type="submit">
+              Save Changes
+            </Button>
           </Col>
 
           {/* Right column: image preview + upload */}
@@ -223,11 +229,9 @@ export default function EditRioForm({
               <Form.Control type="file" accept="image/*" onChange={handleImageChange} />
               <Form.Text className="text-muted">Choose a new image to replace the existing one.</Form.Text>
             </Form.Group>
-            <div className="d-flex justify-content-end">
+            <div className="d-flex justify-content-end mt-3">
               <Button
-                variant="primary"
-                className="mt-3"
-                style={{ position: 'absolute', bottom: '20px', right: '20px', zIndex: 999 }}
+                variant="primary" // uses ribows-green from your global CSS
                 onClick={() => window.history.back()}
               >
                 Go back

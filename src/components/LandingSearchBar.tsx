@@ -2,15 +2,9 @@
 
 import { useMemo, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  Button,
-  Modal,
-  Row,
-  Toast,
-  ToastContainer,
-} from 'react-bootstrap';
+import { Button, Modal, Row, Toast, ToastContainer, Container, Col } from 'react-bootstrap';
 import { useSession } from 'next-auth/react';
-import { Bookmark, BookmarkCheckFill } from 'react-bootstrap-icons';
+import { Bookmark, BookmarkCheckFill, Envelope, Trash3 } from 'react-bootstrap-icons';
 import type { RioType } from '@/lib/dbActions';
 
 type Props = {
@@ -25,8 +19,14 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
 
   const { data: session } = useSession();
   const email = session?.user?.email ?? null;
+  const role = (session?.user as any)?.role ?? null;
+  const currentUser = session?.user?.email ?? null;
 
+  // IDs of RIOs this user has bookmarked
   const [userBookmarkIds, setUserBookmarkIds] = useState<number[]>([]);
+
+  // bookmark count for the selected RIO in the modal
+  const [modalBookmarks, setModalBookmarks] = useState<number>(0);
 
   // toast state
   const [showToast, setShowToast] = useState(false);
@@ -34,7 +34,7 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
 
   const router = useRouter();
 
-  // ---- bookmark helpers ----
+  // -------------------- Fetch current user's bookmark IDs --------------------
   useEffect(() => {
     async function fetchBookmarks() {
       if (!email) {
@@ -65,6 +65,7 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
 
         setUserBookmarkIds(ids);
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error('Error fetching bookmarks in landing search:', err);
       }
     }
@@ -72,8 +73,19 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
     fetchBookmarks();
   }, [email]);
 
-  const toggleBookmark = async (rioId: number) => {
-    if (!email) return;
+  // Is the RIO currently shown in the modal bookmarked by this user?
+  const isSelectedBookmarked = !!selectedRio && userBookmarkIds.includes(selectedRio.id);
+
+  // ------------------------- Toggle bookmark helper -------------------------
+  /**
+   * Toggle bookmark for a specific RIO.
+   * Returns:
+   *  - true  => now bookmarked
+   *  - false => now un-bookmarked
+   *  - null  => no-op (e.g. not logged in)
+   */
+  const toggleBookmark = async (rioId: number): Promise<boolean | null> => {
+    if (!email) return null;
 
     try {
       const res = await fetch('/api/bookmarks/toggle', {
@@ -87,15 +99,37 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
       if (data.bookmarked === true) {
         setUserBookmarkIds((prev) => (prev.includes(rioId) ? prev : [...prev, rioId]));
         setToastMessage('Added to bookmarks!');
-      } else {
-        setUserBookmarkIds((prev) => prev.filter((id) => id !== rioId));
-        setToastMessage('Removed from bookmarks!');
+        setShowToast(true);
+        return true;
       }
+
+      setUserBookmarkIds((prev) => prev.filter((id) => id !== rioId));
+      setToastMessage('Removed from bookmarks!');
       setShowToast(true);
+      return false;
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('Error toggling bookmark in landing search:', err);
       setToastMessage('Error updating bookmark');
       setShowToast(true);
+      return null;
+    }
+  };
+
+  // Suggestions list uses toggleBookmark but doesn't care about count
+  const handleSuggestionBookmarkClick = (rioId: number) => {
+    // eslint-disable-next-line no-void
+    void toggleBookmark(rioId);
+  };
+
+  // Modal bookmark click: toggle and update the count in the pill
+  const handleModalBookmarkClick = async () => {
+    if (!selectedRio) return;
+    const result = await toggleBookmark(selectedRio.id);
+    if (result === true) {
+      setModalBookmarks((prev) => prev + 1);
+    } else if (result === false) {
+      setModalBookmarks((prev) => Math.max(prev - 1, 0));
     }
   };
 
@@ -116,6 +150,25 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
     return base.slice(0, 50);
   }, [term, rioList]);
 
+  // --------------------- Open modal & fetch bookmark count -------------------
+  const openRioModal = async (rio: RioType) => {
+    setSelectedRio(rio);
+
+    try {
+      const res = await fetch(`/api/bookmarks/amount/${rio.id}`);
+      const data = await res.json();
+
+      const countRaw = typeof data === 'number' ? data : Number(data.count ?? data.bookmarks ?? 0);
+
+      setModalBookmarks(Number.isFinite(countRaw) ? countRaw : (rio.bookmarks ?? 0));
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Error fetching bookmark count for modal:', err);
+      setModalBookmarks(selectedRio?.bookmarks ?? 0);
+    }
+  };
+
+  // --------------------------- Search form handlers --------------------------
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const trimmed = term.trim();
@@ -130,12 +183,13 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
 
   const handleSuggestionClick = (rio: RioType) => {
     setTerm(rio.name);
-    setSelectedRio(rio);
     setIsFocused(false);
+    // eslint-disable-next-line no-void
+    void openRioModal(rio);
   };
 
   return (
-    <>
+    <Container style={{ position: 'absolute' }}>
       {/* Toast (top-right, same as Search page) */}
       <ToastContainer position="top-end" className="p-3" style={{ zIndex: 9999 }}>
         <Toast
@@ -148,15 +202,13 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
           <Toast.Header>
             <strong className="me-auto">Bookmark</strong>
           </Toast.Header>
-          <Toast.Body className={toastMessage.includes('Error') ? 'text-white' : ''}>
-            {toastMessage}
-          </Toast.Body>
+          <Toast.Body className={toastMessage.includes('Error') ? 'text-white' : ''}>{toastMessage}</Toast.Body>
         </Toast>
       </ToastContainer>
 
       {/* Search + suggestions */}
       <div
-        className="rb-landing-search-wrapper w-100 d-flex flex-column align-items-center"
+        className="w-100 d-flex flex-column align-items-center"
         onBlur={(e) => {
           if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
             setIsFocused(false);
@@ -182,32 +234,33 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
         {/* Autocomplete dropdown */}
         <div className="w-100 d-flex justify-content-center" style={{ maxWidth: '900px' }}>
           {isFocused && suggestions.length > 0 && (
-            <div className="rb-landing-search-suggestions w-100 mt-2">
+            <div className="w-100 mt-2">
               <ul
-                className="list-group shadow-sm"
+                className="list-group shadow-sm rb-landing-search-suggestions"
                 style={{
-                  maxHeight: '380px',
+                  maxHeight: '200px',
                   overflowY: 'auto',
                   borderRadius: '18px',
+                  zIndex: 9999,
                 }}
               >
                 {suggestions.map((rio) => {
                   const isBookmarked = userBookmarkIds.includes(rio.id);
 
                   return (
-                    <li key={rio.id} className="list-group-item rb-suggestion-item p-0">
+                    <li key={rio.id} className="list-group-item p-0">
                       <button
                         type="button"
-                        className="rb-suggestion-button w-100 text-start border-0 bg-transparent px-3 py-2"
+                        className="w-100 text-start border-0 bg-transparent px-3 py-2"
                         onMouseDown={(e) => {
                           e.preventDefault(); // keep focus on input
                           handleSuggestionClick(rio);
                         }}
                       >
                         <div className="d-flex align-items-center justify-content-between">
-                          <div className="rb-suggestion-main">
-                            <div className="rb-suggestion-name">{rio.name}</div>
-                            <div className="rb-suggestion-interest">{rio.interest.name}</div>
+                          <div>
+                            <div>{rio.name}</div>
+                            <div>{rio.interest.name}</div>
                           </div>
 
                           {email && (
@@ -218,10 +271,14 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
                               onMouseDown={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation(); // don’t trigger the outer button
-                                toggleBookmark(rio.id);
+                                handleSuggestionBookmarkClick(rio.id);
                               }}
                             >
-                              {isBookmarked ? <BookmarkCheckFill /> : <Bookmark />}
+                              {isBookmarked ? (
+                                <BookmarkCheckFill className="rb-bookmark-icon rb-bookmark-icon-active" />
+                              ) : (
+                                <Bookmark className="rb-bookmark-icon" />
+                              )}
                             </button>
                           )}
                         </div>
@@ -235,8 +292,14 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
         </div>
       </div>
 
-      {/* Pop-up RIO card (Modal) */}
-      <Modal show={selectedRio !== null} onHide={() => setSelectedRio(null)} centered>
+      {/* Updated pop-up RIO card (matches RioCardDisplay modal) */}
+      <Modal
+        show={selectedRio !== null}
+        onHide={() => setSelectedRio(null)}
+        centered
+        size="xl"
+        dialogClassName="modal-90w"
+      >
         <Modal.Header closeButton>
           <Row>
             <Modal.Title>{selectedRio?.name ?? ''}</Modal.Title>
@@ -245,36 +308,89 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
         </Modal.Header>
 
         <Modal.Body>
-          {selectedRio && (
-            <>
-              <p>{`Bookmarks: ${selectedRio.bookmarks ?? 0}`}</p>
-              <p>{selectedRio.purposeStatement}</p>
-              Main Contact:&nbsp;
-              {selectedRio.mainContact}
-              <div className="py-2" />
-              Email:&nbsp;
-              {selectedRio.email}
+          <div className="d-flex align-items-center justify-content-between mb-2">
+            {/* CLICKABLE bookmark + count */}
+            {selectedRio && (
+              <button
+                type="button"
+                className="btn p-0 border-0 bg-transparent"
+                onClick={handleModalBookmarkClick}
+                aria-label={isSelectedBookmarked ? 'Remove bookmark' : 'Add bookmark'}
+              >
+                <div
+                  className="text-dark border border-black rounded px-2 py-2"
+                  style={{ color: 'inherit', backgroundColor: '#ffffff' }}
+                >
+                  {isSelectedBookmarked ? (
+                    <BookmarkCheckFill size={20} className="me-1" />
+                  ) : (
+                    <Bookmark size={20} className="me-1" />
+                  )}
+                  {modalBookmarks}
+                </div>
+              </button>
+            )}
+
+            {/* Optional: Edit for admins */}
+            {currentUser && role === 'ADMIN' && selectedRio && (
+              <Button
+                variant="outline-warning"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  window.location.href = `/editRio/${selectedRio.id}`;
+                }}
+              >
+                Edit
+              </Button>
+            )}
+          </div>
+
+          <br />
+          <Row className="justify-content-between">
+            <Col xs={12} md={11} lg={8}>
+              <strong>Purpose Statement:</strong>
+              <p>{selectedRio?.purposeStatement}</p>
+            </Col>
+            <Col xs={7} md={6} lg={4}>
+              <strong>Main Contact:&nbsp;</strong>
+              {selectedRio?.mainContact}
               <br />
-              {`Approved: ${
-                selectedRio.approvalDate ? new Date(selectedRio.approvalDate).toDateString() : ''
-              }`}
+              <strong>Email:&nbsp;</strong>
+              {selectedRio?.email}
               <br />
+              <strong>Approved:&nbsp;</strong>
+              {selectedRio?.approvalDate ? new Date(selectedRio.approvalDate).toDateString() : ''}
               <br />
-              <Row className="justify-content-center" md={3}>
-                <Button variant="success">
-                  <a
-                    href={`mailto:${selectedRio.email}`}
-                    style={{ color: 'inherit', textDecoration: 'none' }}
-                  >
-                    Contact
-                  </a>
+            </Col>
+          </Row>
+
+          <Row>
+            {/* Optional: Delete for admins */}
+            <Col className="d-flex justify-content-start align-items-end">
+              {currentUser && role === 'ADMIN' && selectedRio && (
+                <Button
+                  variant="danger"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.location.href = `/deleteRio/${selectedRio.id}`;
+                  }}
+                >
+                  Delete <Trash3 />
                 </Button>
-              </Row>
-            </>
-          )}
+              )}
+            </Col>
+
+            <Col className="d-flex justify-content-end">
+              <Button variant="outline-primary" size="lg" className="mt-3">
+                <a href={`mailto:${selectedRio?.email}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                  <Envelope size={25} />
+                </a>
+              </Button>
+            </Col>
+          </Row>
         </Modal.Body>
       </Modal>
-    </>
+    </Container>
   );
 };
 
