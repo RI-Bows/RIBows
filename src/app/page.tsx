@@ -6,7 +6,8 @@ import { getTrendingRios, getRios, RioType } from '@/lib/dbActions';
 
 export default async function Home() {
   const allRios: RioType[] = await getRios();
-  const trendingRios: RioType[] = await getTrendingRios(9);
+  let trendingRios: RioType[] = await getTrendingRios(9);
+  trendingRios = trendingRios.sort((a, b) => b.bookmarks - a.bookmarks);
 
   return (
     <Container fluid className="g-0 pt-5 bg-primary">
