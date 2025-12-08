@@ -6,8 +6,8 @@ import { Container, Row, Col, Ratio } from 'react-bootstrap';
 const Feedback = () => {
   return (
     <main>
-      <Container>
-        <Row className="py-3">
+      <Container className="py-5">
+        <Row className="pt-5">
           <Col className="text-center">
             <h1>Feedback Form</h1>
             Thank you for taking the time to give us feedback!
