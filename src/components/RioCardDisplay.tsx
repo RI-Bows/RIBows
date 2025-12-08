@@ -63,8 +63,7 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
   }, [email]);
 
   // when rio card is clicked, it gathers bookmarks from database and displays it
-  const clickRioCard = async (rio: RioType) => {
-    setSelectedRio(rio);
+  const getRioBookmarks = async (rio: RioType) => {
     try {
       const bookmarkRes = await fetch(`/api/bookmarks/amount/${rio.id}`);
       const bookmarkData = await bookmarkRes.json();
@@ -74,6 +73,11 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
       setRioBookmarks(rio.bookmarks ?? 0);
     }
   };
+
+  function clickRioCard(rio: RioType) {
+    getRioBookmarks(rio);
+    setSelectedRio(rio);
+  }
 
   // Toggle bookmark
   const toggleBookmark = async (rioId: number) => {
@@ -153,7 +157,10 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
                   {email && (
                     <Button
                       style={{ cursor: 'pointer', all: 'unset' }}
-                      onClick={() => toggleBookmark(rio.id)}
+                      onClick={() => {
+                        toggleBookmark(rio.id);
+                        getRioBookmarks(rio);
+                      }}
                       aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
                     >
                       {isBookmarked ? <BookmarkCheckFill /> : <Bookmark />}
