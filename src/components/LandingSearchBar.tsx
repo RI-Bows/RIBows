@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Modal, Row, Toast, ToastContainer, Container, Col } from 'react-bootstrap';
+import { Button, Modal, Row, Toast, ToastContainer, Container, Col, Image } from 'react-bootstrap';
 import { useSession } from 'next-auth/react';
 import { Bookmark, BookmarkCheckFill, Envelope, Trash3 } from 'react-bootstrap-icons';
 import type { RioType } from '@/lib/dbActions';
@@ -308,62 +308,86 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
         </Modal.Header>
 
         <Modal.Body>
-          <div className="d-flex align-items-center justify-content-between mb-2">
-            {/* CLICKABLE bookmark + count */}
-            {selectedRio && (
-              <button
-                type="button"
-                className="btn p-0 border-0 bg-transparent"
-                onClick={handleModalBookmarkClick}
-                aria-label={isSelectedBookmarked ? 'Remove bookmark' : 'Add bookmark'}
-              >
-                <div
-                  className="text-dark border border-black rounded px-2 py-2"
-                  style={{ color: 'inherit', backgroundColor: '#ffffff' }}
-                >
-                  {isSelectedBookmarked ? (
-                    <BookmarkCheckFill size={20} className="me-1" />
-                  ) : (
-                    <Bookmark size={20} className="me-1" />
-                  )}
-                  {modalBookmarks}
-                </div>
-              </button>
-            )}
+          {/* Top row: left side info, right side optional image */}
+          <Row className="mb-3">
+            <Col xs={12} md={selectedRio?.image ? 8 : 12}>
+              <div className="d-flex align-items-center justify-content-between mb-2">
+                {/* CLICKABLE bookmark + count (logic unchanged) */}
+                {selectedRio && (
+                  <button
+                    type="button"
+                    className="btn p-0 border-0 bg-transparent"
+                    onClick={handleModalBookmarkClick}
+                    aria-label={isSelectedBookmarked ? 'Remove bookmark' : 'Add bookmark'}
+                  >
+                    <div
+                      className="text-dark border border-black rounded px-2 py-2"
+                      style={{ color: 'inherit', backgroundColor: '#ffffff' }}
+                    >
+                      {isSelectedBookmarked ? (
+                        <BookmarkCheckFill size={20} className="me-1" />
+                      ) : (
+                        <Bookmark size={20} className="me-1" />
+                      )}
+                      {modalBookmarks}
+                    </div>
+                  </button>
+                )}
 
-            {/* Optional: Edit for admins */}
-            {currentUser && role === 'ADMIN' && selectedRio && (
-              <Button
-                variant="outline-warning"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  window.location.href = `/editRio/${selectedRio.id}`;
-                }}
-              >
-                Edit
-              </Button>
-            )}
-          </div>
+                {/* Optional: Edit for admins (same logic, just moved here) */}
+                {currentUser && role === 'ADMIN' && selectedRio && (
+                  <Button
+                    variant="outline-warning"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      window.location.href = `/editRio/${selectedRio.id}`;
+                    }}
+                  >
+                    Edit
+                  </Button>
+                )}
+              </div>
 
-          <br />
-          <Row className="justify-content-between">
-            <Col xs={12} md={11} lg={8}>
               <strong>Purpose Statement:</strong>
               <p>{selectedRio?.purposeStatement}</p>
+
+              <div className="mt-3">
+                <p>
+                  <strong>Main Contact:&nbsp;</strong>
+                  {selectedRio?.mainContact}
+                </p>
+                <p>
+                  <strong>Email:&nbsp;</strong>
+                  {selectedRio?.email}
+                </p>
+                <p>
+                  <strong>Approved:&nbsp;</strong>
+                  {selectedRio?.approvalDate
+                    ? new Date(selectedRio.approvalDate).toDateString()
+                    : ''}
+                </p>
+              </div>
             </Col>
-            <Col xs={7} md={6} lg={4}>
-              <strong>Main Contact:&nbsp;</strong>
-              {selectedRio?.mainContact}
-              <br />
-              <strong>Email:&nbsp;</strong>
-              {selectedRio?.email}
-              <br />
-              <strong>Approved:&nbsp;</strong>
-              {selectedRio?.approvalDate ? new Date(selectedRio.approvalDate).toDateString() : ''}
-              <br />
-            </Col>
+
+            {/* Right column: ONLY render if there is an image */}
+            {selectedRio?.image && (
+              <Col
+                xs={12}
+                md={4}
+                className="d-flex justify-content-center mt-3 mt-md-0"
+              >
+                <div className="rb-rio-modal-image-wrapper">
+                  <Image
+                    src={selectedRio.image}
+                    alt={`${selectedRio.name} logo`}
+                    className="rb-rio-modal-image"
+                  />
+                </div>
+              </Col>
+            )}
           </Row>
 
+          {/* Bottom row: delete (admin) + email button (unchanged logic) */}
           <Row>
             {/* Optional: Delete for admins */}
             <Col className="d-flex justify-content-start align-items-end">
@@ -382,13 +406,17 @@ const LandingSearchBar: React.FC<Props> = ({ rioList }) => {
 
             <Col className="d-flex justify-content-end">
               <Button variant="outline-primary" size="lg" className="mt-3">
-                <a href={`mailto:${selectedRio?.email}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                <a
+                  href={`mailto:${selectedRio?.email}`}
+                  style={{ color: 'inherit', textDecoration: 'none' }}
+                >
                   <Envelope size={25} />
                 </a>
               </Button>
             </Col>
           </Row>
         </Modal.Body>
+
       </Modal>
     </Container>
   );

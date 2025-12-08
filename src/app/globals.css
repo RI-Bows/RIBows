@@ -553,3 +553,47 @@ select[multiple] option:checked {
 .rb-landing-search-suggestions .btn-link:active .rb-bookmark-icon-active {
   color: #000000;
 }
+
+/* RIO images */
+/* RIO modal image layout */
+.rb-rio-modal-image-wrapper {
+  padding: 0.75rem;              /* inner padding around the logo */
+  border-radius: 12px;
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 260px;              /* keeps the logo from getting too wide */
+  width: 100%;
+}
+
+.rb-rio-modal-image {
+  max-width: 220px;              /* actual logo size */
+  max-height: 220px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.rb-rio-modal-image-wrapper {
+  padding: 0.75rem;
+  border-radius: 12px;
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 260px;
+  width: 100%;
+}
+
+.rb-rio-modal-image {
+  max-width: 220px;
+  max-height: 220px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+
