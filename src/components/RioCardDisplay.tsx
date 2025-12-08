@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Button, Card, CardBody, Col, Modal, Row, Toast, ToastContainer } from 'react-bootstrap';
-import { Bookmark, BookmarkCheckFill, BookmarkFill, Envelope } from 'react-bootstrap-icons';
+import { Bookmark, BookmarkCheckFill, BookmarkFill, Envelope, Trash } from 'react-bootstrap-icons';
 import { RioType } from '@/lib/dbActions';
 import { useSession } from 'next-auth/react';
 
@@ -132,22 +132,40 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
                 </CardBody>
               </Button>
               {currentUser && role === 'ADMIN' && (
-                <Button
-                  variant="outline-warning"
-                  size="sm"
-                  onClick={(e) => {
-                    e.stopPropagation(); // don't open the card modal
-                    window.location.href = `/editRio/${rio.id}`;
-                  }}
-                  style={{
-                    position: 'absolute',
-                    bottom: 10,
-                    right: 10,
-                    zIndex: 10,
-                  }}
-                >
-                  Edit
-                </Button>
+                <div className="d-flex justify-content-end gap-2">
+                  <Button
+                    variant="outline-warning"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation(); // don't open the card modal
+                      window.location.href = `/editRio/${rio.id}`;
+                    }}
+                    style={{
+                      position: 'absolute',
+                      bottom: 10,
+                      right: 10,
+                      zIndex: 10,
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="outline-danger"
+                    size="sm"
+                    onClick={(e) => {
+                      e.stopPropagation(); // don't open the card modal
+                      window.location.href = `/editRio/${rio.id}`;
+                    }}
+                    style={{
+                      position: 'absolute',
+                      top: 12,
+                      right: 10,
+                      zIndex: 10,
+                    }}
+                  >
+                    <Trash />
+                  </Button>
+                </div>
               )}
             </Card>
           </Col>
@@ -179,16 +197,28 @@ const RioCardDisplay: React.FC<Props> = ({ rioList, role: propRole, currentUser:
               {selectedRio?.bookmarks ?? 0}
             </div>
             {currentUser && role === 'ADMIN' ? (
-              <Button
-                variant="outline-warning"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  // navigate to edit page
-                  if (selectedRio?.id) window.location.href = `/editRio/${selectedRio.id}`;
-                }}
-              >
-                Edit
-              </Button>
+              <div className="d-flex justify-content-end gap-2">
+                <Button
+                  variant="outline-warning"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // navigate to edit page
+                    if (selectedRio?.id) window.location.href = `/editRio/${selectedRio.id}`;
+                  }}
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="outline-danger"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // navigate to edit page
+                    if (selectedRio?.id) window.location.href = `/editRio/${selectedRio.id}`;
+                  }}
+                >
+                  Delete
+                </Button>
+              </div>
             ) : (
               ''
             )}
