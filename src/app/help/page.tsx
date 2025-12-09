@@ -11,7 +11,7 @@ export default function HelpPage() {
         <Container className="text-center">
           <h1 className="fw-bold mb-3 text-primary">Welcome to RIBows</h1>
           <p className="lead mb-0">
-            This guide walks you through how to create your profile, explore RIOs, bookmark clubs, and get the most out
+            This guide walks you through how to create your profile, explore RIOs, bookmark RIOs, and get the most out
             of the site.
           </p>
         </Container>
@@ -62,13 +62,13 @@ export default function HelpPage() {
             </Col>
 
             <Col md={6}>
-              <h2 className="fw-bold mb-3">3. Bookmark clubs</h2>
+              <h2 className="fw-bold mb-3">3. Bookmark RIOs</h2>
               <p>
                 When you find a RIO you like, click the bookmark icon on the card (or in the search results). Bookmarked
                 RIOs are saved to your account so you can come back to them later.
               </p>
               <p>
-                You can view your saved clubs from the <a href="bookmarks"><strong>Bookmarks</strong></a> link in the navigation bar.
+                You can view your saved RIOs from the <a href="bookmarks"><strong>Bookmarks</strong></a> link in the navigation bar.
               </p>
               <br />
               <Image

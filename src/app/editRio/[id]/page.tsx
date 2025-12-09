@@ -1,4 +1,4 @@
-import EditClubForm from '@/components/EditRioForm';
+import EditRioForm from '@/components/EditRioForm';
 import { getRioById } from '@/lib/dbActions';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma';
@@ -19,7 +19,7 @@ export default async function EditRioPage({ params }: { params: { id: string } }
         <Row className="py-3">
           <Col className="text-center">
             <h1>Error</h1>
-            <p>Unauthorized: Only clubs can edit RIOs.</p>
+            <p>Unauthorized: Only RIOs can edit RIOs.</p>
             <Button variant="primary" href="/">Go to Home</Button>
           </Col>
         </Row>
@@ -37,7 +37,7 @@ export default async function EditRioPage({ params }: { params: { id: string } }
           <Col className="text-center">
             <h1>Error Message</h1>
             <p>
-              The RIO or Club was not found.
+              The RIO was not found.
               {'\n'}
               RIO ID:
               {rioId}
@@ -66,7 +66,7 @@ export default async function EditRioPage({ params }: { params: { id: string } }
       </Row>
       <Row className="justify-content-center">
         <Col md={12} lg={10}>
-          <EditClubForm rio={rio} interestOptions={interestNames} />
+          <EditRioForm rio={rio} interestOptions={interestNames} />
         </Col>
       </Row>
     </Container>

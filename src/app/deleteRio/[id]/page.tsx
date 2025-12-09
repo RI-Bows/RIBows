@@ -18,7 +18,7 @@ export default async function EditRioPage({ params }: { params: { id: string } }
         <Row className="py-3">
           <Col className="text-center">
             <h1>Error</h1>
-            <p>Unauthorized: Only clubs can edit RIOs.</p>
+            <p>Unauthorized: Only RIOs or admins can delete RIOs.</p>
             <Button variant="primary" href="/">Go to Home</Button>
           </Col>
         </Row>
@@ -36,7 +36,7 @@ export default async function EditRioPage({ params }: { params: { id: string } }
           <Col className="text-center">
             <h1>Error Message</h1>
             <p>
-              The RIO or Club was not found.
+              The RIO was not found.
               {'\n'}
               RIO ID:
               {rioId}
