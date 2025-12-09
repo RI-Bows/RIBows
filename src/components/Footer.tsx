@@ -3,7 +3,7 @@ import Image from 'next/image';
 
 /* The Footer appears at the bottom of every page. Rendered by the App Layout component. */
 const Footer = () => (
-  <footer className="text-light text-center mt-auto py-4">
+  <footer className="text-light text-center mt-auto py-4 bg-primary">
     <Container>
       {/* RIBows info block */}
       <Row className="justify-content-center">
