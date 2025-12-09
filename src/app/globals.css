@@ -210,65 +210,6 @@ html, body {
   );
 }
 
-/* Footer styles */
-.rb-footer {
-  background-color: var(--ribows-green);
-  color: var(--ribows-white);          /* light text */
-  padding: 1.5rem 0 1.25rem;           
-  text-align: center;
-}
-
-/* "Powered by" block */
-.rb-footer-powered {
-  font-size: 0.9rem;
-  opacity: 0.85;
-  margin-bottom: 0.35rem;
-}
-
-/* Circle logo with "RB" */
-.rb-footer-logo-circle {
-  width: 40px;
-  height: 40px;
-  border-radius: 999px;
-  border: 2px solid #d7d3c9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-}
-
-.rb-footer-logo-text {
-  font-weight: 700;
-  font-size: 0.9rem;
-}
-
-/* RIBows block */
-.rb-footer-title {
-  margin-top: 1.25rem;        /* space between RB circle and RIBows text */
-  margin-bottom: 0.25rem;
-  font-weight: 600;
-  font-size: 1rem;
-}
-
-.rb-footer-address {
-  font-size: 0.9rem;
-  opacity: 0.95;
-  margin-bottom: 0.25rem;
-}
-
-/* Links */
-.rb-footer-link {
-  font-size: 0.9rem;
-  color: #fdfdfd;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
-}
-
-.rb-footer-link:hover {
-  color: var(--rb-accent);
-}
-
 .btn-outline-secondary:focus {
   box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25) !important;
 }
