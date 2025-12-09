@@ -96,7 +96,7 @@ export default function HelpPage() {
                 src="/images/popup.png"
                 alt="Screenshot of the popup"
                 className="img-fluid rounded shadow-sm d-block mx-auto"
-                style={{ maxWidth: '500px', height: 'auto' }}
+                style={{ maxWidth: '500px', height: '400' }}
               />
             </Col>
           </Row>
