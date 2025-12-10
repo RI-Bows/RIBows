@@ -21,9 +21,6 @@ jobs:
         run: npm ci
       - name: Build Next.js app
         run: | 
-          # This prints the variable name and its value (or an empty string if missing)
-          echo "DATABASE_URL is set."
-          echo "DB URL Check: $DATABASE_URL"
           npm run build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
