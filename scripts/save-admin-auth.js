@@ -14,7 +14,9 @@ const { chromium } = require('playwright');
     await page.click('button[type="submit"]');
 
     // wait for navigation or error query
-    await page.waitForNavigation({ waitUntil: 'networkidle', timeout: 30000 });
+    await page.waitForSelector('role=link[name="Bookmarks"]', {
+      timeout: 120_000,
+    });
 
     const current = page.url();
     console.log('After submit URL:', current);
