@@ -5,7 +5,7 @@ import { authOptions } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 
-export default async function EditClubPage() {
+export default async function EditRIOPage() {
   // Get the current user session (pass authOptions)
   const session = await getServerSession(authOptions);
 
@@ -24,7 +24,7 @@ export default async function EditClubPage() {
         <Row className="py-3">
           <Col className="text-center">
             <h1>Error</h1>
-            <p>Unauthorized: Only clubs can edit RIOs.</p>
+            <p>Unauthorized: Only RIOs can edit RIOs.</p>
             <Button variant="primary" href="/">Go to Home</Button>
           </Col>
         </Row>
@@ -45,7 +45,7 @@ export default async function EditClubPage() {
           <Col className="text-center">
             <h1>Error</h1>
             <p>
-              Your RIO or Club was not found. Please contact support at
+              Your RIO was not found. Please contact support at
               {' '}
               <u>support@example.com</u>
               {' '}

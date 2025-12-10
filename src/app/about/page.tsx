@@ -53,16 +53,15 @@ const AboutPage = () => {
 
   return (
     <main>
-      <Container fluid className="pt-5 p-4 bg-white">
-        <Row className="py-3 pt-5">
+      <Container fluid className="pt-5 bg-light">
+        <Row className="pt-5">
           <Col className="text-center">
-            <h1>About Us</h1>
+            <h2 className="text-primary fw-bold">About Us</h2>
           </Col>
         </Row>
-        <Row className="py-3">
+        <Row className="pt-3">
           <Col className="text-center">
-            <h2>Our Mission</h2>
-            <p className="mx-auto mt-3" style={{ maxWidth: '800px' }}>
+            <p className="mx-auto w-50">
               <big>
                 At RIBows, our mission is to connect students with Registered Independent Organizations (RIOs) that
                 align with their interests and passions. We strive to create a vibrant community where students can
@@ -72,25 +71,24 @@ const AboutPage = () => {
             </p>
           </Col>
         </Row>
-        <Row className="py-3">
-          <Col className="text-center">
-            <h2>Our Team</h2>
-          </Col>
-        </Row>
-        <Row xs={1} md={2} lg={3} className="d-flex justify-content-center rounded g-4 my-2">
+        <Row xs={1} md={2} lg={3} className="d-flex justify-content-center rounded g-4 p-3">
           {members.map((member) => (
             <Col key={`Contact-${member.name}`}>
               <MemberCard {...member} />
             </Col>
           ))}
         </Row>
-        <Row className="py-5">
+        <Row className="py-4">
           <Col className="text-center">
-            <h2>Contact Us!</h2>
-            <p>We&apos;d love to hear from you. Please reach out with any questions or comments.</p>
-            <Row className="g-4 justify-content-center">
+            <h2 className="text-primary fw-bold">Contact Us!</h2>
+            <p className="pt-2">
+              <big>
+                We&apos;d love to hear from you. Please reach out below with any questions or comments.
+              </big>
+            </p>
+            <Row className="pt-1 g-4 justify-content-center">
               <Col>
-                <Link href="/feedback" className="text-black">
+                <Link href="/feedback">
                   {/* <Envelope size={32} /> */}
                   <Button variant="outline-success">Feedback Page</Button>
                 </Link>

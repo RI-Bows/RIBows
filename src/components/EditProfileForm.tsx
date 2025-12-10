@@ -14,7 +14,7 @@ import { updateUser } from '@/lib/dbActions';
 import Multiselect from 'multiselect-react-dropdown';
 import { CaretDownFill, ArrowLeft } from 'react-bootstrap-icons';
 
-type EditClubForm = {
+type EditForm = {
   email: string;
   password?: string;
 };
@@ -74,11 +74,11 @@ export default function EditProfileForm({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<EditClubForm>({
+  } = useForm<EditForm>({
     resolver: yupResolver(EditProfileSchema),
   });
 
-  const onSubmit = async (data: EditClubForm) => {
+  const onSubmit = async (data: EditForm) => {
     setLoading(true);
     try {
       // prefer form email but fall back to local state
