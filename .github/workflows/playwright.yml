@@ -27,18 +27,18 @@ jobs:
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
           NEXTAUTH_URL: "http://localhost:3000"
           STACK_SECRET_SERVER_KEY: ${{ secrets.STACK_SECRET_SERVER_KEY }}
-      - name: Start server
-        run: npx next start
+      - name: Run tests (Start server, Wait, and Test)
+        run: px start-server-and-test "npx next start" http://localhost:3000 "npx playwright test"
         env:
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
           NEXTAUTH_URL: "http://localhost:3000"
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           STACK_SECRET_SERVER_KEY: ${{ secrets.STACK_SECRET_SERVER_KEY }}
         shell: bash
-      - name: Wait for server to be ready
-        run: npx wait-on http://localhost:3000
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+      #- name: Wait for server to be ready
+      #  run: npx wait-on http://localhost:3000
+      #- name: Install Playwright Browsers
+      #  run: npx playwright install --with-deps
       - name: Run setup scripts
         run: |
           node scripts/save-admin-auth.js
