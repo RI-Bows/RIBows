@@ -28,7 +28,7 @@ jobs:
           NEXTAUTH_URL: "http://localhost:3000"
           STACK_SECRET_SERVER_KEY: ${{ secrets.STACK_SECRET_SERVER_KEY }}
       - name: Run tests (Start server, Wait, and Test)
-        run: px start-server-and-test "npx next start" http://localhost:3000 "npx playwright test"
+        run: npx start-server-and-test "npx next start" http://localhost:3000 "npx playwright test"
         env:
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
           NEXTAUTH_URL: "http://localhost:3000"
