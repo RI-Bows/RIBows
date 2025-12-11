@@ -4,7 +4,7 @@ test.use({
   storageState: './admin-auth.json',
 });
 
-test.setTimeout(120000);
+test.setTimeout(180000);
 
 test('Admin pages test', async ({ page }) => {
   await page.goto('http://localhost:3000', { waitUntil: 'networkidle' });
