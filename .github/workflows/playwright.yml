@@ -35,6 +35,8 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           STACK_SECRET_SERVER_KEY: ${{ secrets.STACK_SECRET_SERVER_KEY }}
         shell: bash
+      - name: Wait for server to be ready
+        run: npx wait-on http://localhost:3000
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Wait for server to be ready
