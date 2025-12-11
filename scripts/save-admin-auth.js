@@ -3,7 +3,7 @@ disable ESLint for this file to avoid parserOptions.project errors. */
 const { chromium } = require('playwright');
 
 (async () => {
-  const browser = await chromium.launch({ headless: true, slowMo: 50 });
+  const browser = await chromium.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
   const context = await browser.newContext();
   const page = await context.newPage();
 

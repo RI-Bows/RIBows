@@ -3,7 +3,7 @@ name: Playwright
 on:
   workflow_dispatch:
   push:
-    branches: [main, master]
+    branches: [main, master, Issue-132-2] # to test if I fixed it w/out PR
   pull_request:
     branches: [main, master]
 
