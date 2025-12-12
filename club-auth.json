@@ -2,7 +2,7 @@
   "cookies": [
     {
       "name": "next-auth.csrf-token",
-      "value": "6ed30b6d12a1bf1724dd42a9fef1c1ce8beeef524a3538e82562150c595b15aa%7Cd9803ab9d15ac2ac4f687711e1f4fc93307b8f715441f5952e1310741bef64a6",
+      "value": "a783fe3dce17d894810ab703705a3bc30250162a48256db3954a9024644207ec%7C4a0816e8e3452336a7e7edaa54c0bc27fd3d41437ead67009bf9d84bbec56e33",
       "domain": "localhost",
       "path": "/",
       "expires": -1,
@@ -22,10 +22,10 @@
     },
     {
       "name": "next-auth.session-token",
-      "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..d9--yhwW1s_iLcZL.X77fthjr80jvVDBURt5Rv-vs6BNF7UDtl8yzmG23xqn24vVVslxLcVXetGO2zUHw-aCm5JYuh1p16Ll9vTEC6oj65IR50iOsQGQtBzR4lGEqOHUO2qMtapfMJtV4nV0bxvGkBlbjY0xWF5RUKJooQSIy2RggTVBexqyGpnUYQTC5ZdoQnwk.tSDFANto17pMiZNDTXpeOw",
+      "value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..QGDIGO53XSUnxQCK.dQAHIP2hR-GVDhJzWFuIO2uUaNM0kJhpFEOyZ2cmkf_sRGjkfqvlt1vDnBYdcptXn-_D8bnmSdFBfN24x26TOZH7n48_ACpKN5H5Bl98z_rsGOs-g_-pxlaG4wzNr9B5tOw6tY5EA2BrmqOSyYUHot1afVNjKXf08O12U96GU6nkON5osto.jjxiZxlGW-FNoWx9D2TA_g",
       "domain": "localhost",
       "path": "/",
-      "expires": 1768111550.147485,
+      "expires": 1768117602.887526,
       "httpOnly": true,
       "secure": false,
       "sameSite": "Lax"
@@ -37,7 +37,7 @@
       "localStorage": [
         {
           "name": "nextauth.message",
-          "value": "{\"event\":\"session\",\"data\":{\"trigger\":\"getSession\"},\"timestamp\":1765519550}"
+          "value": "{\"event\":\"session\",\"data\":{\"trigger\":\"getSession\"},\"timestamp\":1765525602}"
         }
       ]
     }
