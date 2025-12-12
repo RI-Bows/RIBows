@@ -19,6 +19,8 @@ jobs:
           node-version: lts/*
       - name: Install dependencies
         run: npm ci
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
       - name: Build Next.js app
         run: | 
           npm run build
@@ -27,25 +29,16 @@ jobs:
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
           NEXTAUTH_URL: "http://localhost:3000"
           STACK_SECRET_SERVER_KEY: ${{ secrets.STACK_SECRET_SERVER_KEY }}
-      - name: Start server
-        run: npx next start &
+      - name: Set permissions for wrapper script
+        run: chmod +x run-e2e.sh
+      - name: Run tests 
+        run: npx start-server-and-test "npx next start" http://localhost:3000 "./run-e2e.sh"
         env:
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
           NEXTAUTH_URL: "http://localhost:3000"
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           STACK_SECRET_SERVER_KEY: ${{ secrets.STACK_SECRET_SERVER_KEY }}
         shell: bash
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
-      - name: Wait for server to be ready
-        run: npx wait-on http://localhost:3000
-      - name: Run setup scripts
-        run: |
-          node scripts/save-admin-auth.js
-          node scripts/save-club-auth.js
-          node scripts/save-user-auth.js
-      - name: Run Playwright tests
-        run: npx playwright test
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -53,3 +46,9 @@ jobs:
           path: playwright-report/
           retention-days: 30
 
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-traces
+          path: test-results/       # <-- This folder contains the actual trace files
+          retention-days: 7   

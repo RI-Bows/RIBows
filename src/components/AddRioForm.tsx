@@ -283,7 +283,7 @@ export default function AddRioForm({ rio = null, interestOptions = defaultIntere
           <Toast.Header>
             <strong className="me-auto">Success</strong>
           </Toast.Header>
-          <Toast.Body>RIO updated!</Toast.Body>
+          <Toast.Body>RIO created!</Toast.Body>
         </Toast>
       </ToastContainer>
     </Card>
