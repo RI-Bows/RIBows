@@ -63,7 +63,7 @@ test('Admin pages test', async ({ page }) => {
   await expect(page.getByText('Image', { exact: true })).toBeVisible();
   await expect(page.getByRole('img', { name: 'Current image' })).toBeVisible();
   await page.getByRole('button', { name: 'Save Changes' }).click();
-  await page.locator('div').filter({ hasText: /^Success$/ }).click();
+  await expect(page.locator('div').filter({ hasText: /^Success$/ })).toBeVisible();
   await page.getByRole('textbox').first().click();
   await page.getByRole('textbox').first().fill('American Marketing Association test');
   await page.getByRole('textbox').nth(1).click();
