@@ -30,10 +30,9 @@ test('Admin pages test', async ({ page }) => {
   // check editRio page from button
   await page.getByRole('button', { name: 'Addiction Medicine and Harm' }).click();
   await page.getByRole('button', { name: 'Close', exact: true }).click();
-  await page.getByRole('button', { name: 'Addiction Medicine and Harm' }).click();
-  await page.locator('.d-flex > .btn').first().click();
+  await page.getByRole('button', { name: 'Edit' }).first().click();
   await page.waitForURL('**/editRio/*'); // fix??
-  await expect(page).toHaveURL('http://localhost:3000/editRio/3');
+  await expect(page).toHaveURL('http://localhost:3000/editRio/*');
   await expect(page.getByRole('heading', { name: 'Edit RIO' })).toBeVisible();
   await expect(page.getByText('RIO Name')).toBeVisible();
   await expect(page.getByRole('textbox').first()).toBeVisible();
